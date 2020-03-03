@@ -1,0 +1,23 @@
+stages:
+  - stage: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      - job: BuildAPI
+        steps:
+          - script: dotnet build
+
+      - job: BuildReact
+        steps:
+          - task: Npm@1
+            displayName: NPM Install
+            inputs:
+              workingDir: cloud-iep-client
+              command: install
+
+          - task: Npm@1
+            displayName: NPM Build
+            inputs:
+              workingDir: cloud-iep-client
+              command: custom
+              customCommand: run build
