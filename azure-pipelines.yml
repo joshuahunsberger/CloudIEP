@@ -5,7 +5,7 @@ stages:
     jobs:
       - job: BuildAPI
         steps:
-          - script: dotnet build
+          - script: dotnet build api/CloudIEP.Web
 
       - job: BuildReact
         steps:
