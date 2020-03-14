@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudIEP.Web", "CloudIEP.Web\CloudIEP.Web.csproj", "{FBDCD469-B71B-49CE-AF60-264D90492B5B}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{823B191F-6E3B-4933-90AE-0FCA800EAF52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +15,9 @@ Global
 		{FBDCD469-B71B-49CE-AF60-264D90492B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBDCD469-B71B-49CE-AF60-264D90492B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBDCD469-B71B-49CE-AF60-264D90492B5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823B191F-6E3B-4933-90AE-0FCA800EAF52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{823B191F-6E3B-4933-90AE-0FCA800EAF52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{823B191F-6E3B-4933-90AE-0FCA800EAF52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{823B191F-6E3B-4933-90AE-0FCA800EAF52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
