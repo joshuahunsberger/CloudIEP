@@ -3,7 +3,11 @@ using CloudIEP.Data.Models;
 
 namespace CloudIEP.Data
 {
-    public class StudentRepository : CosmosDbRepository<Student>, IRepository<Student>
+    public interface IStudentRepository : IRepository<Student>
+    {
+    }
+
+    public class StudentRepository : CosmosDbRepository<Student>, IStudentRepository
     {
         public StudentRepository(ICosmosDbClientFactory factory) : base(factory) { }
 
