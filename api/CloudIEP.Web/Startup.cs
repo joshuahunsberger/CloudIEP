@@ -1,5 +1,4 @@
 using CloudIEP.Web.IoC;
-using CloudIEP.Web.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,9 +21,7 @@ namespace CloudIEP.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var cosmosDbOptions = Configuration.GetSection("CosmosDB")
-                .Get<CosmosDbOptions>();
-            services.AddCosmosDb(cosmosDbOptions);
+            services.AddData(Configuration);
 
             services.AddCors(options => options.AddPolicy(CorsPolicy, builder =>
             {
