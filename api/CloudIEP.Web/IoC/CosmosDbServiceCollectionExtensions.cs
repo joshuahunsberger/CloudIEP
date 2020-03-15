@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using CloudIEP.Data;
 using CloudIEP.Data.CosmosDB;
 using CloudIEP.Web.Options;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -28,6 +30,15 @@ namespace CloudIEP.Web.IoC
             services.AddSingleton<ICosmosDbClientFactory>(cosmosDbClientFactory);
 
             return services;
+        }
+
+        public static IServiceCollection AddData(this IServiceCollection services, IConfiguration config)
+        {
+            var cosmosDbOptions = config.GetSection("CosmosDB")
+                .Get<CosmosDbOptions>();
+
+            return services.AddCosmosDb(cosmosDbOptions)
+                .AddScoped<IStudentRepository, StudentRepository>();
         }
     }
 }
