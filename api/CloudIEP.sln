@@ -5,9 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudIEP.Web", "CloudIEP.We
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{823B191F-6E3B-4933-90AE-0FCA800EAF52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudIEP.Data", "CloudIEP.Data\CloudIEP.Data.csproj", "{E19B4B24-DAA3-4F53-8730-45700EAFEA47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudIEP.Data", "CloudIEP.Data\CloudIEP.Data.csproj", "{8DA6F1DB-66E9-4F3C-87C0-C82A5BAF76B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudIEP.Data.UnitTests", "CloudIEP.Data.UnitTests\CloudIEP.Data.UnitTests.csproj", "{2A20C801-8EF0-41AF-BEB7-E3BAE79E2EEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudIEP.Data.UnitTests", "CloudIEP.Data.UnitTests\CloudIEP.Data.UnitTests.csproj", "{34E88AC0-3217-43D7-A2CC-564054313BFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,13 +23,13 @@ Global
 		{823B191F-6E3B-4933-90AE-0FCA800EAF52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{823B191F-6E3B-4933-90AE-0FCA800EAF52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{823B191F-6E3B-4933-90AE-0FCA800EAF52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E19B4B24-DAA3-4F53-8730-45700EAFEA47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E19B4B24-DAA3-4F53-8730-45700EAFEA47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E19B4B24-DAA3-4F53-8730-45700EAFEA47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E19B4B24-DAA3-4F53-8730-45700EAFEA47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A20C801-8EF0-41AF-BEB7-E3BAE79E2EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A20C801-8EF0-41AF-BEB7-E3BAE79E2EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A20C801-8EF0-41AF-BEB7-E3BAE79E2EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A20C801-8EF0-41AF-BEB7-E3BAE79E2EEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DA6F1DB-66E9-4F3C-87C0-C82A5BAF76B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DA6F1DB-66E9-4F3C-87C0-C82A5BAF76B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DA6F1DB-66E9-4F3C-87C0-C82A5BAF76B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DA6F1DB-66E9-4F3C-87C0-C82A5BAF76B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34E88AC0-3217-43D7-A2CC-564054313BFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34E88AC0-3217-43D7-A2CC-564054313BFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34E88AC0-3217-43D7-A2CC-564054313BFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34E88AC0-3217-43D7-A2CC-564054313BFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
