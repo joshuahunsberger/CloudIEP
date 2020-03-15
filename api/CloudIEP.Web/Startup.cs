@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace CloudIEP.Web
 {
@@ -15,6 +16,8 @@ namespace CloudIEP.Web
         }
 
         readonly string CorsPolicy = "CorsPolicy";
+        readonly string ApiTitle = "CloudIEP API";
+        readonly string ApiVersion = "v1";
 
         public IConfiguration Configuration { get; }
 
@@ -31,6 +34,11 @@ namespace CloudIEP.Web
                     .AllowCredentials();
             }));
             services.AddControllers();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc(ApiVersion, new OpenApiInfo { Title = ApiTitle, Version = ApiVersion });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +57,9 @@ namespace CloudIEP.Web
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", ApiTitle));
         }
     }
 }
