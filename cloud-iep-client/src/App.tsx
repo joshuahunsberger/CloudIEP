@@ -1,17 +1,14 @@
 
-import { AppBar, Box, Toolbar, Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import React from "react";
 import "./App.css";
+import TopBar from './ui/TopBar';
 
 function App() {
   return (
     <div className="App">
       <Box>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6">Cloud IEP</Typography>
-          </Toolbar>
-        </AppBar>
+        <TopBar />
         <Typography variant="h1">Home</Typography>
       </Box>
     </div>
