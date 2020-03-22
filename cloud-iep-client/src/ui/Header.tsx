@@ -5,6 +5,9 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(2),
+    },
+    appName: {
+        flex: 1
     }
 }));
 
@@ -17,7 +20,8 @@ function Header() {
         <AppBar position="static">
             <Toolbar >
                 <Cloud className={classes.icon} />
-                <Typography variant="h6">Cloud IEP</Typography>
+                <Typography variant="h6" className={classes.appName}>Cloud IEP</Typography>
+                <Typography>Login</Typography>
             </Toolbar>
         </AppBar>
     );
