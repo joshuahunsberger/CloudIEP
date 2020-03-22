@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function TopBar() {
+function Header() {
     const theme = useTheme();
 
     const classes = useStyles(theme);
@@ -23,4 +23,4 @@ function TopBar() {
     );
 }
 
-export default TopBar;
+export default Header;
