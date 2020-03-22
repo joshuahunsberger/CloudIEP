@@ -1,17 +1,23 @@
 
-import { Box, Typography } from "@material-ui/core";
+import { Box, createMuiTheme, ThemeProvider, Typography } from "@material-ui/core";
+import { blue } from "@material-ui/core/colors";
 import React from "react";
-import "./App.css";
 import TopBar from './ui/TopBar';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+  },
+});
 
 function App() {
   return (
-    <div className="App">
+    <ThemeProvider theme={theme}>
       <Box>
         <TopBar />
         <Typography variant="h1">Home</Typography>
       </Box>
-    </div>
+    </ThemeProvider>
   );
 }
 

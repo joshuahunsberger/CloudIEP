@@ -1,10 +1,22 @@
+import { AppBar, Toolbar, Typography, makeStyles, useTheme } from '@material-ui/core';
+import { Cloud } from '@material-ui/icons';
 import React from "react";
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+    icon: {
+        marginRight: theme.spacing(2),
+    }
+}));
 
 function TopBar() {
+    const theme = useTheme();
+
+    const classes = useStyles(theme);
+
     return (
-        <AppBar color="primary" position="static">
-            <Toolbar>
+        <AppBar position="static">
+            <Toolbar >
+                <Cloud className={classes.icon} />
                 <Typography variant="h6">Cloud IEP</Typography>
             </Toolbar>
         </AppBar>
