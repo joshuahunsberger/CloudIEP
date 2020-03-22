@@ -1,8 +1,8 @@
-
-import { createMuiTheme, Grid, ThemeProvider, Typography } from "@material-ui/core";
+import { createMuiTheme, Grid, ThemeProvider } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import React from "react";
-import Header from './ui/Header';
+import Body from "./ui/Body";
+import Header from "./ui/Header";
 
 const theme = createMuiTheme({
   palette: {
@@ -18,7 +18,7 @@ function App() {
           <Header />
         </Grid>
         <Grid item>
-          <Typography variant="h1">Home</Typography>
+          <Body />
         </Grid>
       </Grid>
     </ThemeProvider>
