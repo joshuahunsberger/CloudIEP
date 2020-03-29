@@ -43,6 +43,13 @@ namespace CloudIEP.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult<Student[]>> GetStudents()
+        {
+            var students = await _studentRepository.GetAllAsync();
+            return Ok(students);
+        }
+
         [HttpPut("{studentId}")]
         public async Task<ActionResult<Student>> UpdateStudent(string studentId, Student student)
         {

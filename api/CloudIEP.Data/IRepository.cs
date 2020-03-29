@@ -9,6 +9,7 @@ namespace CloudIEP.Data
     // https://github.com/Azure-Samples/PartitionedRepository/blob/master/TodoService.Core/Interfaces/IRepository.cs
     public interface IRepository<T> where T : Entity
     {
+        Task<T[]> GetAllAsync();
         Task<T> GetByIdAsync(string id);
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);

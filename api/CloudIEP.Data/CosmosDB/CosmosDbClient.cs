@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 
 namespace CloudIEP.Data.CosmosDB
 {
@@ -15,6 +17,8 @@ namespace CloudIEP.Data.CosmosDB
     {
         Task<Document> ReadDocumentAsync(string documentId, RequestOptions options = null,
             CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<IEnumerable<T>> ReadDocumentsAsync<T>(RequestOptions options = null, CancellationToken cancellationToken = default);
 
         Task<Document> CreateDocumentAsync(object document, RequestOptions options = null,
             bool disableAutomaticIdGeneration = false,
@@ -45,6 +49,22 @@ namespace CloudIEP.Data.CosmosDB
         {
             return await _documentClient.ReadDocumentAsync(
                 UriFactory.CreateDocumentUri(_databaseName, _collectionName, documentId), options, cancellationToken);
+        }
+
+        public async Task<IEnumerable<T>> ReadDocumentsAsync<T>(RequestOptions options = null, CancellationToken cancellationToken = default)
+        {
+            using var queryable = _documentClient
+                .CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(_databaseName, _collectionName), new FeedOptions { MaxItemCount = 10 })
+                .AsDocumentQuery();
+            var returnList = new List<T>();
+            while (queryable.HasMoreResults)
+            {
+                foreach (T t in await queryable.ExecuteNextAsync<T>(cancellationToken))
+                {
+                    returnList.Add(t);
+                }
+            }
+            return returnList;
         }
 
         public async Task<Document> CreateDocumentAsync(object document, RequestOptions options = null,
