@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using CloudIEP.Data.Exceptions;
@@ -21,6 +22,13 @@ namespace CloudIEP.Data.CosmosDB
         protected CosmosDbRepository(ICosmosDbClientFactory cosmosDbClientFactory)
         {
             _cosmosDbClientFactory = cosmosDbClientFactory;
+        }
+
+        public async Task<T[]> GetAllAsync()
+        {
+            var cosmosDbClient = _cosmosDbClientFactory.GetClient(CollectionName);
+            var documents = await cosmosDbClient.ReadDocumentsAsync<T>();
+            return documents.ToArray();
         }
 
         public async Task<T> GetByIdAsync(string id)
