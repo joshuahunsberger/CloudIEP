@@ -1,6 +1,6 @@
 import { Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React from 'react';
-import { Student } from '../students/Student';
+import { Student } from '../../students/Student';
 
 interface StudentTableProps {
     students?: ReadonlyArray<Student>

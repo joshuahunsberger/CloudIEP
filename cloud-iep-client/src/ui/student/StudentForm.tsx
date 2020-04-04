@@ -1,7 +1,7 @@
 import { Button, makeStyles, TextField, useTheme } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import React, { FormEvent, useState } from "react";
-import { Student } from '../students/Student';
+import { Student } from '../../students/Student';
 
 const useStyles = makeStyles((theme) => ({
     form: {
