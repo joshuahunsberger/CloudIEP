@@ -1,9 +1,9 @@
 import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useTheme } from '@material-ui/core';
 import React from 'react';
-import postRequest from '../network/postRequest';
-import { Student } from '../students/Student';
-import useStudentsApi from "../students/useStudentsApi";
-import ApiStatus from "../types/ApiStatus";
+import postRequest from '../../network/postRequest';
+import { Student } from '../../students/Student';
+import useStudentsApi from "../../students/useStudentsApi";
+import ApiStatus from "../../types/ApiStatus";
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable';
 

@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core";
 import React from 'react';
 import Home from './Home';
-import StudentPage from './StudentPage';
+import StudentPage from './student/StudentPage';
 
 function Body() {
     return (
