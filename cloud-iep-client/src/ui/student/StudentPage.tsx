@@ -36,7 +36,10 @@ const StudentPage = () => {
     const addStudent = async (newStudent: Student) => {
         const result = await postRequest<Student>('http://localhost:5000/api/Student', newStudent);
 
-        setStudents([...students, result]);
+        if (result != null) {
+            setStudents([...students, result]);
+        }
+        return result;
     }
 
     return (
