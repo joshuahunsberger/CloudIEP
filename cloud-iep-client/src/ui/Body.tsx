@@ -1,6 +1,5 @@
 import { Grid } from "@material-ui/core";
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from '../Routes';
 
 function Body() {
@@ -8,9 +7,7 @@ function Body() {
         <Grid container>
             <Grid item xs={false} sm={2} />
             <Grid item xs={12} sm={8} >
-                <Router>
-                    <Routes />
-                </Router>
+                <Routes />
             </Grid>
             <Grid item xs={false} sm={2} />
         </Grid>
