@@ -1,5 +1,5 @@
 import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useTheme } from '@material-ui/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
 import { Student } from '../../students/Student';
 import useStudentsApi from "../../students/useStudentsApi";
@@ -22,16 +22,22 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const addStudent = (newStudent: Student) => {
-    postRequest<Student>('http://localhost:5000/api/Student', newStudent)
-        .then(response => console.log("New ID: " + response.id))
-        .catch(error => console.log(error));
-}
-
 const StudentPage = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const service = useStudentsApi();
+    const [students, setStudents] = useState<Student[]>([]);
+
+    useEffect(() => {
+        service.status === ApiStatus.Loaded &&
+            setStudents(service.result);
+    }, [service]);
+
+    const addStudent = async (newStudent: Student) => {
+        const result = await postRequest<Student>('http://localhost:5000/api/Student', newStudent);
+
+        setStudents([...students, result]);
+    }
 
     return (
         <>
@@ -52,7 +58,7 @@ const StudentPage = () => {
                 {service.status === ApiStatus.Loaded &&
                     (service.result.length > 0
                         ?
-                        <StudentTable students={service.result} />
+                        <StudentTable students={students} />
                         :
                         <Typography variant="h4">No Students</Typography>
                     )
