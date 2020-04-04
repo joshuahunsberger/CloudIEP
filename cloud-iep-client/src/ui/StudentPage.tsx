@@ -1,8 +1,11 @@
-import { Card, CardContent, makeStyles, Typography, useTheme } from '@material-ui/core';
+import { Card, CardContent, CircularProgress, makeStyles, Typography, useTheme } from '@material-ui/core';
 import React from 'react';
 import postRequest from '../network/postRequest';
 import { Student } from '../students/Student';
+import useStudentsApi from "../students/useStudentsApi";
+import ApiStatus from "../types/ApiStatus";
 import StudentForm from './StudentForm';
+import StudentTable from './StudentTable';
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -10,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+    },
+    dataCard: {
+        marginTop: theme.spacing(4)
     }
 }));
 
@@ -22,14 +28,28 @@ const addStudent = (newStudent: Student) => {
 const StudentPage = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
+    const service = useStudentsApi();
 
     return (
-        <Card className={classes.card}>
-            <CardContent>
-                <Typography variant="h4" align="center">Add a Student</Typography>
-                <StudentForm addStudent={addStudent} />
-            </CardContent>
-        </Card>
+        <>
+            <Card className={classes.card}>
+                <CardContent>
+                    <Typography variant="h4" align="center">Add a Student</Typography>
+                    <StudentForm addStudent={addStudent} />
+                </CardContent>
+            </Card>
+            <Card className={classes.dataCard}>
+                <CardContent>
+                    {service.status === ApiStatus.Loading && <CircularProgress />}
+                    {service.status === ApiStatus.Loaded &&
+                        <StudentTable students={service.result} />
+                    }
+                    {service.status === ApiStatus.Error && (
+                        <div>There was an error getting students.</div>
+                    )}
+                </CardContent>
+            </Card>
+        </>
     )
 }
 
