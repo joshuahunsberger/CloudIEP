@@ -1,4 +1,4 @@
-import { Card, CardContent, CircularProgress, makeStyles, Typography, useTheme } from '@material-ui/core';
+import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useTheme } from '@material-ui/core';
 import React from 'react';
 import postRequest from '../network/postRequest';
 import { Student } from '../students/Student';
@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
     },
     dataCard: {
         marginTop: theme.spacing(4)
+    },
+    noStudents: {
+        align: 'center'
     }
 }));
 
@@ -38,17 +41,26 @@ const StudentPage = () => {
                     <StudentForm addStudent={addStudent} />
                 </CardContent>
             </Card>
-            <Card className={classes.dataCard}>
-                <CardContent>
-                    {service.status === ApiStatus.Loading && <CircularProgress />}
-                    {service.status === ApiStatus.Loaded &&
+            <Grid
+                container
+                direction="column"
+                alignItems="center"
+                justify="center"
+                className={classes.dataCard}
+            >
+                {service.status === ApiStatus.Loading && <CircularProgress />}
+                {service.status === ApiStatus.Loaded &&
+                    (service.result.length > 0
+                        ?
                         <StudentTable students={service.result} />
-                    }
-                    {service.status === ApiStatus.Error && (
-                        <div>There was an error getting students.</div>
-                    )}
-                </CardContent>
-            </Card>
+                        :
+                        <Typography variant="h4">No Students</Typography>
+                    )
+                }
+                {service.status === ApiStatus.Error && (
+                    <div>There was an error getting students.</div>
+                )}
+            </Grid>
         </>
     )
 }
