@@ -6,7 +6,7 @@ interface StudentTableProps {
     students?: ReadonlyArray<Student>
 }
 
-const StudentTable: React.FC<StudentTableProps> = (props: StudentTableProps) => {
+const StudentTable: React.FC<StudentTableProps> = ({ students }: StudentTableProps) => {
     return (
         <TableContainer component={Card}>
             <Table>
@@ -18,7 +18,7 @@ const StudentTable: React.FC<StudentTableProps> = (props: StudentTableProps) => 
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.students?.map(student => (
+                    {students?.map(student => (
                         <TableRow key={student.id}>
                             <TableCell>{student.firstName}</TableCell>
                             <TableCell>{student.lastName}</TableCell>
