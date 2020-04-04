@@ -1,15 +1,16 @@
 import { Grid } from "@material-ui/core";
 import React from 'react';
-import Home from './Home';
-import StudentPage from './student/StudentPage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Routes from '../Routes';
 
 function Body() {
     return (
         <Grid container>
             <Grid item xs={false} sm={2} />
             <Grid item xs={12} sm={8} >
-                <Home />
-                <StudentPage />
+                <Router>
+                    <Routes />
+                </Router>
             </Grid>
             <Grid item xs={false} sm={2} />
         </Grid>
