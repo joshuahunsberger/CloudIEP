@@ -9,7 +9,9 @@ const useStyles = makeStyles((theme) => ({
     },
     homeLink: {
         textDecoration: 'none',
-        color: "inherit",
+        color: "inherit"
+    },
+    gap: {
         flex: 1
     }
 }));
@@ -25,6 +27,7 @@ function Header() {
                 <Link to="/" className={classes.homeLink}>
                     <Typography variant="h6">Cloud IEP</Typography>
                 </Link>
+                <div className={classes.gap} />
                 <Typography>Login</Typography>
             </Toolbar>
         </AppBar>
