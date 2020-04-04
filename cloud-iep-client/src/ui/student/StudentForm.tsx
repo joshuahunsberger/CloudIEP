@@ -13,27 +13,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface StudentFormProps {
-    addStudent: (newStudent: Student) => void;
+    addStudent: (newStudent: Student) => Promise<Student>;
 }
 
 const StudentForm = ({ addStudent }: StudentFormProps) => {
     const theme = useTheme();
     const classes = useStyles(theme);
-
-    const [student, setStudent] = useState<Student>({
+    const defaultStudent = {
         id: "",
         firstName: "",
         lastName: "",
         dateOfBirth: new Date()
-    });
+    };
+
+    const [student, setStudent] = useState<Student>(defaultStudent);
 
     const handleDateChange = (date: Date | null) => {
         date && setStudent({ ...student, dateOfBirth: date })
     }
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const clearStudent = () => {
+        setStudent(defaultStudent);
+    }
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        addStudent(student);
+        const newStudent = await addStudent(student);
+        if (newStudent != null) {
+            clearStudent();
+        }
     }
 
     return (
