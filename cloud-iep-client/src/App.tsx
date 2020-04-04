@@ -3,6 +3,7 @@ import { createMuiTheme, Grid, ThemeProvider } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import React from "react";
+import { BrowserRouter as Router } from 'react-router-dom';
 import Body from "./ui/Body";
 import Header from "./ui/Header";
 
@@ -15,16 +16,18 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Grid container direction="column">
-        <Grid item>
-          <Header />
+      <Router>
+        <Grid container direction="column">
+          <Grid item>
+            <Header />
+          </Grid>
+          <Grid item>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Body />
+            </MuiPickersUtilsProvider>
+          </Grid>
         </Grid>
-        <Grid item>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Body />
-          </MuiPickersUtilsProvider>
-        </Grid>
-      </Grid>
+      </Router>
     </ThemeProvider>
   );
 }
