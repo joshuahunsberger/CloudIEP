@@ -6,11 +6,11 @@ import StudentPage from '../ui/student/StudentPage';
 const Routes = () => (
     <Switch>
         <Switch>
+            <Route path="/" exact={true}>
+                <Home />
+            </Route>
             <Route path="/students">
                 <StudentPage />
-            </Route>
-            <Route path="/">
-                <Home />
             </Route>
         </Switch>
     </Switch>
