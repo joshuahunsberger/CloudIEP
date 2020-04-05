@@ -3,10 +3,11 @@ import { createMuiTheme, Grid, ThemeProvider } from "@material-ui/core";
 import { blue } from "@material-ui/core/colors";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import React from "react";
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
+import { useAuth0 } from "./react-auth0-spa";
 import Body from "./ui/Body";
 import Header from "./ui/Header";
-import { useAuth0 } from "./react-auth0-spa";
+import history from "./utils/history";
 
 const theme = createMuiTheme({
   palette: {
@@ -23,7 +24,7 @@ function App() {
     :
     (
       <ThemeProvider theme={theme}>
-        <Router>
+        <Router history={history}>
           <Grid container direction="column">
             <Grid item>
               <Header />
