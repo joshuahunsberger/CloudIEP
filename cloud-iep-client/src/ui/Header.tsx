@@ -1,7 +1,8 @@
-import { AppBar, makeStyles, Toolbar, Typography, useTheme } from '@material-ui/core';
+import { AppBar, Button, makeStyles, Toolbar, Typography, useTheme } from '@material-ui/core';
 import { Cloud } from '@material-ui/icons';
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "../react-auth0-spa";
 
 const useStyles = makeStyles((theme) => ({
     icon: {
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 function Header() {
     const theme = useTheme();
     const classes = useStyles(theme);
+    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
     return (
         <AppBar position="static">
@@ -28,7 +30,13 @@ function Header() {
                     <Typography variant="h6">Cloud IEP</Typography>
                 </Link>
                 <div className={classes.gap} />
-                <Typography>Login</Typography>
+                {!isAuthenticated &&
+                    <Button onClick={() => loginWithRedirect({})}>Login</Button>
+                }
+
+                {isAuthenticated &&
+                    <Button onClick={() => logout()}>Log out</Button>
+                }
             </Toolbar>
         </AppBar>
     );
