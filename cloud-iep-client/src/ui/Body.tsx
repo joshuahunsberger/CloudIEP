@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React from 'react';
-import Routes from '../Routes';
+import Routes from '../routing/Routes';
 
 function Body() {
     return (
