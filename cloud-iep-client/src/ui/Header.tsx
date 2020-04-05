@@ -1,4 +1,4 @@
-import { AppBar, Button, makeStyles, Toolbar, Typography, useTheme } from '@material-ui/core';
+import { AppBar, Avatar, Button, makeStyles, Toolbar, Typography, useTheme } from '@material-ui/core';
 import { Cloud } from '@material-ui/icons';
 import React from "react";
 import { Link } from "react-router-dom";
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 function Header() {
     const theme = useTheme();
     const classes = useStyles(theme);
-    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+    const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
     return (
         <AppBar position="static">
@@ -35,7 +35,12 @@ function Header() {
                 }
 
                 {isAuthenticated &&
-                    <Button onClick={() => logout()}>Log out</Button>
+                    <>
+                        <Link to="/profile">
+                            <Avatar src={user.picture} alt="Profile" />
+                        </Link>
+                        <Button onClick={() => logout()}>Log out</Button>
+                    </>
                 }
             </Toolbar>
         </AppBar>
