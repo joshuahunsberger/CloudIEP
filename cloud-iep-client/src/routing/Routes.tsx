@@ -1,23 +1,32 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Home from '../ui/Home';
-import StudentPage from '../ui/student/StudentPage';
-import Profile from "../ui/user/Profile";
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { useAuth0 } from "../react-auth0-spa";
+import Home, { homeRoute } from '../ui/Home';
+import StudentPage, { studentsRoute } from '../ui/student/StudentPage';
+import Profile, { profileRoute } from "../ui/user/Profile";
 
-const Routes = () => (
-    <Switch>
+// Logged-in routing inspired by John Reilly on GitHub:
+// https://github.com/johnnyreilly/auth0-react-typescript-asp-net-core
+
+const privateRoutes = [
+    { path: profileRoute, component: Profile },
+    { path: studentsRoute, component: StudentPage }
+];
+
+const Routes = () => {
+    const { isAuthenticated } = useAuth0();
+
+    return (
         <Switch>
-            <Route path="/" exact={true}>
-                <Home />
-            </Route>
-            <Route path="/students">
-                <StudentPage />
-            </Route>
-            <Route path="/profile">
-                <Profile />
-            </Route>
+            <Route path={homeRoute} exact={true} component={Home} />
+            {isAuthenticated
+                ? privateRoutes.map(({ path, component }) =>
+                    <Route key={path} path={path} exact={true} component={component} />
+                )
+                : null}
+            <Redirect key="redirect" to={homeRoute} />
         </Switch>
-    </Switch>
-)
+    )
+}
 
 export default Routes;

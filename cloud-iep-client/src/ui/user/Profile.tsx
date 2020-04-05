@@ -33,4 +33,5 @@ const Profile = () => {
     );
 };
 
+export const profileRoute = "/profile";
 export default Profile;
