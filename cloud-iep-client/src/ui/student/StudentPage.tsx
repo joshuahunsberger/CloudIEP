@@ -74,4 +74,5 @@ const StudentPage = () => {
     )
 }
 
+export const studentsRoute = "/students";
 export default StudentPage;

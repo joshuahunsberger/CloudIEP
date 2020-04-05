@@ -12,4 +12,5 @@ function Home() {
     )
 }
 
+export const homeRoute = "/";
 export default Home;
