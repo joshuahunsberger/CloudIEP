@@ -14,8 +14,8 @@ interface Auth0ContextState {
     handleRedirectCallback: () => Promise<RedirectLoginResult>;
     getIdTokenClaims: (options?: getIdTokenClaimsOptions | undefined) => Promise<IdToken>;
     loginWithRedirect: (options?: RedirectLoginOptions) => Promise<void>;
-    getTokenSilently: (options?: GetTokenSilentlyOptions) => Promise<string>;
-    getTokenWithPopup: (p: GetTokenWithPopupOptions) => Promise<string>;
+    getTokenSilently: (options?: GetTokenSilentlyOptions) => Promise<any>;
+    getTokenWithPopup: (options?: GetTokenWithPopupOptions | undefined, config?: PopupConfigOptions | undefined) => Promise<string>;
     logout: (options?: LogoutOptions) => void;
 }
 
