@@ -67,7 +67,7 @@ const StudentPage = () => {
                     )
                 }
                 {service.status === ApiStatus.Error && (
-                    <Typography variant="h6">There was an error getting students.</Typography>
+                    <Typography variant="h6">There was an error getting students. {service.error.message}</Typography>
                 )}
             </Grid>
         </>
