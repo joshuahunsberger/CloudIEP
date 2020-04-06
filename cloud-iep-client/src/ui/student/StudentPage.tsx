@@ -1,6 +1,7 @@
 import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useTheme } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
+import { useAuth0 } from "../../react-auth0-spa";
 import { Student } from '../../students/Student';
 import useStudentsApi from "../../students/useStudentsApi";
 import ApiStatus from "../../types/ApiStatus";
@@ -27,6 +28,7 @@ const StudentPage = () => {
     const classes = useStyles(theme);
     const service = useStudentsApi();
     const [students, setStudents] = useState<Student[]>([]);
+    const { getTokenSilently } = useAuth0();
 
     useEffect(() => {
         service.status === ApiStatus.Loaded &&
@@ -34,7 +36,8 @@ const StudentPage = () => {
     }, [service]);
 
     const addStudent = async (newStudent: Student) => {
-        const result = await postRequest<Student>('http://localhost:5000/api/Student', newStudent);
+        const token = await getTokenSilently();
+        const result = await postRequest<Student>('http://localhost:5000/api/Student', newStudent, token);
 
         if (result != null) {
             setStudents([...students, result]);
