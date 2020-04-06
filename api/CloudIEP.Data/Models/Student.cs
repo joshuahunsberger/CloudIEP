@@ -4,8 +4,10 @@ namespace CloudIEP.Data.Models
 {
     public class Student : Entity
     {
+        private DateTime dateOfBirth;
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get => dateOfBirth; set => dateOfBirth = value.Date; }
     }
 }
