@@ -10,6 +10,7 @@
   <ItemGroup>
     <Folder Include="Options\" />
     <Folder Include="IoC\" />
+    <Folder Include="Authorization\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj">
@@ -18,5 +19,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
   </ItemGroup>
 </Project>
