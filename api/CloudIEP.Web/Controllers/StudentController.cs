@@ -2,12 +2,14 @@
 using CloudIEP.Data;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudIEP.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class StudentController : Controller
     {
         private readonly IStudentRepository _studentRepository;
