@@ -18,7 +18,9 @@ const onRedirectCallback = (result: RedirectLoginResult) => {
 const options: Auth0ClientOptions = {
     domain: process.env.REACT_APP_AUTH0_DOMAIN ?? "",
     client_id: process.env.REACT_APP_AUTH0_CLIENTID ?? "",
-    redirect_uri: window.location.origin
+    redirect_uri: 'http://localhost:3000',
+    scope: 'openid',
+    audience: 'https://cloudiepdev/api',
 }
 
 ReactDOM.render(
