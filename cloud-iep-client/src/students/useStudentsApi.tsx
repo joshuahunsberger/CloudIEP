@@ -11,25 +11,24 @@ const useStudentsApi = () => {
     });
     const { getTokenSilently } = useAuth0();
 
-    async function fetchStudents() {
-        try {
-            const options: GetTokenSilentlyOptions = {
-                scope: "openid",
-                audience: process.env.REACT_APP_AUTH0_AUDIENCE ?? ""
-            };
-            const token = await getTokenSilently(options);
-
-            const response = await getRequest<Student[]>('http://localhost:5000/api/Student/', token);
-            setResult({ status: ApiStatus.Loaded, result: response });
-        }
-        catch (error) {
-            setResult({ status: ApiStatus.Error, error });
-        }
-    }
-
     useEffect(() => {
+        async function fetchStudents() {
+            try {
+                const options: GetTokenSilentlyOptions = {
+                    scope: "openid",
+                    audience: process.env.REACT_APP_AUTH0_AUDIENCE ?? ""
+                };
+                const token = await getTokenSilently(options);
+
+                const response = await getRequest<Student[]>('http://localhost:5000/api/Student/', token);
+                setResult({ status: ApiStatus.Loaded, result: response });
+            }
+            catch (error) {
+                setResult({ status: ApiStatus.Error, error });
+            }
+        }
         fetchStudents();
-    }, []);
+    }, [getTokenSilently]);
 
     return result;
 }
