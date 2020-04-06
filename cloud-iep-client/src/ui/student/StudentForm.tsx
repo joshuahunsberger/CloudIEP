@@ -2,6 +2,7 @@ import { Button, makeStyles, TextField, useTheme } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import React, { FormEvent, useState } from "react";
 import { Student } from '../../students/Student';
+import { startOfDay } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -23,7 +24,7 @@ const StudentForm = ({ addStudent }: StudentFormProps) => {
         id: "",
         firstName: "",
         lastName: "",
-        dateOfBirth: new Date()
+        dateOfBirth: startOfDay(new Date())
     };
 
     const [student, setStudent] = useState<Student>(defaultStudent);
