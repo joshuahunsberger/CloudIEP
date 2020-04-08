@@ -7,6 +7,7 @@ import { Router } from 'react-router-dom';
 import { useAuth0 } from "./react-auth0-spa";
 import Body from "./ui/Body";
 import Header from "./ui/Header";
+import { SnackbarProvider } from "./ui/SnackbarProvider";
 import history from "./utils/history";
 
 const theme = createMuiTheme({
@@ -24,18 +25,20 @@ function App() {
     :
     (
       <ThemeProvider theme={theme}>
-        <Router history={history}>
-          <Grid container direction="column">
-            <Grid item>
-              <Header />
+        <SnackbarProvider>
+          <Router history={history}>
+            <Grid container direction="column">
+              <Grid item>
+                <Header />
+              </Grid>
+              <Grid item>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <Body />
+                </MuiPickersUtilsProvider>
+              </Grid>
             </Grid>
-            <Grid item>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <Body />
-              </MuiPickersUtilsProvider>
-            </Grid>
-          </Grid>
-        </Router>
+          </Router>
+        </SnackbarProvider>
       </ThemeProvider>
     );
 }
