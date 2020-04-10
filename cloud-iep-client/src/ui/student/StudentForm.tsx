@@ -1,48 +1,31 @@
 import { Button, makeStyles, TextField, useTheme } from '@material-ui/core';
 import { KeyboardDatePicker } from '@material-ui/pickers';
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent } from "react";
 import { Student } from '../../students/Student';
-import { startOfDay } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
     form: {
         marginTop: theme.spacing(1)
     },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
+    button: {
+        margin: theme.spacing(3, 0, 0),
+    }
 }));
 
 interface StudentFormProps {
-    addStudent: (newStudent: Student) => Promise<Student>;
+    student: Student;
+    setStudent: (student: Student) => void;
+    isEditing: boolean;
+    cancelEditing: () => void;
+    handleSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
-const StudentForm = ({ addStudent }: StudentFormProps) => {
+const StudentForm = ({ handleSubmit, student, setStudent, isEditing, cancelEditing }: StudentFormProps) => {
     const theme = useTheme();
     const classes = useStyles(theme);
-    const defaultStudent = {
-        id: "",
-        firstName: "",
-        lastName: "",
-        dateOfBirth: startOfDay(new Date())
-    };
-
-    const [student, setStudent] = useState<Student>(defaultStudent);
 
     const handleDateChange = (date: Date | null) => {
         date && setStudent({ ...student, dateOfBirth: date })
-    }
-
-    const clearStudent = () => {
-        setStudent(defaultStudent);
-    }
-
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const newStudent = await addStudent(student);
-        if (newStudent != null) {
-            clearStudent();
-        }
     }
 
     return (
@@ -84,15 +67,39 @@ const StudentForm = ({ addStudent }: StudentFormProps) => {
                 value={student.dateOfBirth}
                 onChange={date => handleDateChange(date)}
             />
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-            >
-                Submit
-            </Button>
+            {isEditing ? (
+                <>
+                    <Button
+                        type="button"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                    >
+                        Update
+                        </Button>
+                    <Button
+                        type="reset"
+                        fullWidth
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        onClick={cancelEditing}
+                    >
+                        Cancel
+                        </Button>
+                </>
+            ) :
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                >
+                    Submit
+                </Button>
+            }
         </form>
     );
 }

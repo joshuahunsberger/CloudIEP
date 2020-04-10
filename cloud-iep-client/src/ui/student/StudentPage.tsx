@@ -1,5 +1,6 @@
 import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useTheme } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { startOfDay } from "date-fns";
+import React, { FormEvent, useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
 import { useAuth0 } from "../../react-auth0-spa";
 import { Student } from '../../students/Student';
@@ -27,7 +28,17 @@ const StudentPage = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const service = useStudentsApi();
+
+    const defaultStudent = {
+        id: "",
+        firstName: "",
+        lastName: "",
+        dateOfBirth: startOfDay(new Date())
+    };
+
+    const [isEditing, setIsEditing] = useState(false);
     const [students, setStudents] = useState<Student[]>([]);
+    const [student, setStudent] = useState<Student>(defaultStudent);
     const { getTokenSilently } = useAuth0();
 
     useEffect(() => {
@@ -45,12 +56,45 @@ const StudentPage = () => {
         return result;
     }
 
+    const setEditing = (id: string) => {
+        const editingStudent = students.find(s => s.id === id);
+        if (editingStudent) {
+            setIsEditing(true);
+            setStudent(editingStudent);
+        }
+    }
+
+    const cancelEditing = () => {
+        setStudent(defaultStudent);
+        setIsEditing(false);
+    }
+
+    const clearStudent = () => {
+        setStudent(defaultStudent);
+    }
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const newStudent = await addStudent(student);
+        if (newStudent != null) {
+            clearStudent();
+        }
+    }
+
     return (
         <>
             <Card className={classes.card}>
                 <CardContent>
-                    <Typography variant="h4" align="center">Add a Student</Typography>
-                    <StudentForm addStudent={addStudent} />
+                    <Typography variant="h4" align="center">
+                        {isEditing ? "Edit Student" : "Add a Student"}
+                    </Typography>
+                    <StudentForm
+                        handleSubmit={handleSubmit}
+                        isEditing={isEditing}
+                        cancelEditing={cancelEditing}
+                        student={student}
+                        setStudent={setStudent}
+                    />
                 </CardContent>
             </Card>
             <Grid
@@ -64,7 +108,7 @@ const StudentPage = () => {
                 {service.status === ApiStatus.Loaded &&
                     (service.result.length > 0
                         ?
-                        <StudentTable students={students} />
+                        <StudentTable students={students} setEditing={setEditing} />
                         :
                         <Typography variant="h4">No Students</Typography>
                     )
