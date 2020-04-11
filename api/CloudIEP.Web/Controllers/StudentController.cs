@@ -53,7 +53,7 @@ namespace CloudIEP.Web.Controllers
         }
 
         [HttpPut("{studentId}")]
-        public async Task<ActionResult<Student>> UpdateStudent(string studentId, Student student)
+        public async Task<ActionResult> UpdateStudent(string studentId, Student student)
         {
             if (student.Id != studentId)
             {
