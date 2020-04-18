@@ -21,7 +21,13 @@ const useStudentsApi = () => {
                 const token = await getTokenSilently(options);
 
                 const response = await getRequest<Student[]>('http://localhost:5000/api/Student/', token);
-                setResult({ status: ApiStatus.Loaded, result: response });
+                const students = response.map(s => ({
+                    id: s.id,
+                    firstName: s.firstName,
+                    lastName: s.lastName,
+                    dateOfBirth: new Date(s.dateOfBirth)
+                } as Student));
+                setResult({ status: ApiStatus.Loaded, result: students });
             }
             catch (error) {
                 setResult({ status: ApiStatus.Error, error });

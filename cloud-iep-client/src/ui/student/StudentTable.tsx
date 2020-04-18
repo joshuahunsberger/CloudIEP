@@ -1,5 +1,6 @@
 import { Card, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { Delete, Edit } from "@material-ui/icons";
+import { format } from 'date-fns';
 import React from 'react';
 import { Student } from '../../students/Student';
 
@@ -25,7 +26,7 @@ const StudentTable: React.FC<StudentTableProps> = ({ students, setEditing }: Stu
                         <TableRow key={student.id}>
                             <TableCell>{student.firstName}</TableCell>
                             <TableCell>{student.lastName}</TableCell>
-                            <TableCell>{student.dateOfBirth}</TableCell>
+                            <TableCell>{format(student.dateOfBirth, 'MM/dd/yyyy')}</TableCell>
                             <TableCell>
                                 <IconButton onClick={() => setEditing(student.id)}><Edit /></IconButton>
                                 <IconButton><Delete /></IconButton>
