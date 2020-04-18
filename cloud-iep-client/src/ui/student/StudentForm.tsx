@@ -70,14 +70,14 @@ const StudentForm = ({ handleSubmit, student, setStudent, isEditing, cancelEditi
             {isEditing ? (
                 <>
                     <Button
-                        type="button"
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
                         className={classes.button}
                     >
                         Update
-                        </Button>
+                    </Button>
                     <Button
                         type="reset"
                         fullWidth
@@ -87,7 +87,7 @@ const StudentForm = ({ handleSubmit, student, setStudent, isEditing, cancelEditi
                         onClick={cancelEditing}
                     >
                         Cancel
-                        </Button>
+                    </Button>
                 </>
             ) :
                 <Button

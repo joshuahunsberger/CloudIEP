@@ -2,6 +2,7 @@ import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useT
 import { startOfDay } from "date-fns";
 import React, { FormEvent, useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
+import putRequest from '../../network/putRequest';
 import { useAuth0 } from "../../react-auth0-spa";
 import { Student } from '../../students/Student';
 import useStudentsApi from "../../students/useStudentsApi";
@@ -56,6 +57,16 @@ const StudentPage = () => {
         return result;
     }
 
+    const editStudent = async (existingStudent: Student) => {
+        const token = await getTokenSilently();
+        await putRequest('http://localhost:5000/api/Student/' + existingStudent.id, existingStudent, token);
+
+        const newStudents = students.map(student => student.id === existingStudent.id
+            ? existingStudent
+            : student);
+        setStudents(newStudents);
+    }
+
     const setEditing = (id: string) => {
         const editingStudent = students.find(s => s.id === id);
         if (editingStudent) {
@@ -75,10 +86,17 @@ const StudentPage = () => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const newStudent = await addStudent(student);
-        if (newStudent != null) {
+        if (isEditing) {
+            await editStudent(student);
             clearStudent();
+            setIsEditing(false);
+        } else {
+            const newStudent = await addStudent(student);
+            if (newStudent != null) {
+                clearStudent();
+            }
         }
+
     }
 
     return (
