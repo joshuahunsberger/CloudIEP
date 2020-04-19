@@ -7,6 +7,7 @@ import { useAuth0 } from "../../react-auth0-spa";
 import { Student } from '../../students/Student';
 import useStudentsApi from "../../students/useStudentsApi";
 import ApiStatus from "../../types/ApiStatus";
+import { useSnackbar } from '../SnackbarProvider';
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable';
 
@@ -29,6 +30,7 @@ const StudentPage = () => {
     const theme = useTheme();
     const classes = useStyles(theme);
     const service = useStudentsApi();
+    const snackBar = useSnackbar();
 
     const defaultStudent = {
         id: "",
@@ -55,6 +57,7 @@ const StudentPage = () => {
             result.dateOfBirth = new Date(result.dateOfBirth);
             setStudents([...students, result]);
         }
+        snackBar.openSnackbar('Student added.');
         return result;
     }
 
@@ -66,6 +69,7 @@ const StudentPage = () => {
             ? existingStudent
             : student);
         setStudents(newStudents);
+        snackBar.openSnackbar("Student updated.")
     }
 
     const setEditing = (id: string) => {
