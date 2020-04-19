@@ -1,6 +1,6 @@
-import React from 'react';
-import useWeatherForecastsService from './useWeatherForecastsService';
-import ApiStatus from './types/ApiStatus';
+import React from "react";
+import useWeatherForecastsService from "./useWeatherForecastsService";
+import ApiStatus from "./types/ApiStatus";
 
 const WeatherForecasts: React.FC<{}> = () => {
   const service = useWeatherForecastsService();
@@ -13,7 +13,7 @@ const WeatherForecasts: React.FC<{}> = () => {
           <div key={forecast.date.valueOf()}>
             <b>Date:</b> {forecast.date}
             <br />
-            Temp (C): {forecast.temperatureC} Temp (F): {forecast.temperatureF}{' '}
+            Temp (C): {forecast.temperatureC} Temp (F): {forecast.temperatureF}{" "}
             Summary: {forecast.summary}
           </div>
         ))}
