@@ -15,16 +15,17 @@ const onRedirectCallback = (result: any) => {
   );
 };
 
-const options: Auth0ClientOptions = {
-  domain: process.env.REACT_APP_AUTH0_DOMAIN ?? '',
-  client_id: process.env.REACT_APP_AUTH0_CLIENTID ?? '',
-  redirect_uri: 'http://localhost:3000',
-  scope: 'openid',
-  audience: 'https://cloudiepdev/api',
-};
-
 ReactDOM.render(
-  <Auth0Provider onRedirectCallback={onRedirectCallback} initOptions={options}>
+  <Auth0Provider
+    onRedirectCallback={onRedirectCallback}
+    initOptions={{
+      domain: process.env.REACT_APP_AUTH0_DOMAIN ?? '',
+      client_id: process.env.REACT_APP_AUTH0_CLIENTID ?? '',
+      redirect_uri: 'http://localhost:3000',
+      scope: 'openid',
+      audience: 'https://cloudiepdev/api',
+    }}
+  >
     <App />
   </Auth0Provider>,
   document.getElementById('root'),
