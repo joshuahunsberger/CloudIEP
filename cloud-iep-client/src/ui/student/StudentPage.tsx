@@ -52,6 +52,7 @@ const StudentPage = () => {
         const result = await postRequest<Student>('http://localhost:5000/api/Student', newStudent, token);
 
         if (result != null) {
+            result.dateOfBirth = new Date(result.dateOfBirth);
             setStudents([...students, result]);
         }
         return result;
