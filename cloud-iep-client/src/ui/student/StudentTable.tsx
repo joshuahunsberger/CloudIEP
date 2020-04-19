@@ -7,9 +7,10 @@ import { Student } from '../../students/Student';
 interface StudentTableProps {
     students?: ReadonlyArray<Student>
     setEditing: (id: string) => void;
+    deleteStudent: (id: string) => void;
 }
 
-const StudentTable: React.FC<StudentTableProps> = ({ students, setEditing }: StudentTableProps) => {
+const StudentTable: React.FC<StudentTableProps> = ({ students, setEditing, deleteStudent }: StudentTableProps) => {
     return (
         <TableContainer component={Card}>
             <Table>
@@ -29,7 +30,7 @@ const StudentTable: React.FC<StudentTableProps> = ({ students, setEditing }: Stu
                             <TableCell>{format(student.dateOfBirth, 'MM/dd/yyyy')}</TableCell>
                             <TableCell>
                                 <IconButton onClick={() => setEditing(student.id)}><Edit /></IconButton>
-                                <IconButton><Delete /></IconButton>
+                                <IconButton onClick={() => deleteStudent(student.id)}><Delete /></IconButton>
                             </TableCell>
                         </TableRow>
                     ))}

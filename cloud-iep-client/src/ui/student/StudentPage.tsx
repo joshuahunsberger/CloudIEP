@@ -1,6 +1,7 @@
 import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useTheme } from '@material-ui/core';
 import { startOfDay } from "date-fns";
 import React, { FormEvent, useEffect, useState } from 'react';
+import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
 import { useAuth0 } from "../../react-auth0-spa";
@@ -72,6 +73,16 @@ const StudentPage = () => {
         snackBar.openSnackbar("Student updated.")
     }
 
+    const deleteStudent = async (studentId: string) => {
+        // TODO: Confirm?
+        const token = await getTokenSilently();
+        await deleteRequest('http://localhost:5000/api/Student/' + studentId, token);
+
+        const updatedStudents = students.filter(student => student.id !== studentId);
+        setStudents(updatedStudents);
+        snackBar.openSnackbar("Student deleted.");
+    }
+
     const setEditing = (id: string) => {
         const editingStudent = students.find(s => s.id === id);
         if (editingStudent) {
@@ -131,7 +142,7 @@ const StudentPage = () => {
                 {service.status === ApiStatus.Loaded &&
                     (service.result.length > 0
                         ?
-                        <StudentTable students={students} setEditing={setEditing} />
+                        <StudentTable students={students} setEditing={setEditing} deleteStudent={deleteStudent} />
                         :
                         <Typography variant="h4">No Students</Typography>
                     )
