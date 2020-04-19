@@ -1,159 +1,182 @@
-import { Card, CardContent, CircularProgress, Grid, makeStyles, Typography, useTheme } from '@material-ui/core';
-import { startOfDay } from "date-fns";
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  makeStyles,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
+import { startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
-import { useAuth0 } from "../../react-auth0-spa";
+import { useAuth0 } from '../../react-auth0-spa';
 import { Student } from '../../students/Student';
-import useStudentsApi from "../../students/useStudentsApi";
-import ApiStatus from "../../types/ApiStatus";
+import useStudentsApi from '../../students/useStudentsApi';
+import ApiStatus from '../../types/ApiStatus';
 import { useSnackbar } from '../SnackbarProvider';
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable';
 
 const useStyles = makeStyles((theme) => ({
-    card: {
-        marginTop: theme.spacing(4),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    dataCard: {
-        marginTop: theme.spacing(4)
-    },
-    noStudents: {
-        align: 'center'
-    }
+  card: {
+    marginTop: theme.spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dataCard: {
+    marginTop: theme.spacing(4),
+  },
+  noStudents: {
+    align: 'center',
+  },
 }));
 
 const StudentPage = () => {
-    const theme = useTheme();
-    const classes = useStyles(theme);
-    const service = useStudentsApi();
-    const snackBar = useSnackbar();
+  const theme = useTheme();
+  const classes = useStyles(theme);
+  const service = useStudentsApi();
+  const snackBar = useSnackbar();
 
-    const defaultStudent = {
-        id: "",
-        firstName: "",
-        lastName: "",
-        dateOfBirth: startOfDay(new Date())
-    };
+  const defaultStudent = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    dateOfBirth: startOfDay(new Date()),
+  };
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [students, setStudents] = useState<Student[]>([]);
-    const [student, setStudent] = useState<Student>(defaultStudent);
-    const { getTokenSilently } = useAuth0();
+  const [isEditing, setIsEditing] = useState(false);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [student, setStudent] = useState<Student>(defaultStudent);
+  const { getTokenSilently } = useAuth0();
 
-    useEffect(() => {
-        service.status === ApiStatus.Loaded &&
-            setStudents(service.result);
-    }, [service]);
+  useEffect(() => {
+    service.status === ApiStatus.Loaded && setStudents(service.result);
+  }, [service]);
 
-    const addStudent = async (newStudent: Student) => {
-        const token = await getTokenSilently();
-        const result = await postRequest<Student>('http://localhost:5000/api/Student', newStudent, token);
+  const addStudent = async (newStudent: Student) => {
+    const token = await getTokenSilently();
+    const result = await postRequest<Student>(
+      'http://localhost:5000/api/Student',
+      newStudent,
+      token,
+    );
 
-        if (result != null) {
-            result.dateOfBirth = new Date(result.dateOfBirth);
-            setStudents([...students, result]);
-        }
-        snackBar.openSnackbar('Student added.');
-        return result;
+    if (result != null) {
+      result.dateOfBirth = new Date(result.dateOfBirth);
+      setStudents([...students, result]);
     }
+    snackBar.openSnackbar('Student added.');
+    return result;
+  };
 
-    const editStudent = async (existingStudent: Student) => {
-        const token = await getTokenSilently();
-        await putRequest('http://localhost:5000/api/Student/' + existingStudent.id, existingStudent, token);
+  const editStudent = async (existingStudent: Student) => {
+    const token = await getTokenSilently();
+    await putRequest(
+      'http://localhost:5000/api/Student/' + existingStudent.id,
+      existingStudent,
+      token,
+    );
 
-        const newStudents = students.map(student => student.id === existingStudent.id
-            ? existingStudent
-            : student);
-        setStudents(newStudents);
-        snackBar.openSnackbar("Student updated.")
+    const newStudents = students.map((student) =>
+      student.id === existingStudent.id ? existingStudent : student,
+    );
+    setStudents(newStudents);
+    snackBar.openSnackbar('Student updated.');
+  };
+
+  const deleteStudent = async (studentId: string) => {
+    // TODO: Confirm?
+    const token = await getTokenSilently();
+    await deleteRequest(
+      'http://localhost:5000/api/Student/' + studentId,
+      token,
+    );
+
+    const updatedStudents = students.filter(
+      (student) => student.id !== studentId,
+    );
+    setStudents(updatedStudents);
+    snackBar.openSnackbar('Student deleted.');
+  };
+
+  const setEditing = (id: string) => {
+    const editingStudent = students.find((s) => s.id === id);
+    if (editingStudent) {
+      setIsEditing(true);
+      setStudent(editingStudent);
     }
+  };
 
-    const deleteStudent = async (studentId: string) => {
-        // TODO: Confirm?
-        const token = await getTokenSilently();
-        await deleteRequest('http://localhost:5000/api/Student/' + studentId, token);
+  const cancelEditing = () => {
+    setStudent(defaultStudent);
+    setIsEditing(false);
+  };
 
-        const updatedStudents = students.filter(student => student.id !== studentId);
-        setStudents(updatedStudents);
-        snackBar.openSnackbar("Student deleted.");
+  const clearStudent = () => {
+    setStudent(defaultStudent);
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isEditing) {
+      await editStudent(student);
+      clearStudent();
+      setIsEditing(false);
+    } else {
+      const newStudent = await addStudent(student);
+      if (newStudent != null) {
+        clearStudent();
+      }
     }
+  };
 
-    const setEditing = (id: string) => {
-        const editingStudent = students.find(s => s.id === id);
-        if (editingStudent) {
-            setIsEditing(true);
-            setStudent(editingStudent);
-        }
-    }
+  return (
+    <>
+      <Card className={classes.card}>
+        <CardContent>
+          <Typography variant="h4" align="center">
+            {isEditing ? 'Edit Student' : 'Add a Student'}
+          </Typography>
+          <StudentForm
+            handleSubmit={handleSubmit}
+            isEditing={isEditing}
+            cancelEditing={cancelEditing}
+            student={student}
+            setStudent={setStudent}
+          />
+        </CardContent>
+      </Card>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justify="center"
+        className={classes.dataCard}
+      >
+        {service.status === ApiStatus.Loading && <CircularProgress />}
+        {service.status === ApiStatus.Loaded &&
+          (service.result.length > 0 ? (
+            <StudentTable
+              students={students}
+              setEditing={setEditing}
+              deleteStudent={deleteStudent}
+            />
+          ) : (
+            <Typography variant="h4">No Students</Typography>
+          ))}
+        {service.status === ApiStatus.Error && (
+          <Typography variant="h6">
+            There was an error getting students. {service.error.message}
+          </Typography>
+        )}
+      </Grid>
+    </>
+  );
+};
 
-    const cancelEditing = () => {
-        setStudent(defaultStudent);
-        setIsEditing(false);
-    }
-
-    const clearStudent = () => {
-        setStudent(defaultStudent);
-    }
-
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (isEditing) {
-            await editStudent(student);
-            clearStudent();
-            setIsEditing(false);
-        } else {
-            const newStudent = await addStudent(student);
-            if (newStudent != null) {
-                clearStudent();
-            }
-        }
-
-    }
-
-    return (
-        <>
-            <Card className={classes.card}>
-                <CardContent>
-                    <Typography variant="h4" align="center">
-                        {isEditing ? "Edit Student" : "Add a Student"}
-                    </Typography>
-                    <StudentForm
-                        handleSubmit={handleSubmit}
-                        isEditing={isEditing}
-                        cancelEditing={cancelEditing}
-                        student={student}
-                        setStudent={setStudent}
-                    />
-                </CardContent>
-            </Card>
-            <Grid
-                container
-                direction="column"
-                alignItems="center"
-                justify="center"
-                className={classes.dataCard}
-            >
-                {service.status === ApiStatus.Loading && <CircularProgress />}
-                {service.status === ApiStatus.Loaded &&
-                    (service.result.length > 0
-                        ?
-                        <StudentTable students={students} setEditing={setEditing} deleteStudent={deleteStudent} />
-                        :
-                        <Typography variant="h4">No Students</Typography>
-                    )
-                }
-                {service.status === ApiStatus.Error && (
-                    <Typography variant="h6">There was an error getting students. {service.error.message}</Typography>
-                )}
-            </Grid>
-        </>
-    )
-}
-
-export const studentsRoute = "/students";
+export const studentsRoute = '/students';
 export default StudentPage;
