@@ -1,9 +1,10 @@
+import { GetTokenSilentlyOptions } from '@auth0/auth0-spa-js';
 import { useEffect, useState } from 'react';
 import getRequest from '../network/getRequest';
+import { useAuth0 } from '../react-auth0-spa';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
 import { Student } from './Student';
-import { useAuth0 } from '../react-auth0-spa';
 
 const useStudentsApi = () => {
   const [result, setResult] = useState<Api<Student[]>>({
