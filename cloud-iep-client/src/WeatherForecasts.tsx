@@ -9,10 +9,13 @@ const WeatherForecasts: React.FC<{}> = () => {
     <div>
       {service.status === ApiStatus.Loading && <div>Loading...</div>}
       {service.status === ApiStatus.Loaded &&
-        service.result.map(forecast => (
+        service.result.map((forecast) => (
           <div key={forecast.date.valueOf()}>
-            <b>Date:</b> {forecast.date}<br />
-            Temp (C): {forecast.temperatureC} Temp (F): {forecast.temperatureF} Summary: {forecast.summary}</div>
+            <b>Date:</b> {forecast.date}
+            <br />
+            Temp (C): {forecast.temperatureC} Temp (F): {forecast.temperatureF}{' '}
+            Summary: {forecast.summary}
+          </div>
         ))}
       {service.status === ApiStatus.Error && (
         <div>There was an error with the service.</div>
