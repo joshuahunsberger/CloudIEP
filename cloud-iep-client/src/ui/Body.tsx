@@ -1,7 +1,7 @@
-import { Grid } from "@material-ui/core";
-import React from "react";
-import Routes from "../routing/Routes";
-import ErrorBoundary from "./ErrorBoundary";
+import { Grid } from '@material-ui/core';
+import React from 'react';
+import Routes from '../routing/Routes';
+import ErrorBoundary from './ErrorBoundary';
 
 function Body() {
   return (

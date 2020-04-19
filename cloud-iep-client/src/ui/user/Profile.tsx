@@ -5,9 +5,9 @@ import {
   Theme,
   Typography,
   useTheme,
-} from "@material-ui/core";
-import React from "react";
-import { useAuth0 } from "../../react-auth0-spa";
+} from '@material-ui/core';
+import React from 'react';
+import { useAuth0 } from '../../react-auth0-spa';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -46,5 +46,5 @@ const Profile = () => {
   );
 };
 
-export const profileRoute = "/profile";
+export const profileRoute = '/profile';
 export default Profile;
