@@ -6,7 +6,7 @@ import { Auth0Provider } from './react-auth0-spa';
 import * as serviceWorker from './serviceWorker';
 import history from './utils/history';
 
-const onRedirectCallback = (result: RedirectLoginResult) => {
+const onRedirectCallback = (result: any) => {
   const appState = result?.appState;
   history.push(
     appState && appState.targetUrl
