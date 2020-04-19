@@ -6,32 +6,32 @@ import {
   makeStyles,
   Typography,
   useTheme,
-} from "@material-ui/core";
-import { startOfDay } from "date-fns";
-import React, { FormEvent, useEffect, useState } from "react";
-import deleteRequest from "../../network/deleteRequest";
-import postRequest from "../../network/postRequest";
-import putRequest from "../../network/putRequest";
-import { useAuth0 } from "../../react-auth0-spa";
-import { Student } from "../../students/Student";
-import useStudentsApi from "../../students/useStudentsApi";
-import ApiStatus from "../../types/ApiStatus";
-import { useSnackbar } from "../SnackbarProvider";
-import StudentForm from "./StudentForm";
-import StudentTable from "./StudentTable";
+} from '@material-ui/core';
+import { startOfDay } from 'date-fns';
+import React, { FormEvent, useEffect, useState } from 'react';
+import deleteRequest from '../../network/deleteRequest';
+import postRequest from '../../network/postRequest';
+import putRequest from '../../network/putRequest';
+import { useAuth0 } from '../../react-auth0-spa';
+import { Student } from '../../students/Student';
+import useStudentsApi from '../../students/useStudentsApi';
+import ApiStatus from '../../types/ApiStatus';
+import { useSnackbar } from '../SnackbarProvider';
+import StudentForm from './StudentForm';
+import StudentTable from './StudentTable';
 
 const useStyles = makeStyles((theme) => ({
   card: {
     marginTop: theme.spacing(4),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   dataCard: {
     marginTop: theme.spacing(4),
   },
   noStudents: {
-    align: "center",
+    align: 'center',
   },
 }));
 
@@ -42,9 +42,9 @@ const StudentPage = () => {
   const snackBar = useSnackbar();
 
   const defaultStudent = {
-    id: "",
-    firstName: "",
-    lastName: "",
+    id: '',
+    firstName: '',
+    lastName: '',
     dateOfBirth: startOfDay(new Date()),
   };
 
@@ -60,7 +60,7 @@ const StudentPage = () => {
   const addStudent = async (newStudent: Student) => {
     const token = await getTokenSilently();
     const result = await postRequest<Student>(
-      "http://localhost:5000/api/Student",
+      'http://localhost:5000/api/Student',
       newStudent,
       token,
     );
@@ -69,14 +69,14 @@ const StudentPage = () => {
       result.dateOfBirth = new Date(result.dateOfBirth);
       setStudents([...students, result]);
     }
-    snackBar.openSnackbar("Student added.");
+    snackBar.openSnackbar('Student added.');
     return result;
   };
 
   const editStudent = async (existingStudent: Student) => {
     const token = await getTokenSilently();
     await putRequest(
-      "http://localhost:5000/api/Student/" + existingStudent.id,
+      'http://localhost:5000/api/Student/' + existingStudent.id,
       existingStudent,
       token,
     );
@@ -85,14 +85,14 @@ const StudentPage = () => {
       student.id === existingStudent.id ? existingStudent : student,
     );
     setStudents(newStudents);
-    snackBar.openSnackbar("Student updated.");
+    snackBar.openSnackbar('Student updated.');
   };
 
   const deleteStudent = async (studentId: string) => {
     // TODO: Confirm?
     const token = await getTokenSilently();
     await deleteRequest(
-      "http://localhost:5000/api/Student/" + studentId,
+      'http://localhost:5000/api/Student/' + studentId,
       token,
     );
 
@@ -100,7 +100,7 @@ const StudentPage = () => {
       (student) => student.id !== studentId,
     );
     setStudents(updatedStudents);
-    snackBar.openSnackbar("Student deleted.");
+    snackBar.openSnackbar('Student deleted.');
   };
 
   const setEditing = (id: string) => {
@@ -139,7 +139,7 @@ const StudentPage = () => {
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h4" align="center">
-            {isEditing ? "Edit Student" : "Add a Student"}
+            {isEditing ? 'Edit Student' : 'Add a Student'}
           </Typography>
           <StudentForm
             handleSubmit={handleSubmit}
@@ -178,5 +178,5 @@ const StudentPage = () => {
   );
 };
 
-export const studentsRoute = "/students";
+export const studentsRoute = '/students';
 export default StudentPage;

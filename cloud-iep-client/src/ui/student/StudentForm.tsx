@@ -1,7 +1,7 @@
-import { Button, makeStyles, TextField, useTheme } from "@material-ui/core";
-import { KeyboardDatePicker } from "@material-ui/pickers";
-import React, { FormEvent } from "react";
-import { Student } from "../../students/Student";
+import { Button, makeStyles, TextField, useTheme } from '@material-ui/core';
+import { KeyboardDatePicker } from '@material-ui/pickers';
+import React, { FormEvent } from 'react';
+import { Student } from '../../students/Student';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -70,7 +70,7 @@ const StudentForm = ({
         margin="normal"
         id="dob-picker"
         label="Date of Birth"
-        views={["year", "month", "date"]}
+        views={['year', 'month', 'date']}
         maxDateMessage="Date of birth cannot be in the future"
         value={student.dateOfBirth}
         onChange={(date) => handleDateChange(date)}

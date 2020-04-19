@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Snackbar } from "@material-ui/core";
+import React, { useContext, useState } from 'react';
+import { Snackbar } from '@material-ui/core';
 
 interface SnackbarContextState {
   isOpen: boolean;
@@ -19,7 +19,7 @@ interface SnackbarProviderProps {
 
 export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
   const [isOpen, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [closeDuration, setCloseDuration] = useState(5000);
 
   const openSnackbar = (message: string, closeDuration?: number) => {
@@ -30,7 +30,7 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
 
   const closeSnackbar = () => {
     setCloseDuration(5000);
-    setMessage("");
+    setMessage('');
     setOpen(false);
   };
 
@@ -47,8 +47,8 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
       {children}
       <Snackbar
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
         open={isOpen}
         message={message}

@@ -1,4 +1,4 @@
-import handleErrors from "./handleErrors";
+import handleErrors from './handleErrors';
 
 async function postRequest<T>(
   url: string,
@@ -6,17 +6,17 @@ async function postRequest<T>(
   token?: string,
 ): Promise<T> {
   const headers = new Headers();
-  headers.append("Content-Type", "application/json");
+  headers.append('Content-Type', 'application/json');
 
   if (token) {
-    headers.append("Authorization", `Bearer ${token}`);
+    headers.append('Authorization', `Bearer ${token}`);
   }
 
   const request = new Request(url, {
     body: JSON.stringify(body),
     headers,
-    method: "POST",
-    mode: "cors",
+    method: 'POST',
+    mode: 'cors',
   });
 
   return fetch(request)

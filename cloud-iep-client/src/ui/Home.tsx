@@ -1,6 +1,6 @@
-import { Paper, Typography } from "@material-ui/core";
-import React from "react";
-import { Link } from "react-router-dom";
+import { Paper, Typography } from '@material-ui/core';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Home() {
   return (
@@ -14,5 +14,5 @@ function Home() {
   );
 }
 
-export const homeRoute = "/";
+export const homeRoute = '/';
 export default Home;
