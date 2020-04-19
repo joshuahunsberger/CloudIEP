@@ -1,6 +1,16 @@
-import createAuth0Client from "@auth0/auth0-spa-js";
-import Auth0Client from "@auth0/auth0-spa-js/dist/typings/Auth0Client";
-import RedirectLoginResult from "@auth0/auth0-spa-js/dist/typings";
+import createAuth0Client, {
+  Auth0Client,
+  Auth0ClientOptions,
+  getIdTokenClaimsOptions,
+  GetTokenSilentlyOptions,
+  GetTokenWithPopupOptions,
+  IdToken,
+  LogoutOptions,
+  PopupConfigOptions,
+  PopupLoginOptions,
+  RedirectLoginOptions,
+  RedirectLoginResult,
+} from "@auth0/auth0-spa-js";
 import React, { useContext, useEffect, useState } from "react";
 
 const DEFAULT_REDIRECT_CALLBACK = (result: RedirectLoginResult) =>
