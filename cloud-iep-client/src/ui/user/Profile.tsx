@@ -12,9 +12,10 @@ import {
   Theme,
   Typography,
   useTheme,
+  TextField,
 } from '@material-ui/core';
 import { ContactMail, Edit, Person } from '@material-ui/icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth0 } from '../../react-auth0-spa';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,6 +33,8 @@ const Profile = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const { loading, user } = useAuth0();
+  const [editingFirstName, setEditingFirstName] = useState(false);
+  const [editingLastName, setEditingLastName] = useState(false);
 
   if (loading || !user) {
     return <div>Loading...</div>;
@@ -52,26 +55,49 @@ const Profile = () => {
 
           <List>
             <ListItem>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText primary="First Name" secondary={user.name} />
-              <ListItemSecondaryAction>
-                <IconButton>
-                  <Edit />
-                </IconButton>
-              </ListItemSecondaryAction>
+              {editingFirstName ? (
+                <TextField
+                  autoFocus
+                  fullWidth
+                  label="First Name"
+                  onBlur={() => setEditingFirstName(false)}
+                />
+              ) : (
+                <>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+
+                  <ListItemText primary="First Name" secondary={user.name} />
+                  <ListItemSecondaryAction>
+                    <IconButton onClick={() => setEditingFirstName(true)}>
+                      <Edit />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </>
+              )}
             </ListItem>
             <ListItem>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText primary="Last Name" secondary="Placeholder" />
-              <ListItemSecondaryAction>
-                <IconButton>
-                  <Edit />
-                </IconButton>
-              </ListItemSecondaryAction>
+              {editingLastName ? (
+                <TextField
+                  autoFocus
+                  fullWidth
+                  label="Last Name"
+                  onBlur={() => setEditingLastName(false)}
+                />
+              ) : (
+                <>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText primary="Last Name" secondary="Placeholder" />
+                  <ListItemSecondaryAction>
+                    <IconButton onClick={() => setEditingLastName(true)}>
+                      <Edit />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </>
+              )}
             </ListItem>
             <ListItem>
               <ListItemIcon>
