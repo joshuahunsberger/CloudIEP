@@ -1,11 +1,19 @@
 import {
   Avatar,
+  Grid,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
   makeStyles,
   Paper,
   Theme,
   Typography,
   useTheme,
 } from '@material-ui/core';
+import { ContactMail, Edit, Person } from '@material-ui/icons';
 import React from 'react';
 import { useAuth0 } from '../../react-auth0-spa';
 
@@ -34,14 +42,46 @@ const Profile = () => {
       <Typography variant="h2" align="center">
         Profile
       </Typography>
-      <Avatar
-        src={user.picture}
-        alt="Profile"
-        className={classes.largeAvatar}
-      />
-      <Typography variant="h4">{user.name}</Typography>
-      <Typography variant="body1">Email: {user.email}</Typography>
-      <code>{JSON.stringify(user, null, 2)}</code>
+      <Grid container alignContent="center">
+        <Grid item xs={12}>
+          <Avatar
+            src={user.picture}
+            alt="Profile"
+            className={classes.largeAvatar}
+          />
+
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText primary="First Name" secondary={user.name} />
+              <ListItemSecondaryAction>
+                <IconButton>
+                  <Edit />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText primary="Last Name" secondary="Placeholder" />
+              <ListItemSecondaryAction>
+                <IconButton>
+                  <Edit />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <ContactMail />
+              </ListItemIcon>
+              <ListItemText primary="Email" secondary={user.email} />
+            </ListItem>
+          </List>
+        </Grid>
+      </Grid>
     </Paper>
   );
 };
