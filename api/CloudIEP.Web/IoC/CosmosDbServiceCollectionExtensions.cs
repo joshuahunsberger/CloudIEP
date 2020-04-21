@@ -38,7 +38,8 @@ namespace CloudIEP.Web.IoC
                 .Get<CosmosDbOptions>();
 
             return services.AddCosmosDb(cosmosDbOptions)
-                .AddScoped<IStudentRepository, StudentRepository>();
+                .AddScoped<IStudentRepository, StudentRepository>()
+                .AddScoped<IUserRepository, UserRepository>();
         }
     }
 }
