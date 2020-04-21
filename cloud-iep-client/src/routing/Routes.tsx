@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { useAuth0 } from '../react-auth0-spa';
 import Home, { homeRoute } from '../ui/Home';
 import StudentPage, { studentsRoute } from '../ui/student/StudentPage';
+import Auth, { authCallbackRoute } from '../ui/user/Auth';
 import Profile, { profileRoute } from '../ui/user/Profile';
 
 // Logged-in routing inspired by John Reilly on GitHub:
@@ -11,6 +12,7 @@ import Profile, { profileRoute } from '../ui/user/Profile';
 const privateRoutes = [
   { path: profileRoute, component: Profile },
   { path: studentsRoute, component: StudentPage },
+  { path: authCallbackRoute, component: Auth },
 ];
 
 const Routes = () => {

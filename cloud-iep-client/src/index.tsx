@@ -21,7 +21,7 @@ ReactDOM.render(
     initOptions={{
       domain: process.env.REACT_APP_AUTH0_DOMAIN ?? '',
       client_id: process.env.REACT_APP_AUTH0_CLIENTID ?? '',
-      redirect_uri: 'http://localhost:3000',
+      redirect_uri: 'http://localhost:3000/logincallback',
       scope: 'openid',
       audience: 'https://cloudiepdev/api',
     }}
