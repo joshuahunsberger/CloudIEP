@@ -15,9 +15,11 @@ import {
   useTheme,
 } from '@material-ui/core';
 import { ContactMail, Edit, Person } from '@material-ui/icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
 import { useAuth0 } from '../../react-auth0-spa';
+import ApiStatus from '../../types/ApiStatus';
+import useUsersApi from '../../users/useUserApi';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,9 +37,17 @@ const Profile = () => {
   const classes = useStyles(theme);
   const { loading, user, getTokenSilently } = useAuth0();
   const [editingFirstName, setEditingFirstName] = useState(false);
-  const [firstName, setFirstName] = useState<string>(user.name);
+  const [firstName, setFirstName] = useState<string>('');
   const [editingLastName, setEditingLastName] = useState(false);
   const [lastName, setLastName] = useState('');
+
+  const service = useUsersApi();
+
+  useEffect(() => {
+    if (service.status !== ApiStatus.Loaded) return;
+    setFirstName(service.result.firstName);
+    setLastName(service.result.lastName);
+  }, [service]);
 
   const hideAllFields = () => {
     setEditingFirstName(false);
@@ -81,7 +91,7 @@ const Profile = () => {
     );
   };
 
-  if (loading || !user) {
+  if (loading || service.status === ApiStatus.Loading) {
     return <div>Loading...</div>;
   }
 
@@ -98,65 +108,72 @@ const Profile = () => {
             className={classes.largeAvatar}
           />
 
-          <List>
-            <ListItem>
-              {editingFirstName ? (
-                <TextField
-                  autoFocus
-                  fullWidth
-                  label="First Name"
-                  value={firstName}
-                  onChange={(event) => setFirstName(event.currentTarget.value)}
-                  onKeyDown={(event) => handleKeyDown(event, 'firstName')}
-                  onBlur={() => setEditingFirstName(false)}
-                />
-              ) : (
-                <>
-                  <ListItemIcon>
-                    <Person />
-                  </ListItemIcon>
+          {service.status === ApiStatus.Loaded && (
+            <List>
+              <ListItem>
+                {editingFirstName ? (
+                  <TextField
+                    autoFocus
+                    fullWidth
+                    label="First Name"
+                    value={firstName}
+                    onChange={(event) =>
+                      setFirstName(event.currentTarget.value)
+                    }
+                    onKeyDown={(event) => handleKeyDown(event, 'firstName')}
+                    onBlur={() => setEditingFirstName(false)}
+                  />
+                ) : (
+                  <>
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
 
-                  <ListItemText primary="First Name" secondary={firstName} />
-                  <ListItemSecondaryAction>
-                    <IconButton onClick={() => setEditingFirstName(true)}>
-                      <Edit />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </>
-              )}
-            </ListItem>
-            <ListItem>
-              {editingLastName ? (
-                <TextField
-                  autoFocus
-                  fullWidth
-                  label="Last Name"
-                  value={lastName}
-                  onChange={(event) => setLastName(event.currentTarget.value)}
-                  onKeyDown={(event) => handleKeyDown(event, 'lastName')}
-                  onBlur={() => setEditingLastName(false)}
-                />
-              ) : (
-                <>
-                  <ListItemIcon>
-                    <Person />
-                  </ListItemIcon>
-                  <ListItemText primary="Last Name" secondary={lastName} />
-                  <ListItemSecondaryAction>
-                    <IconButton onClick={() => setEditingLastName(true)}>
-                      <Edit />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </>
-              )}
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <ContactMail />
-              </ListItemIcon>
-              <ListItemText primary="Email" secondary={user.email} />
-            </ListItem>
-          </List>
+                    <ListItemText primary="First Name" secondary={firstName} />
+                    <ListItemSecondaryAction>
+                      <IconButton onClick={() => setEditingFirstName(true)}>
+                        <Edit />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
+                )}
+              </ListItem>
+              <ListItem>
+                {editingLastName ? (
+                  <TextField
+                    autoFocus
+                    fullWidth
+                    label="Last Name"
+                    value={lastName}
+                    onChange={(event) => setLastName(event.currentTarget.value)}
+                    onKeyDown={(event) => handleKeyDown(event, 'lastName')}
+                    onBlur={() => setEditingLastName(false)}
+                  />
+                ) : (
+                  <>
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
+                    <ListItemText primary="Last Name" secondary={lastName} />
+                    <ListItemSecondaryAction>
+                      <IconButton onClick={() => setEditingLastName(true)}>
+                        <Edit />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
+                )}
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <ContactMail />
+                </ListItemIcon>
+                <ListItemText primary="Email" secondary={user.email} />
+              </ListItem>
+            </List>
+          )}
+          {service.status === ApiStatus.Error && (
+            <Typography>{service.error.message}</Typography>
+          )}
         </Grid>
       </Grid>
     </Paper>
