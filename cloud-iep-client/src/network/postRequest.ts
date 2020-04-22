@@ -21,7 +21,10 @@ async function postRequest<T>(
 
   return fetch(request)
     .then((request) => handleErrors(request))
-    .then((response) => response.json());
+    .then(
+      (response) =>
+        (response.status === 204 ? {} : response.json()) as Promise<T>,
+    );
 }
 
 export default postRequest;
