@@ -47,7 +47,7 @@ namespace CloudIEP.Web.Controllers
                 var user = await _userRepository.GetByIdAsync(userId);
                 user.FirstName = firstName;
                 await _userRepository.UpdateAsync(user);
-                return Ok();
+                return NoContent();
             }
             catch (EntityNotFoundException)
             {
