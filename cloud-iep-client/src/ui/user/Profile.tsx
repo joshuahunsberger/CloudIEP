@@ -35,7 +35,7 @@ const Profile = () => {
   const classes = useStyles(theme);
   const { loading, user, getTokenSilently } = useAuth0();
   const [editingFirstName, setEditingFirstName] = useState(false);
-  const [firstName, setFirstName] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>(user.name);
   const [editingLastName, setEditingLastName] = useState(false);
 
   const hideAllFields = () => {
@@ -53,6 +53,7 @@ const Profile = () => {
       case 'Enter':
         if (fieldName === 'firstName') {
           updateFirstName(firstName);
+          hideAllFields();
         }
         break;
     }
@@ -91,7 +92,7 @@ const Profile = () => {
                   autoFocus
                   fullWidth
                   label="First Name"
-                  value={user.Name}
+                  value={firstName}
                   onChange={(event) => setFirstName(event.currentTarget.value)}
                   onKeyDown={(event) => handleKeyDown(event, 'firstName')}
                   onBlur={() => setEditingFirstName(false)}
@@ -102,7 +103,7 @@ const Profile = () => {
                     <Person />
                   </ListItemIcon>
 
-                  <ListItemText primary="First Name" secondary={user.name} />
+                  <ListItemText primary="First Name" secondary={firstName} />
                   <ListItemSecondaryAction>
                     <IconButton onClick={() => setEditingFirstName(true)}>
                       <Edit />
