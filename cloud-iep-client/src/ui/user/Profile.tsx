@@ -37,6 +37,7 @@ const Profile = () => {
   const [editingFirstName, setEditingFirstName] = useState(false);
   const [firstName, setFirstName] = useState<string>(user.name);
   const [editingLastName, setEditingLastName] = useState(false);
+  const [lastName, setLastName] = useState('');
 
   const hideAllFields = () => {
     setEditingFirstName(false);
@@ -54,6 +55,9 @@ const Profile = () => {
         if (fieldName === 'firstName') {
           updateFirstName(firstName);
           hideAllFields();
+        } else if (fieldName === 'lastName') {
+          updateLastName(lastName);
+          hideAllFields();
         }
         break;
     }
@@ -64,6 +68,15 @@ const Profile = () => {
     await postRequest(
       'http://localhost:5000/api/User/FirstName',
       newFirstName,
+      token,
+    );
+  };
+
+  const updateLastName = async (newLastName: string) => {
+    var token = await getTokenSilently();
+    await postRequest(
+      'http://localhost:5000/api/User/LastName',
+      newLastName,
       token,
     );
   };
@@ -118,6 +131,9 @@ const Profile = () => {
                   autoFocus
                   fullWidth
                   label="Last Name"
+                  value={lastName}
+                  onChange={(event) => setLastName(event.currentTarget.value)}
+                  onKeyDown={(event) => handleKeyDown(event, 'lastName')}
                   onBlur={() => setEditingLastName(false)}
                 />
               ) : (
@@ -125,7 +141,7 @@ const Profile = () => {
                   <ListItemIcon>
                     <Person />
                   </ListItemIcon>
-                  <ListItemText primary="Last Name" secondary="Placeholder" />
+                  <ListItemText primary="Last Name" secondary={lastName} />
                   <ListItemSecondaryAction>
                     <IconButton onClick={() => setEditingLastName(true)}>
                       <Edit />

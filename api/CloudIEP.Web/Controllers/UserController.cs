@@ -54,5 +54,23 @@ namespace CloudIEP.Web.Controllers
                 return NotFound(userId);
             }
         }
+
+        [HttpPost("LastName")]
+        public async Task<ActionResult> UpdateLastName([FromBody] string lastName)
+        {
+            var userId = HttpContext.User.Identity.Name;
+
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(userId);
+                user.LastName = lastName;
+                await _userRepository.UpdateAsync(user);
+                return NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound(userId);
+            }
+        }
     }
 }
