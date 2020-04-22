@@ -37,8 +37,8 @@ namespace CloudIEP.Web.Controllers
 
         }
 
-        [HttpPost("/firstName")]
-        public async Task<ActionResult> UpdateFirstName(string firstName)
+        [HttpPost("FirstName")]
+        public async Task<ActionResult> UpdateFirstName([FromBody] string firstName)
         {
             var userId = HttpContext.User.Identity.Name;
 
