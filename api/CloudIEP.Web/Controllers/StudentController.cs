@@ -68,7 +68,7 @@ namespace CloudIEP.Web.Controllers
                 }
 
                 await _studentRepository.UpdateAsync(student);
-                return Ok();
+                return NoContent();
             }
             catch (EntityNotFoundException)
             {
