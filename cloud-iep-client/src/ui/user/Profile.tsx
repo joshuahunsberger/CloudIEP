@@ -9,13 +9,14 @@ import {
   ListItemText,
   makeStyles,
   Paper,
+  TextField,
   Theme,
   Typography,
   useTheme,
-  TextField,
 } from '@material-ui/core';
 import { ContactMail, Edit, Person } from '@material-ui/icons';
 import React, { useState } from 'react';
+import postRequest from '../../network/postRequest';
 import { useAuth0 } from '../../react-auth0-spa';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,9 +33,39 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Profile = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const { loading, user } = useAuth0();
+  const { loading, user, getTokenSilently } = useAuth0();
   const [editingFirstName, setEditingFirstName] = useState(false);
+  const [firstName, setFirstName] = useState<string>('');
   const [editingLastName, setEditingLastName] = useState(false);
+
+  const hideAllFields = () => {
+    setEditingFirstName(false);
+    setEditingLastName(false);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent, fieldName: string) => {
+    const key = event.key;
+
+    switch (key) {
+      case 'Escape':
+        hideAllFields();
+        break;
+      case 'Enter':
+        if (fieldName === 'firstName') {
+          updateFirstName(firstName);
+        }
+        break;
+    }
+  };
+
+  const updateFirstName = async (newFirstName: string) => {
+    var token = await getTokenSilently();
+    await postRequest(
+      'http://localhost:5000/api/User/FirstName',
+      newFirstName,
+      token,
+    );
+  };
 
   if (loading || !user) {
     return <div>Loading...</div>;
@@ -60,6 +91,9 @@ const Profile = () => {
                   autoFocus
                   fullWidth
                   label="First Name"
+                  value={user.Name}
+                  onChange={(event) => setFirstName(event.currentTarget.value)}
+                  onKeyDown={(event) => handleKeyDown(event, 'firstName')}
                   onBlur={() => setEditingFirstName(false)}
                 />
               ) : (
