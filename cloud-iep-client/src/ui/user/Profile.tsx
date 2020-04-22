@@ -20,6 +20,7 @@ import postRequest from '../../network/postRequest';
 import { useAuth0 } from '../../react-auth0-spa';
 import ApiStatus from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
+import { useSnackbar } from '../SnackbarProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,11 +36,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Profile = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
+  const snackbar = useSnackbar();
+
   const { loading, user, getTokenSilently } = useAuth0();
   const [editingFirstName, setEditingFirstName] = useState(false);
-  const [firstName, setFirstName] = useState<string>('');
+  const [firstName, setFirstName] = useState('');
+  const [pendingFirstName, setPendingFirstName] = useState('');
   const [editingLastName, setEditingLastName] = useState(false);
   const [lastName, setLastName] = useState('');
+  const [pendingLastName, setPendingLastName] = useState('');
 
   const service = useUsersApi();
 
@@ -54,7 +59,10 @@ const Profile = () => {
     setEditingLastName(false);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent, fieldName: string) => {
+  const handleKeyDown = async (
+    event: React.KeyboardEvent,
+    fieldName: string,
+  ) => {
     const key = event.key;
 
     switch (key) {
@@ -63,10 +71,25 @@ const Profile = () => {
         break;
       case 'Enter':
         if (fieldName === 'firstName') {
-          updateFirstName(firstName);
+          try {
+            await updateFirstName(pendingFirstName);
+            setFirstName(pendingFirstName);
+            snackbar.openSnackbar('First name saved.');
+          } catch (error) {
+            console.log(error);
+            snackbar.openSnackbar('Error saving first name');
+          }
           hideAllFields();
         } else if (fieldName === 'lastName') {
-          updateLastName(lastName);
+          try {
+            await updateLastName(pendingLastName);
+            setLastName(pendingLastName);
+            snackbar.openSnackbar('Last name saved.');
+          } catch (error) {
+            console.log(error);
+            snackbar.openSnackbar('Error saving last name');
+          }
+
           hideAllFields();
         }
         break;
@@ -116,9 +139,9 @@ const Profile = () => {
                     autoFocus
                     fullWidth
                     label="First Name"
-                    value={firstName}
+                    value={pendingFirstName}
                     onChange={(event) =>
-                      setFirstName(event.currentTarget.value)
+                      setPendingFirstName(event.currentTarget.value)
                     }
                     onKeyDown={(event) => handleKeyDown(event, 'firstName')}
                     onBlur={() => setEditingFirstName(false)}
@@ -131,7 +154,12 @@ const Profile = () => {
 
                     <ListItemText primary="First Name" secondary={firstName} />
                     <ListItemSecondaryAction>
-                      <IconButton onClick={() => setEditingFirstName(true)}>
+                      <IconButton
+                        onClick={() => {
+                          setPendingFirstName(firstName);
+                          setEditingFirstName(true);
+                        }}
+                      >
                         <Edit />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -144,8 +172,10 @@ const Profile = () => {
                     autoFocus
                     fullWidth
                     label="Last Name"
-                    value={lastName}
-                    onChange={(event) => setLastName(event.currentTarget.value)}
+                    value={pendingLastName}
+                    onChange={(event) =>
+                      setPendingLastName(event.currentTarget.value)
+                    }
                     onKeyDown={(event) => handleKeyDown(event, 'lastName')}
                     onBlur={() => setEditingLastName(false)}
                   />
@@ -156,7 +186,12 @@ const Profile = () => {
                     </ListItemIcon>
                     <ListItemText primary="Last Name" secondary={lastName} />
                     <ListItemSecondaryAction>
-                      <IconButton onClick={() => setEditingLastName(true)}>
+                      <IconButton
+                        onClick={() => {
+                          setPendingLastName(lastName);
+                          setEditingLastName(true);
+                        }}
+                      >
                         <Edit />
                       </IconButton>
                     </ListItemSecondaryAction>
