@@ -15,9 +15,16 @@ interface ConfirmDialogProps {
   declineButtonText: string;
   isOpen: boolean;
   confirm: (isConfirmed: boolean) => void;
+  forDelete?: boolean;
 }
 
+type ButtonColor = 'primary' | 'secondary';
 const ConfirmDialog = ({ ...props }: ConfirmDialogProps) => {
+  const getConfirmButtonColor = (): ButtonColor => {
+    return props.forDelete && props.forDelete === true
+      ? 'secondary'
+      : 'primary';
+  };
   return (
     <Dialog
       open={props.isOpen}
@@ -31,10 +38,19 @@ const ConfirmDialog = ({ ...props }: ConfirmDialogProps) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => props.confirm(false)} color="primary">
+        <Button
+          onClick={() => props.confirm(false)}
+          variant="contained"
+          color="primary"
+        >
           {props.declineButtonText}
         </Button>
-        <Button onClick={() => props.confirm(true)} color="primary" autoFocus>
+        <Button
+          onClick={() => props.confirm(true)}
+          variant="contained"
+          color={getConfirmButtonColor()}
+          autoFocus
+        >
           {props.confirmButtonText}
         </Button>
       </DialogActions>
