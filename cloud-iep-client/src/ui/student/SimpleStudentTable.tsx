@@ -47,6 +47,7 @@ const SimpleStudentTable: React.FC<SimpleStudentTableProps> = ({
         confirmButtonText="Delete"
         declineButtonText="Cancel"
         confirm={confirmDelete}
+        forDelete={true}
       />
       <TableContainer component={Card}>
         <Table>
