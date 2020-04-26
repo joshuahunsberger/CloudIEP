@@ -1,20 +1,30 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import useStudentByUrl from '../../students/useStudentByUrl';
-import ApiStatus from '../../types/ApiStatus';
 import {
+  Button,
+  Card,
+  CardContent,
   CircularProgress,
-  Typography,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  makeStyles,
   Paper,
   Theme,
-  makeStyles,
+  Typography,
   useTheme,
 } from '@material-ui/core';
 import { Cake, Person } from '@material-ui/icons';
+import { add, startOfDay } from 'date-fns';
+import React, { FormEvent, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Goal } from '../../goals/Goal';
+import postRequest from '../../network/postRequest';
+import { useAuth0 } from '../../react-auth0-spa';
+import { GoalPreview } from '../../students/GoalPreview';
+import useStudentByUrl from '../../students/useStudentByUrl';
+import ApiStatus from '../../types/ApiStatus';
+import GoalForm from '../goal/GoalForm';
+import { useSnackbar } from '../SnackbarProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -28,6 +38,55 @@ const StudentDetail = () => {
   const { id } = useParams();
   const url = 'http://localhost:5000/api/Student/' + id;
   const service = useStudentByUrl(url);
+  const snackBar = useSnackbar();
+
+  const defaultGoal: Goal = {
+    id: '',
+    goalName: '',
+    goalDescription: '',
+    category: '',
+    beginDate: startOfDay(new Date()),
+    endDate: startOfDay(add(new Date(), { years: 1 })),
+    objectives: [],
+    studentId: id!,
+  };
+
+  const [isAdding, setIsAdding] = useState(false);
+  const [goals, setGoals] = useState<GoalPreview[]>([]);
+  const [goal, setGoal] = useState<Goal>(defaultGoal);
+  const { getTokenSilently } = useAuth0();
+
+  useEffect(() => {
+    service.status === ApiStatus.Loaded && setGoals(service.result.goals);
+  }, [service]);
+
+  const addGoal = async (newGoal: Goal) => {
+    const token = await getTokenSilently();
+    const result = await postRequest<Goal>(
+      'http://localhost:5000/api/Goal',
+      newGoal,
+      token,
+    );
+    if (result != null) {
+      const goalPreview: GoalPreview = {
+        goalId: result.id,
+        goalName: result.goalName,
+      };
+      setGoals([...goals, goalPreview]);
+      snackBar.openSnackbar('Goal added.');
+    }
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await addGoal(goal);
+    setIsAdding(false);
+  };
+
+  const cancel = () => {
+    setGoal(defaultGoal);
+    setIsAdding(false);
+  };
 
   return (
     <>
@@ -66,11 +125,35 @@ const StudentDetail = () => {
               />
             </ListItem>
           </List>
+          {isAdding ? (
+            <Card>
+              <CardContent>
+                <Typography variant="h4" align="center">
+                  Add a Goal
+                </Typography>
+                <GoalForm
+                  goal={goal}
+                  setGoal={setGoal}
+                  handleSubmit={handleSubmit}
+                  cancel={cancel}
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setIsAdding(true)}
+            >
+              Add Goal
+            </Button>
+          )}
+
           <Typography variant="h4" align="center">
             TODO: Goals
           </Typography>
-          {service.result.goals?.length > 0 ? (
-            service.result.goals.map((goal) => <div>{goal.goalName}</div>)
+          {service.result.goals.length > 0 ? (
+            goals.map((goalRow) => <div>{goalRow.goalName}</div>)
           ) : (
             <Typography>No Goals</Typography>
           )}
