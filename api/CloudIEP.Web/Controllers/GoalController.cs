@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using CloudIEP.Data;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
@@ -57,6 +58,24 @@ namespace CloudIEP.Web.Controllers
             }
         }
 
+        [HttpDelete("{goalId}")]
+        public async Task<ActionResult> DeleteGoal(string goalId)
+        {
+            try
+            {
+                var goal = await _goalRepository.GetByIdAsync(goalId);
+                var student = await GetStudent(goal.StudentId);
+                await _goalRepository.DeleteAsync(goal);
+                await RemoveGoalFromStudent(student, goalId);
+
+                return NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound(goalId);
+            }
+        }
+
         private async Task<Student> GetStudent(string studentId)
         {
             try
@@ -77,6 +96,12 @@ namespace CloudIEP.Web.Controllers
                 GoalName = goal.GoalName
             };
             student.Goals.Add(goalPreview);
+            await _studentRepository.UpdateAsync(student);
+        }
+
+        private async Task RemoveGoalFromStudent(Student student, string goalId)
+        {
+            student.Goals = student.Goals.Where(g => g.GoalId != goalId).ToList();
             await _studentRepository.UpdateAsync(student);
         }
     }
