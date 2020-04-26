@@ -41,11 +41,12 @@ const StudentPage = () => {
   const service = useStudentsApi();
   const snackBar = useSnackbar();
 
-  const defaultStudent = {
+  const defaultStudent: Student = {
     id: '',
     firstName: '',
     lastName: '',
     dateOfBirth: startOfDay(new Date()),
+    goals: [],
   };
 
   const [isEditing, setIsEditing] = useState(false);

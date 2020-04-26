@@ -45,11 +45,12 @@ const SimpleStudentPage = () => {
   const service = useUsersApi();
   const snackBar = useSnackbar();
 
-  const defaultStudent = {
+  const defaultStudent: Student = {
     id: '',
     firstName: '',
     lastName: '',
     dateOfBirth: startOfDay(new Date()),
+    goals: [],
   };
 
   const [isAdding, setIsAdding] = useState(false);
