@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -31,6 +32,9 @@ import { useSnackbar } from '../SnackbarProvider';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(4),
+  },
+  button: {
+    margin: theme.spacing(2),
   },
 }));
 
@@ -136,38 +140,48 @@ const StudentDetail = () => {
               />
             </ListItem>
           </List>
-          {isAdding ? (
-            <Card>
-              <CardContent>
-                <Typography variant="h4" align="center">
-                  Add a Goal
-                </Typography>
-                <GoalForm
-                  goal={goal}
-                  setGoal={setGoal}
-                  handleSubmit={handleSubmit}
-                  cancel={cancel}
-                />
-              </CardContent>
-            </Card>
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setIsAdding(true)}
-            >
-              Add Goal
-            </Button>
-          )}
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            {isAdding ? (
+              <Card>
+                <CardContent>
+                  <Typography variant="h4" align="center">
+                    Add a Goal
+                  </Typography>
+                  <GoalForm
+                    goal={goal}
+                    setGoal={setGoal}
+                    handleSubmit={handleSubmit}
+                    cancel={cancel}
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsAdding(true)}
+                className={classes.button}
+              >
+                Add Goal
+              </Button>
+            )}
 
-          <Typography variant="h4" align="center">
-            Goals
-          </Typography>
-          {service.result.goals.length > 0 ? (
-            <GoalTable goals={goals} deleteGoal={deleteGoal} />
-          ) : (
-            <Typography>No Goals</Typography>
-          )}
+            <Typography variant="h4" align="center">
+              Goals
+            </Typography>
+            {goals.length > 0 ? (
+              <GoalTable goals={goals} deleteGoal={deleteGoal} />
+            ) : (
+              <Typography variant="h6" align="center">
+                You don't have any goals right now. Add one above.
+              </Typography>
+            )}
+          </Grid>
         </Paper>
       )}
       {service.status === ApiStatus.Error && (
