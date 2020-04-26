@@ -86,16 +86,6 @@ const StudentForm = ({
           >
             Update
           </Button>
-          <Button
-            type="reset"
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.button}
-            onClick={cancelEditing}
-          >
-            Cancel
-          </Button>
         </>
       ) : (
         <Button
@@ -108,6 +98,16 @@ const StudentForm = ({
           Submit
         </Button>
       )}
+      <Button
+        type="reset"
+        fullWidth
+        variant="contained"
+        color="secondary"
+        className={classes.button}
+        onClick={cancelEditing}
+      >
+        Cancel
+      </Button>
     </form>
   );
 };
