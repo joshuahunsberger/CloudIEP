@@ -76,6 +76,22 @@ namespace CloudIEP.Web.Controllers
             }
         }
 
+        [HttpPost("{goalId}/observation")]
+        public async Task<ActionResult> AddObservation(string goalId, Observation observation)
+        {
+            try
+            {
+                var goal = await _goalRepository.GetByIdAsync(goalId);
+                goal.Observations.Add(observation);
+                await _goalRepository.UpdateAsync(goal);
+                return NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound(goalId);
+            }
+        }
+
         private async Task<Student> GetStudent(string studentId)
         {
             try
