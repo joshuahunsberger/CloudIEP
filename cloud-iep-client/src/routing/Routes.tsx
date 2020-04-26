@@ -7,6 +7,7 @@ import SimpleStudentPage, {
 } from '../ui/student/SimpleStudentPage';
 import Auth, { authCallbackRoute } from '../ui/user/Auth';
 import Profile, { profileRoute } from '../ui/user/Profile';
+import StudentDetail, { studentDetailRoute } from '../ui/student/StudentDetail';
 
 // Logged-in routing inspired by John Reilly on GitHub:
 // https://github.com/johnnyreilly/auth0-react-typescript-asp-net-core
@@ -15,6 +16,7 @@ const privateRoutes = [
   { path: profileRoute, component: Profile },
   { path: studentsRoute, component: SimpleStudentPage },
   { path: authCallbackRoute, component: Auth },
+  { path: studentDetailRoute, component: StudentDetail },
 ];
 
 const Routes = () => {
