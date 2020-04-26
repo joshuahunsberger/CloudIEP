@@ -53,7 +53,7 @@ const SimpleStudentTable: React.FC<SimpleStudentTableProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Link</TableCell>
+              <TableCell>Detail</TableCell>
               <TableCell>Student Name</TableCell>
               <TableCell />
             </TableRow>

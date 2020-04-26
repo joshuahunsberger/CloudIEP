@@ -53,7 +53,7 @@ const GoalTable: React.FC<GoalTableProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Link</TableCell>
+              <TableCell>Detail</TableCell>
               <TableCell>Goal Name</TableCell>
               <TableCell />
             </TableRow>
