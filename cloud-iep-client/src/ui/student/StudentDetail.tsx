@@ -54,6 +54,7 @@ const StudentDetail = () => {
     beginDate: startOfDay(new Date()),
     endDate: startOfDay(add(new Date(), { years: 1 })),
     objectives: [],
+    observations: [],
     studentId: id!,
   };
 

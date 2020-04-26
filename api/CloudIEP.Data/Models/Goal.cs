@@ -10,7 +10,9 @@ namespace CloudIEP.Data.Models
         public string Category { get; set; }
         public DateTime BeginDate { get; set; }
         public DateTime EndDate { get; set; }
+        public decimal GoalPercentage { get; set; }
         public List<Objective> Objectives { get; set; } = new List<Objective>();
+        public List<Observation> Observations { get; set; } = new List<Observation>();
         public string StudentId { get; set; }
     }
 
@@ -18,5 +20,13 @@ namespace CloudIEP.Data.Models
     {
         public string ObjectiveName { get; set; }
         public bool Complete { get; set; }
+    }
+
+    public class Observation
+    {
+        public string Id { get; set; }
+        public DateTime ObservationDate { get; set; }
+        public int SuccessCount { get; set; }
+        public int TotalCount { get; set; }
     }
 }
