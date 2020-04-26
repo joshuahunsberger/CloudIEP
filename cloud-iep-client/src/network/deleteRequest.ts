@@ -13,7 +13,8 @@ async function deleteRequest(url: string, token?: string): Promise<void> {
     method: 'DELETE',
   });
 
-  fetch(request).then(handleErrors);
+  const response = await fetch(request);
+  await handleErrors(response);
 }
 
 export default deleteRequest;
