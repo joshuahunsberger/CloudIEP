@@ -72,7 +72,7 @@ const GoalForm = ({ goal, setGoal, handleSubmit, cancel }: GoalFormProps) => {
         openTo="year"
         format="MM/dd/yyyy"
         margin="normal"
-        id="dob-picker"
+        id="goal-begin-date-picker"
         label="Goal Begin Date"
         views={['year', 'month', 'date']}
         value={goal.beginDate}
@@ -85,7 +85,7 @@ const GoalForm = ({ goal, setGoal, handleSubmit, cancel }: GoalFormProps) => {
         openTo="year"
         format="MM/dd/yyyy"
         margin="normal"
-        id="dob-picker"
+        id="goal-end-date-picker"
         label="Goal End Date"
         views={['year', 'month', 'date']}
         value={goal.endDate}
