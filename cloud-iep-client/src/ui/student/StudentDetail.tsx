@@ -15,15 +15,17 @@ import {
 } from '@material-ui/core';
 import { Cake, Person } from '@material-ui/icons';
 import { add, startOfDay } from 'date-fns';
-import React, { FormEvent, useState, useEffect } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Goal } from '../../goals/Goal';
+import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
 import { useAuth0 } from '../../react-auth0-spa';
 import { GoalPreview } from '../../students/GoalPreview';
 import useStudentByUrl from '../../students/useStudentByUrl';
 import ApiStatus from '../../types/ApiStatus';
 import GoalForm from '../goal/GoalForm';
+import GoalTable from '../goal/GoalTable';
 import { useSnackbar } from '../SnackbarProvider';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -75,6 +77,15 @@ const StudentDetail = () => {
       setGoals([...goals, goalPreview]);
       snackBar.openSnackbar('Goal added.');
     }
+  };
+
+  const deleteGoal = async (goalId: string) => {
+    const token = await getTokenSilently();
+    await deleteRequest('http://localhost:5000/api/Goal/' + goalId, token);
+
+    const updatedGoals = goals.filter((goal) => goal.goalId !== goalId);
+    setGoals(updatedGoals);
+    snackBar.openSnackbar('Goal deleted.');
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -150,10 +161,10 @@ const StudentDetail = () => {
           )}
 
           <Typography variant="h4" align="center">
-            TODO: Goals
+            Goals
           </Typography>
           {service.result.goals.length > 0 ? (
-            goals.map((goalRow) => <div>{goalRow.goalName}</div>)
+            <GoalTable goals={goals} deleteGoal={deleteGoal} />
           ) : (
             <Typography>No Goals</Typography>
           )}
