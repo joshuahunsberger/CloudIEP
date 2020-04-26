@@ -2,7 +2,9 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { useAuth0 } from '../react-auth0-spa';
 import Home, { homeRoute } from '../ui/Home';
-import StudentPage, { studentsRoute } from '../ui/student/StudentPage';
+import SimpleStudentPage, {
+  studentsRoute,
+} from '../ui/student/SimpleStudentPage';
 import Auth, { authCallbackRoute } from '../ui/user/Auth';
 import Profile, { profileRoute } from '../ui/user/Profile';
 
@@ -11,7 +13,7 @@ import Profile, { profileRoute } from '../ui/user/Profile';
 
 const privateRoutes = [
   { path: profileRoute, component: Profile },
-  { path: studentsRoute, component: StudentPage },
+  { path: studentsRoute, component: SimpleStudentPage },
   { path: authCallbackRoute, component: Auth },
 ];
 
