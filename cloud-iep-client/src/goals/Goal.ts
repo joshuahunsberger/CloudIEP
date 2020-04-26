@@ -3,8 +3,7 @@ interface Objective {
   complete: boolean;
 }
 
-interface Observation {
-  id: string;
+export interface Observation {
   observationDate: Date;
   successCount: number;
   totalCount: number;
@@ -17,6 +16,7 @@ export interface Goal {
   category: string;
   beginDate: Date;
   endDate: Date;
+  goalPercentage: number;
   studentId: string;
   objectives: Objective[];
   observations: Observation[];

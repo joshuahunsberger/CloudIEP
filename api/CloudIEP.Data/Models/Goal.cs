@@ -24,7 +24,6 @@ namespace CloudIEP.Data.Models
 
     public class Observation
     {
-        public string Id { get; set; }
         public DateTime ObservationDate { get; set; }
         public int SuccessCount { get; set; }
         public int TotalCount { get; set; }
