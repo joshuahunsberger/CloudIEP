@@ -69,6 +69,11 @@ const StudentDetail = () => {
           <Typography variant="h4" align="center">
             TODO: Goals
           </Typography>
+          {service.result.goals?.length > 0 ? (
+            service.result.goals.map((goal) => <div>{goal.goalName}</div>)
+          ) : (
+            <Typography>No Goals</Typography>
+          )}
         </Paper>
       )}
       {service.status === ApiStatus.Error && (
