@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using CloudIEP.Data;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
@@ -13,10 +14,12 @@ namespace CloudIEP.Web.Controllers
     public class StudentController : Controller
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IUserRepository _userRepository;
 
-        public StudentController(IStudentRepository studentRepository)
+        public StudentController(IStudentRepository studentRepository, IUserRepository userRepository)
         {
             _studentRepository = studentRepository;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -27,7 +30,14 @@ namespace CloudIEP.Web.Controllers
                 return BadRequest();
             }
 
+            var user = await GetUser();
+            if (user == null) return BadRequest("You need to create a user account first.");
+
+            student.TeacherId = user.Id;
+
             var studentResponse = await _studentRepository.AddAsync(student);
+            await AddStudentToUser(user, studentResponse);
+
             return Ok(studentResponse);
         }
 
@@ -60,6 +70,9 @@ namespace CloudIEP.Web.Controllers
                 return BadRequest(student.Id);
             }
 
+            var user = await GetUser();
+            if (user == null) return BadRequest("You need to create a user account first.");
+
             try
             {
                 if (studentId == null)
@@ -68,6 +81,8 @@ namespace CloudIEP.Web.Controllers
                 }
 
                 await _studentRepository.UpdateAsync(student);
+                await UpdateStudentForUser(user, student);
+
                 return NoContent();
             }
             catch (EntityNotFoundException)
@@ -81,9 +96,13 @@ namespace CloudIEP.Web.Controllers
         {
             try
             {
+                var user = await GetUser();
+                if (user == null) return BadRequest("You need to create a user account first.");
+
                 var student = await _studentRepository.GetByIdAsync(studentId);
 
                 await _studentRepository.DeleteAsync(student);
+                await RemoveStudentFromUser(user, studentId);
 
                 return NoContent();
             }
@@ -91,6 +110,42 @@ namespace CloudIEP.Web.Controllers
             {
                 return NotFound(studentId);
             }
+        }
+
+        private async Task<User> GetUser()
+        {
+            var userId = HttpContext.User.Identity.Name;
+            try
+            {
+                return await _userRepository.GetByIdAsync(userId);
+            }
+            catch (EntityNotFoundException)
+            {
+                return null;
+            }
+        }
+
+        private async Task AddStudentToUser(User user, Student student)
+        {
+            var studentPreview = new StudentPreview
+            {
+                Id = student.Id,
+                FullName = $"{student.FirstName} {student.LastName}",
+            };
+            user.Students.Add(studentPreview);
+            await _userRepository.UpdateAsync(user);
+        }
+
+        private async Task UpdateStudentForUser(User user, Student student)
+        {
+            user.Students = user.Students.Where(s => s.Id != student.Id).ToList();
+            await AddStudentToUser(user, student);
+        }
+
+        private async Task RemoveStudentFromUser(User user, string studentId)
+        {
+            user.Students = user.Students.Where(s => s.Id != studentId).ToList();
+            await _userRepository.UpdateAsync(user);
         }
     }
 }
