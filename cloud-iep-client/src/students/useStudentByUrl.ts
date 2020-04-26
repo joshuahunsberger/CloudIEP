@@ -22,6 +22,7 @@ const useStudentByUrl = (url: string) => {
           firstName: response.firstName,
           lastName: response.lastName,
           dateOfBirth: new Date(response.dateOfBirth),
+          goals: response.goals,
         } as Student;
         setResult({ status: ApiStatus.Loaded, result: student });
       } catch (error) {
