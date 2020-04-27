@@ -3,7 +3,7 @@ import getRequest from '../network/getRequest';
 import { useAuth0 } from '../react-auth0-spa';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
-import { Goal } from './Goal';
+import { Goal, Observation } from './Goal';
 
 const useGoalByUrl = (url: string) => {
   const [result, setResult] = useState<Api<Goal>>({
@@ -21,6 +21,13 @@ const useGoalByUrl = (url: string) => {
           ...response,
           beginDate: new Date(response.beginDate),
           endDate: new Date(response.endDate),
+          observations: response.observations.map(
+            (obs) =>
+              ({
+                ...obs,
+                observationDate: new Date(obs.observationDate),
+              } as Observation),
+          ),
         } as Goal;
         setResult({ status: ApiStatus.Loaded, result: goal });
       } catch (error) {
