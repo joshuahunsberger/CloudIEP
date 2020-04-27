@@ -1,15 +1,17 @@
 import { Paper, Typography } from '@material-ui/core';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useAuth0 } from '../react-auth0-spa';
 
 function Home() {
+  const { isAuthenticated } = useAuth0();
   return (
     <Paper>
-      <Typography variant="h2" align="center" gutterBottom>
+      <Typography variant="h4" align="center" gutterBottom>
         Home
       </Typography>
-      <Typography variant="body1">This is the homepage content.</Typography>
-      <Link to="/students">Students</Link>
+      <Typography variant="body1" align="center">
+        {isAuthenticated ? 'Welcome back.' : 'Please log in.'}
+      </Typography>
     </Paper>
   );
 }
