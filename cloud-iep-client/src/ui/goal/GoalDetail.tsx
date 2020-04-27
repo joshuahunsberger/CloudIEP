@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CircularProgress,
+  Grid,
   List,
   ListItem,
   ListItemText,
@@ -130,15 +131,20 @@ const GoalDetail = () => {
             <ObservationForm addObservation={addObservation} cancel={cancel} />
           ) : (
             <>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setIsAdding(true)}
-                className={classes.button}
-              >
-                Add Observation
-              </Button>
-              <ObservationTable observations={goal.observations} />
+              <Grid container item direction="column" alignItems="center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setIsAdding(true)}
+                  className={classes.button}
+                >
+                  Add Observation
+                </Button>
+                <Typography variant="h4" align="center">
+                  Observations
+                </Typography>
+                <ObservationTable observations={goal.observations} />
+              </Grid>
               <ObservationGraph
                 observations={goal.observations}
                 goalPercentage={goal.goalPercentage}
