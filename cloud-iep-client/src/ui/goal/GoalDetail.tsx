@@ -9,7 +9,8 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import { add, startOfDay } from 'date-fns';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Goal, Observation } from '../../goals/Goal';
 import useGoalByUrl from '../../goals/useGoalByUrl';
@@ -18,8 +19,8 @@ import postRequest from '../../network/postRequest';
 import { useAuth0 } from '../../react-auth0-spa';
 import ApiStatus from '../../types/ApiStatus';
 import ObservationForm from './ObservationForm';
+import ObservationGraph from './ObservationGraph';
 import ObservationTable from './ObservationTable';
-import { add, startOfDay } from 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -126,7 +127,10 @@ const GoalDetail = () => {
                 Add Observation
               </Button>
               <ObservationTable observations={goal.observations} />
-              {/* TODO: Graph data points */}
+              <ObservationGraph
+                observations={goal.observations}
+                goalPercentage={goal.goalPercentage}
+              />
             </>
           )}
         </>
