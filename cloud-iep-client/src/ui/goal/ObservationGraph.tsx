@@ -1,16 +1,24 @@
+import { Card, makeStyles, Typography, useTheme } from '@material-ui/core';
+import { format } from 'date-fns';
 import React from 'react';
-import { Observation } from '../../goals/Goal';
 import {
   CartesianGrid,
-  LineChart,
   Line,
+  LineChart,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
-import { Typography } from '@material-ui/core';
+import { Observation } from '../../goals/Goal';
+
+const useStyles = makeStyles((theme) => ({
+  card: {
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(1),
+  },
+}));
 
 interface ObservationGraphProps {
   observations: ReadonlyArray<Observation>;
@@ -18,7 +26,7 @@ interface ObservationGraphProps {
 }
 
 interface ObservationGraphData {
-  observationDate: Date;
+  observationDate: string;
   observationPercentage: number;
 }
 
@@ -26,24 +34,34 @@ const ObservationGraph = ({
   observations,
   goalPercentage,
 }: ObservationGraphProps) => {
+  const theme = useTheme();
+  const classes = useStyles(theme);
+
   const makeGraphData = (): ObservationGraphData[] => {
     return observations.map(
       (o) =>
         ({
-          observationDate: o.observationDate,
+          observationDate: format(o.observationDate, 'MM/dd/yyyy'),
           observationPercentage: o.successCount / o.totalCount,
         } as ObservationGraphData),
     );
   };
+
   return (
-    <>
-      <Typography>Chart</Typography>
+    <Card className={classes.card}>
+      <Typography variant="h4" align="center">
+        Observation History
+      </Typography>
       <ResponsiveContainer height={300}>
         <LineChart data={makeGraphData()}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="observationDate" label="Date" />
           <YAxis domain={[0, 1]} />
-          <Tooltip />
+          <Tooltip
+            formatter={(value) => {
+              return [value, 'Observed Percentage'];
+            }}
+          />
           {goalPercentage && (
             <ReferenceLine
               y={goalPercentage}
@@ -55,7 +73,7 @@ const ObservationGraph = ({
           <Line type="monotone" dataKey="observationPercentage" />
         </LineChart>
       </ResponsiveContainer>
-    </>
+    </Card>
   );
 };
 
