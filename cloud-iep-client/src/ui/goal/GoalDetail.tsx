@@ -13,6 +13,7 @@ import { add, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Goal, Observation } from '../../goals/Goal';
+import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
 import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
@@ -65,7 +66,12 @@ const GoalDetail = () => {
     var token = await getTokenSilently();
     await postRequest<Observation>(url, newObservation, token);
     setIsAdding(false);
-    setGoal({ ...goal, observations: [...goal.observations, newObservation] });
+    setGoal({
+      ...goal,
+      observations: [...goal.observations, newObservation].sort(
+        sortObservationsByDate,
+      ),
+    });
   };
 
   const cancel = () => {
