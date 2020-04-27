@@ -102,6 +102,12 @@ const GoalDetail = () => {
               </ListItem>
               <ListItem>
                 <ListItemText
+                  primary="Goal Percentage"
+                  secondary={service.result.goalPercentage}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
                   primary="Begin Date"
                   secondary={service.result.beginDate.toDateString()}
                 />

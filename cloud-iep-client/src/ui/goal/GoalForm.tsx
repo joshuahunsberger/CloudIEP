@@ -1,7 +1,7 @@
 import { Button, makeStyles, TextField, useTheme } from '@material-ui/core';
+import { KeyboardDatePicker } from '@material-ui/pickers';
 import React, { FormEvent } from 'react';
 import { Goal } from '../../goals/Goal';
-import { KeyboardDatePicker } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -64,6 +64,19 @@ const GoalForm = ({ goal, setGoal, handleSubmit, cancel }: GoalFormProps) => {
         id="goalCategory"
         value={goal.category}
         onChange={(e) => setGoal({ ...goal, category: e.currentTarget.value })}
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        type="number"
+        label="Goal Percentage"
+        id="goalPercentage"
+        value={goal.goalPercentage}
+        onChange={(e) =>
+          setGoal({ ...goal, goalPercentage: Number(e.currentTarget.value) })
+        }
       />
       <KeyboardDatePicker
         autoOk
