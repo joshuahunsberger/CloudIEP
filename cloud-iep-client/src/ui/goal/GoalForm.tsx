@@ -17,9 +17,16 @@ interface GoalFormProps {
   setGoal: (goal: Goal) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   cancel: () => void;
+  isEditing?: boolean;
 }
 
-const GoalForm = ({ goal, setGoal, handleSubmit, cancel }: GoalFormProps) => {
+const GoalForm = ({
+  goal,
+  setGoal,
+  handleSubmit,
+  cancel,
+  isEditing,
+}: GoalFormProps) => {
   const theme = useTheme();
   const classes = useStyles(theme);
 
@@ -111,7 +118,7 @@ const GoalForm = ({ goal, setGoal, handleSubmit, cancel }: GoalFormProps) => {
         color="primary"
         className={classes.button}
       >
-        Add
+        {isEditing ? 'Update' : 'Add'}
       </Button>
       <Button
         type="reset"

@@ -11,17 +11,19 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import { ArrowBack } from '@material-ui/icons';
+import { ArrowBack, Edit } from '@material-ui/icons';
 import { add, startOfDay } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Goal, Observation } from '../../goals/Goal';
 import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
 import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
+import putRequest from '../../network/putRequest';
 import { useAuth0 } from '../../react-auth0-spa';
 import ApiStatus from '../../types/ApiStatus';
+import GoalForm from './GoalForm';
 import ObservationForm from './ObservationForm';
 import ObservationGraph from './ObservationGraph';
 import ObservationTable from './ObservationTable';
@@ -60,6 +62,7 @@ const GoalDetail = () => {
 
   const [goal, setGoal] = useState<Goal>(defaultGoal);
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     service.status === ApiStatus.Loaded && setGoal(service.result);
@@ -82,6 +85,17 @@ const GoalDetail = () => {
     setIsAdding(false);
   };
 
+  const handleGoalSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    var token = await getTokenSilently();
+    await putRequest(goalUrl, goal, token);
+    setIsEditing(false);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+  };
+
   return (
     <>
       {service.status === ApiStatus.Loading && <CircularProgress />}
@@ -94,44 +108,51 @@ const GoalDetail = () => {
             <Typography variant="h4" align="center">
               Goal
             </Typography>
-            <List>
-              <ListItem>
-                <ListItemText
-                  primary="Goal Name"
-                  secondary={service.result.goalName}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Goal Description"
-                  secondary={service.result.goalDescription}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Category"
-                  secondary={service.result.category}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Goal Percentage"
-                  secondary={service.result.goalPercentage}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Begin Date"
-                  secondary={service.result.beginDate.toDateString()}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="End Date"
-                  secondary={service.result.endDate.toDateString()}
-                />
-              </ListItem>
-            </List>
+            <IconButton>
+              <Edit onClick={() => setIsEditing(true)} />
+            </IconButton>
+            {isEditing ? (
+              <GoalForm
+                goal={goal}
+                setGoal={setGoal}
+                handleSubmit={handleGoalSubmit}
+                cancel={cancelEditing}
+                isEditing={true}
+              />
+            ) : (
+              <List>
+                <ListItem>
+                  <ListItemText primary="Goal Name" secondary={goal.goalName} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Goal Description"
+                    secondary={goal.goalDescription}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Category" secondary={goal.category} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Goal Percentage"
+                    secondary={goal.goalPercentage}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="Begin Date"
+                    secondary={goal.beginDate.toDateString()}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary="End Date"
+                    secondary={goal.endDate.toDateString()}
+                  />
+                </ListItem>
+              </List>
+            )}
           </Card>
           {isAdding ? (
             <ObservationForm addObservation={addObservation} cancel={cancel} />

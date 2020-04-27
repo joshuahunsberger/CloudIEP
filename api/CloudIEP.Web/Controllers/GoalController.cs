@@ -58,6 +58,30 @@ namespace CloudIEP.Web.Controllers
             }
         }
 
+        [HttpPut("{goalId}")]
+        public async Task<ActionResult> UpdateGoal(string goalId, Goal goal)
+        {
+            if (goal.Id != goalId)
+            {
+                return BadRequest(goal.Id);
+            }
+
+            var student = await GetStudent(goal.StudentId);
+            if (student == null) return BadRequest("Student doesn't exist.");
+
+            try
+            {
+                await _goalRepository.UpdateAsync(goal);
+                await UpdateGoalForStudent(student, goal);
+
+                return NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound(goalId);
+            }
+        }
+
         [HttpDelete("{goalId}")]
         public async Task<ActionResult> DeleteGoal(string goalId)
         {
@@ -113,6 +137,12 @@ namespace CloudIEP.Web.Controllers
             };
             student.Goals.Add(goalPreview);
             await _studentRepository.UpdateAsync(student);
+        }
+
+        private async Task UpdateGoalForStudent(Student student, Goal goal)
+        {
+            student.Goals = student.Goals.Where(g => g.GoalId != goal.Id).ToList();
+            await AddGoalToStudent(student, goal);
         }
 
         private async Task RemoveGoalFromStudent(Student student, string goalId)
