@@ -9,15 +9,17 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Observation } from '../../goals/Goal';
+import { Goal, Observation } from '../../goals/Goal';
 import useGoalByUrl from '../../goals/useGoalByUrl';
 import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
 import { useAuth0 } from '../../react-auth0-spa';
 import ApiStatus from '../../types/ApiStatus';
 import ObservationForm from './ObservationForm';
+import ObservationTable from './ObservationTable';
+import { add, startOfDay } from 'date-fns';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,12 +38,33 @@ const GoalDetail = () => {
   const goalUrl = baseUrl + 'goal/' + id;
   const service = useGoalByUrl(goalUrl);
   const { getTokenSilently } = useAuth0();
+
+  const defaultGoal: Goal = {
+    id: '',
+    goalName: '',
+    goalDescription: '',
+    category: '',
+    beginDate: startOfDay(new Date()),
+    endDate: startOfDay(add(new Date(), { years: 1 })),
+    goalPercentage: 0,
+    objectives: [],
+    observations: [],
+    studentId: id!,
+  };
+
+  const [goal, setGoal] = useState<Goal>(defaultGoal);
   const [isAdding, setIsAdding] = useState(false);
+
+  useEffect(() => {
+    service.status === ApiStatus.Loaded && setGoal(service.result);
+  }, [service]);
 
   const addObservation = async (newObservation: Observation) => {
     var url = goalUrl + '/observation';
     var token = await getTokenSilently();
     await postRequest<Observation>(url, newObservation, token);
+    setIsAdding(false);
+    setGoal({ ...goal, observations: [...goal.observations, newObservation] });
   };
 
   const cancel = () => {
@@ -93,16 +116,18 @@ const GoalDetail = () => {
           {isAdding ? (
             <ObservationForm addObservation={addObservation} cancel={cancel} />
           ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setIsAdding(true)}
-              className={classes.button}
-            >
-              Add Observation
-            </Button>
-            // TODO: List observations
-            // TODO: Graph data points
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsAdding(true)}
+                className={classes.button}
+              >
+                Add Observation
+              </Button>
+              <ObservationTable observations={goal.observations} />
+              {/* TODO: Graph data points */}
+            </>
           )}
         </>
       )}
