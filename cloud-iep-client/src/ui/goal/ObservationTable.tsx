@@ -6,6 +6,7 @@ import {
   TableCell,
   TableBody,
   TableRow,
+  Card,
 } from '@material-ui/core';
 import { Observation } from '../../goals/Goal';
 import { format } from 'date-fns';
@@ -16,7 +17,7 @@ interface ObservationTableProps {
 
 const ObservationTable = ({ observations }: ObservationTableProps) => {
   return (
-    <TableContainer>
+    <TableContainer component={Card}>
       <Table>
         <TableHead>
           <TableRow>
