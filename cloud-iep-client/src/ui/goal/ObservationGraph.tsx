@@ -55,7 +55,7 @@ const ObservationGraph = ({
       <ResponsiveContainer height={300}>
         <LineChart data={makeGraphData()}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="observationDate" label="Date" />
+          <XAxis dataKey="observationDate" />
           <YAxis domain={[0, 1]} />
           <Tooltip
             formatter={(value) => {
