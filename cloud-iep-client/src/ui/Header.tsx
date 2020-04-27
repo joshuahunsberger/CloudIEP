@@ -11,6 +11,7 @@ import { Cloud } from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '../react-auth0-spa';
+import { studentsRoute } from './student/StudentPage';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -19,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
   homeLink: {
     textDecoration: 'none',
     color: 'inherit',
+    margin: theme.spacing(0, 2),
   },
   gap: {
     flex: 1,
@@ -36,6 +38,10 @@ function Header() {
         <Cloud className={classes.icon} />
         <Link to="/" className={classes.homeLink}>
           <Typography variant="h6">Cloud IEP</Typography>
+        </Link>
+        <Typography variant="h6">|</Typography>
+        <Link to={studentsRoute} className={classes.homeLink}>
+          <Typography variant="h6">Students</Typography>
         </Link>
         <div className={classes.gap} />
         {!isAuthenticated && (
