@@ -53,6 +53,7 @@ const StudentDetail = () => {
     category: '',
     beginDate: startOfDay(new Date()),
     endDate: startOfDay(add(new Date(), { years: 1 })),
+    goalPercentage: 0,
     objectives: [],
     observations: [],
     studentId: id!,
