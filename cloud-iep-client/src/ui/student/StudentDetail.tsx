@@ -18,6 +18,7 @@ import {
   useTheme,
 } from '@material-ui/core';
 import { ArrowBack, Cake, Edit, Person } from '@material-ui/icons';
+import { KeyboardDatePicker } from '@material-ui/pickers';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -83,6 +84,8 @@ const StudentDetail = () => {
   const [pendingFirstName, setPendingFirstName] = useState('');
   const [editingLastName, setEditingLastName] = useState(false);
   const [pendingLastName, setPendingLastName] = useState('');
+  const [editingDoB, setEditingDoB] = useState(false);
+  const [pendingDoB, setPendingDoB] = useState<Date>(new Date());
 
   useEffect(() => {
     const updateFromService = (studentResponse: Student) => {
@@ -95,7 +98,13 @@ const StudentDetail = () => {
   const hideAllFields = () => {
     setEditingFirstName(false);
     setEditingLastName(false);
+    setEditingDoB(false);
   };
+
+  const handleDateChange = (date: Date | null) => {
+    date && setPendingDoB(date);
+  };
+
   const handleKeyDown = async (
     event: React.KeyboardEvent,
     fieldName: string,
@@ -124,7 +133,15 @@ const StudentDetail = () => {
             console.log(error);
             snackBar.openSnackbar('Error saving last name');
           }
-
+          hideAllFields();
+        } else if (fieldName === 'dob') {
+          try {
+            await updateDoB(pendingDoB);
+            snackBar.openSnackbar('Date of birth saved.');
+          } catch (error) {
+            console.log(error);
+            snackBar.openSnackbar('Error saving Date of Birth.');
+          }
           hideAllFields();
         }
         break;
@@ -137,6 +154,10 @@ const StudentDetail = () => {
 
   const updateLastName = async (lastName: string) => {
     await updateStudent({ ...student, lastName: lastName });
+  };
+
+  const updateDoB = async (date: Date) => {
+    await updateStudent({ ...student, dateOfBirth: date });
   };
 
   const updateStudent = async (pendingStudent: Student) => {
@@ -266,13 +287,45 @@ const StudentDetail = () => {
                 )}
               </ListItem>
               <ListItem>
-                <ListItemIcon>
-                  <Cake />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Date of Birth"
-                  secondary={service.result.dateOfBirth.toDateString()}
-                />
+                {editingDoB ? (
+                  <KeyboardDatePicker
+                    disableFuture
+                    autoOk
+                    fullWidth
+                    variant="inline"
+                    inputVariant="outlined"
+                    openTo="year"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="dob-picker"
+                    label="Date of Birth"
+                    views={['year', 'month', 'date']}
+                    maxDateMessage="Date of birth cannot be in the future"
+                    value={pendingDoB}
+                    onKeyDown={(event) => handleKeyDown(event, 'dob')}
+                    onChange={(date) => handleDateChange(date)}
+                  />
+                ) : (
+                  <>
+                    <ListItemIcon>
+                      <Cake />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Date of Birth"
+                      secondary={service.result.dateOfBirth.toDateString()}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        onClick={() => {
+                          setPendingDoB(student.dateOfBirth);
+                          setEditingDoB(true);
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
+                )}
               </ListItem>
             </List>
             <Grid
