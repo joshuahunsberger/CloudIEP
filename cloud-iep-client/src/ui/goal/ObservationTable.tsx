@@ -19,9 +19,11 @@ const ObservationTable = ({ observations }: ObservationTableProps) => {
     <TableContainer>
       <Table>
         <TableHead>
-          <TableCell>Observation Date</TableCell>
-          <TableCell>Success Count</TableCell>
-          <TableCell>Total Count</TableCell>
+          <TableRow>
+            <TableCell>Observation Date</TableCell>
+            <TableCell>Success Count</TableCell>
+            <TableCell>Total Count</TableCell>
+          </TableRow>
         </TableHead>
         <TableBody>
           {observations.map((observation) => (
