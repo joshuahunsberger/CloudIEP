@@ -3,6 +3,7 @@ import {
   Card,
   CircularProgress,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemText,
@@ -10,9 +11,10 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
+import { ArrowBack } from '@material-ui/icons';
 import { add, startOfDay } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Goal, Observation } from '../../goals/Goal';
 import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
@@ -41,6 +43,7 @@ const GoalDetail = () => {
   const goalUrl = baseUrl + 'goal/' + id;
   const service = useGoalByUrl(goalUrl);
   const { getTokenSilently } = useAuth0();
+  const history = useHistory();
 
   const defaultGoal: Goal = {
     id: '',
@@ -84,6 +87,9 @@ const GoalDetail = () => {
       {service.status === ApiStatus.Loading && <CircularProgress />}
       {service.status === ApiStatus.Loaded && (
         <>
+          <IconButton onClick={history.goBack}>
+            <ArrowBack />
+          </IconButton>
           <Card className={classes.root}>
             <Typography variant="h4" align="center">
               Goal

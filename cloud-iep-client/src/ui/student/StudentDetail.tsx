@@ -4,6 +4,7 @@ import {
   CardContent,
   CircularProgress,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
@@ -14,10 +15,10 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import { Cake, Person } from '@material-ui/icons';
+import { ArrowBack, Cake, Person } from '@material-ui/icons';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Goal } from '../../goals/Goal';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
@@ -45,6 +46,7 @@ const StudentDetail = () => {
   const url = 'http://localhost:5000/api/Student/' + id;
   const service = useStudentByUrl(url);
   const snackBar = useSnackbar();
+  const history = useHistory();
 
   const defaultGoal: Goal = {
     id: '',
@@ -109,82 +111,87 @@ const StudentDetail = () => {
     <>
       {service.status === ApiStatus.Loading && <CircularProgress />}
       {service.status === ApiStatus.Loaded && (
-        <Paper className={classes.root}>
-          <Typography variant="h2" align="center">
-            Student Detail
-          </Typography>
-          <List>
-            <ListItem>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText
-                primary="First Name"
-                secondary={service.result.firstName}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
-              <ListItemText
-                primary="Last Name"
-                secondary={service.result.lastName}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <Cake />
-              </ListItemIcon>
-              <ListItemText
-                primary="Date of Birth"
-                secondary={service.result.dateOfBirth.toDateString()}
-              />
-            </ListItem>
-          </List>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
-            {isAdding ? (
-              <Card>
-                <CardContent>
-                  <Typography variant="h4" align="center">
-                    Add a Goal
-                  </Typography>
-                  <GoalForm
-                    goal={goal}
-                    setGoal={setGoal}
-                    handleSubmit={handleSubmit}
-                    cancel={cancel}
-                  />
-                </CardContent>
-              </Card>
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setIsAdding(true)}
-                className={classes.button}
-              >
-                Add Goal
-              </Button>
-            )}
-
+        <>
+          <IconButton onClick={history.goBack}>
+            <ArrowBack />
+          </IconButton>
+          <Paper className={classes.root}>
             <Typography variant="h4" align="center">
-              Goals
+              Student Detail
             </Typography>
-            {goals.length > 0 ? (
-              <GoalTable goals={goals} deleteGoal={deleteGoal} />
-            ) : (
-              <Typography variant="h6" align="center">
-                You don't have any goals right now. Add one above.
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText
+                  primary="First Name"
+                  secondary={service.result.firstName}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Last Name"
+                  secondary={service.result.lastName}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <Cake />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Date of Birth"
+                  secondary={service.result.dateOfBirth.toDateString()}
+                />
+              </ListItem>
+            </List>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              {isAdding ? (
+                <Card>
+                  <CardContent>
+                    <Typography variant="h4" align="center">
+                      Add a Goal
+                    </Typography>
+                    <GoalForm
+                      goal={goal}
+                      setGoal={setGoal}
+                      handleSubmit={handleSubmit}
+                      cancel={cancel}
+                    />
+                  </CardContent>
+                </Card>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setIsAdding(true)}
+                  className={classes.button}
+                >
+                  Add Goal
+                </Button>
+              )}
+
+              <Typography variant="h4" align="center">
+                Goals
               </Typography>
-            )}
-          </Grid>
-        </Paper>
+              {goals.length > 0 ? (
+                <GoalTable goals={goals} deleteGoal={deleteGoal} />
+              ) : (
+                <Typography variant="h6" align="center">
+                  You don't have any goals right now. Add one above.
+                </Typography>
+              )}
+            </Grid>
+          </Paper>
+        </>
       )}
       {service.status === ApiStatus.Error && (
         <Typography variant="h6">
