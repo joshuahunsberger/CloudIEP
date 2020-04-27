@@ -8,22 +8,27 @@ import {
   List,
   ListItem,
   ListItemIcon,
+  ListItemSecondaryAction,
   ListItemText,
   makeStyles,
   Paper,
+  TextField,
   Theme,
   Typography,
   useTheme,
 } from '@material-ui/core';
-import { ArrowBack, Cake, Person } from '@material-ui/icons';
+import { ArrowBack, Cake, Edit, Person } from '@material-ui/icons';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Goal } from '../../goals/Goal';
 import deleteRequest from '../../network/deleteRequest';
+import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
+import putRequest from '../../network/putRequest';
 import { useAuth0 } from '../../react-auth0-spa';
 import { GoalPreview } from '../../students/GoalPreview';
+import { Student } from '../../students/Student';
 import useStudentByUrl from '../../students/useStudentByUrl';
 import ApiStatus from '../../types/ApiStatus';
 import GoalForm from '../goal/GoalForm';
@@ -43,11 +48,19 @@ const StudentDetail = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
   const { id } = useParams();
-  const url = 'http://localhost:5000/api/Student/' + id;
+  const baseUrl = getBaseUrl();
+  const url = baseUrl + 'Student/' + id;
   const service = useStudentByUrl(url);
   const snackBar = useSnackbar();
   const history = useHistory();
 
+  const defaultStudent: Student = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    dateOfBirth: startOfDay(new Date()),
+    goals: [],
+  };
   const defaultGoal: Goal = {
     id: '',
     goalName: '',
@@ -62,13 +75,75 @@ const StudentDetail = () => {
   };
 
   const [isAdding, setIsAdding] = useState(false);
+  const [student, setStudent] = useState<Student>(defaultStudent);
   const [goals, setGoals] = useState<GoalPreview[]>([]);
   const [goal, setGoal] = useState<Goal>(defaultGoal);
   const { getTokenSilently } = useAuth0();
+  const [editingFirstName, setEditingFirstName] = useState(false);
+  const [pendingFirstName, setPendingFirstName] = useState('');
+  const [editingLastName, setEditingLastName] = useState(false);
+  const [pendingLastName, setPendingLastName] = useState('');
 
   useEffect(() => {
-    service.status === ApiStatus.Loaded && setGoals(service.result.goals);
+    const updateFromService = (studentResponse: Student) => {
+      setStudent(studentResponse);
+      setGoals(studentResponse.goals);
+    };
+    service.status === ApiStatus.Loaded && updateFromService(service.result);
   }, [service]);
+
+  const hideAllFields = () => {
+    setEditingFirstName(false);
+    setEditingLastName(false);
+  };
+  const handleKeyDown = async (
+    event: React.KeyboardEvent,
+    fieldName: string,
+  ) => {
+    const key = event.key;
+
+    switch (key) {
+      case 'Escape':
+        hideAllFields();
+        break;
+      case 'Enter':
+        if (fieldName === 'firstName') {
+          try {
+            await updateFirstName(pendingFirstName);
+            snackBar.openSnackbar('First name saved.');
+          } catch (error) {
+            console.log(error);
+            snackBar.openSnackbar('Error saving first name');
+          }
+          hideAllFields();
+        } else if (fieldName === 'lastName') {
+          try {
+            await updateLastName(pendingLastName);
+            snackBar.openSnackbar('Last name saved.');
+          } catch (error) {
+            console.log(error);
+            snackBar.openSnackbar('Error saving last name');
+          }
+
+          hideAllFields();
+        }
+        break;
+    }
+  };
+
+  const updateFirstName = async (firstName: string) => {
+    await updateStudent({ ...student, firstName: firstName });
+  };
+
+  const updateLastName = async (lastName: string) => {
+    await updateStudent({ ...student, lastName: lastName });
+  };
+
+  const updateStudent = async (pendingStudent: Student) => {
+    const token = await getTokenSilently();
+    await putRequest(url, pendingStudent, token);
+    setStudent(pendingStudent);
+  };
 
   const addGoal = async (newGoal: Goal) => {
     const token = await getTokenSilently();
@@ -121,22 +196,74 @@ const StudentDetail = () => {
             </Typography>
             <List>
               <ListItem>
-                <ListItemIcon>
-                  <Person />
-                </ListItemIcon>
-                <ListItemText
-                  primary="First Name"
-                  secondary={service.result.firstName}
-                />
+                {editingFirstName ? (
+                  <TextField
+                    autoFocus
+                    fullWidth
+                    label="First Name"
+                    value={pendingFirstName}
+                    onChange={(event) =>
+                      setPendingFirstName(event.currentTarget.value)
+                    }
+                    onKeyDown={(event) => handleKeyDown(event, 'firstName')}
+                    onBlur={() => setEditingFirstName(false)}
+                  />
+                ) : (
+                  <>
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="First Name"
+                      secondary={student.firstName}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        onClick={() => {
+                          setPendingFirstName(student.firstName);
+                          setEditingFirstName(true);
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
+                )}
               </ListItem>
               <ListItem>
-                <ListItemIcon>
-                  <Person />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Last Name"
-                  secondary={service.result.lastName}
-                />
+                {editingLastName ? (
+                  <TextField
+                    autoFocus
+                    fullWidth
+                    label="Last Name"
+                    value={pendingLastName}
+                    onChange={(event) =>
+                      setPendingLastName(event.currentTarget.value)
+                    }
+                    onKeyDown={(event) => handleKeyDown(event, 'lastName')}
+                    onBlur={() => setEditingLastName(false)}
+                  />
+                ) : (
+                  <>
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Last Name"
+                      secondary={student.lastName}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        onClick={() => {
+                          setPendingLastName(student.lastName);
+                          setEditingLastName(true);
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
+                )}
               </ListItem>
               <ListItem>
                 <ListItemIcon>
