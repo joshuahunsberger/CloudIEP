@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 const GoalDetail = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const baseUrl = getBaseUrl();
   const goalUrl = baseUrl + 'goal/' + id;
   const service = useGoalByUrl(goalUrl);
