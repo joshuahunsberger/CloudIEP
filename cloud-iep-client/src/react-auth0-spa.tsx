@@ -52,7 +52,7 @@ export const Auth0Provider = ({
   initOptions,
 }: Auth0ProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<any>();
   const [auth0Client, setAuth0] = useState<Auth0Client>();
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);
