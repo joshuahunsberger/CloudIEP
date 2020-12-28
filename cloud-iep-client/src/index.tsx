@@ -2,29 +2,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
-import { Auth0Provider } from './react-auth0-spa';
+import { AppState, Auth0Provider } from '@auth0/auth0-react';
 import * as serviceWorker from './serviceWorker';
 import history from './utils/history';
 
-const onRedirectCallback = (result: any) => {
-  const appState = result?.appState;
-  history.push(
-    appState && appState.targetUrl
-      ? appState.targetUrl
-      : window.location.pathname,
-  );
+// Example from documentation:
+// https://github.com/auth0/auth0-react/blob/master/EXAMPLES.md#1-protecting-a-route-in-a-react-router-dom-app
+const onRedirectCallback = (appState: AppState) => {
+  // Use the router's history module to replace the url
+  history.replace(appState?.returnTo || window.location.pathname);
 };
 
 ReactDOM.render(
   <Auth0Provider
+    domain={process.env.REACT_APP_AUTH0_DOMAIN ?? ''}
+    clientId={process.env.REACT_APP_AUTH0_CLIENTID ?? ''}
+    redirectUri="http://localhost:3000/logincallback"
+    scope="openid"
+    audience="https://cloudiepdev/api"
     onRedirectCallback={onRedirectCallback}
-    initOptions={{
-      domain: process.env.REACT_APP_AUTH0_DOMAIN ?? '',
-      client_id: process.env.REACT_APP_AUTH0_CLIENTID ?? '',
-      redirect_uri: 'http://localhost:3000/logincallback',
-      scope: 'openid',
-      audience: 'https://cloudiepdev/api',
-    }}
   >
     <App />
   </Auth0Provider>,
