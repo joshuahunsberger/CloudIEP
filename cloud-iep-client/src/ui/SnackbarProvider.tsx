@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
 import { Snackbar } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
 
 interface SnackbarContextState {
   isOpen: boolean;

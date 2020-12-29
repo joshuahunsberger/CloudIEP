@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   Avatar,
   Grid,
@@ -17,7 +18,6 @@ import {
 import { ContactMail, Edit, Person } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
-import { useAuth0 } from '@auth0/auth0-react';
 import ApiStatus from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
 import { useSnackbar } from '../SnackbarProvider';

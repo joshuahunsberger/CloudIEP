@@ -1,6 +1,6 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import postRequest from '../network/postRequest';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
 import { User } from './User';

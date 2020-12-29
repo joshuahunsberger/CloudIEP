@@ -1,10 +1,10 @@
+import { AppState, Auth0Provider } from '@auth0/auth0-react';
+import { createBrowserHistory } from 'history';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
-import { AppState, Auth0Provider } from '@auth0/auth0-react';
 import * as serviceWorker from './serviceWorker';
-import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory();
 
