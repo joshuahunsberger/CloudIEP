@@ -4,7 +4,9 @@ import App from './App';
 import './index.css';
 import { AppState, Auth0Provider } from '@auth0/auth0-react';
 import * as serviceWorker from './serviceWorker';
-import history from './utils/history';
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
 
 // Example from documentation:
 // https://github.com/auth0/auth0-react/blob/master/EXAMPLES.md#1-protecting-a-route-in-a-react-router-dom-app
