@@ -1,6 +1,6 @@
 import { Paper, Typography } from '@material-ui/core';
 import React from 'react';
-import { useAuth0 } from '../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function Home() {
   const { isAuthenticated } = useAuth0();
