@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   Button,
   Card,
@@ -27,7 +28,6 @@ import deleteRequest from '../../network/deleteRequest';
 import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
-import { useAuth0 } from '@auth0/auth0-react';
 import { GoalPreview } from '../../students/GoalPreview';
 import { Student } from '../../students/Student';
 import useStudentByUrl from '../../students/useStudentByUrl';

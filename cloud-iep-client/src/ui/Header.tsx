@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   AppBar,
   Avatar,
@@ -10,7 +11,6 @@ import {
 import { Cloud } from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
 import { studentsRoute } from './student/StudentPage';
 
 const useStyles = makeStyles((theme) => ({

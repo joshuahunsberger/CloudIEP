@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   Button,
   Card,
@@ -12,7 +13,6 @@ import { startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Student } from '../../students/Student';
 import ApiStatus from '../../types/ApiStatus';
 import { StudentPreview } from '../../users/StudentPreview';

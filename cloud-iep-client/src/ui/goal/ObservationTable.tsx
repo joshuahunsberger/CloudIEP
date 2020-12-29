@@ -1,15 +1,15 @@
-import React from 'react';
 import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableCell,
-  TableBody,
-  TableRow,
   Card,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@material-ui/core';
-import { Observation } from '../../goals/Goal';
 import { format } from 'date-fns';
+import React from 'react';
+import { Observation } from '../../goals/Goal';
 
 interface ObservationTableProps {
   observations: ReadonlyArray<Observation>;

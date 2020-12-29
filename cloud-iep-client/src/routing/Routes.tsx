@@ -1,14 +1,14 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import GoalDetail, { goalDetailRoute } from '../ui/goal/GoalDetail';
 import Home, { homeRoute } from '../ui/Home';
 import SimpleStudentPage, {
   studentsRoute,
 } from '../ui/student/SimpleStudentPage';
+import StudentDetail, { studentDetailRoute } from '../ui/student/StudentDetail';
 import Auth, { authCallbackRoute } from '../ui/user/Auth';
 import Profile, { profileRoute } from '../ui/user/Profile';
-import StudentDetail, { studentDetailRoute } from '../ui/student/StudentDetail';
-import GoalDetail, { goalDetailRoute } from '../ui/goal/GoalDetail';
 
 // Logged-in routing inspired by John Reilly on GitHub:
 // https://github.com/johnnyreilly/auth0-react-typescript-asp-net-core

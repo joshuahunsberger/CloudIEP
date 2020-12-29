@@ -10,9 +10,9 @@ import {
 } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { StudentPreview } from '../../users/StudentPreview';
 import ConfirmDialog from '../ConfirmDialog';
-import { Link } from 'react-router-dom';
 
 interface SimpleStudentTableProps {
   students?: ReadonlyArray<StudentPreview>;
