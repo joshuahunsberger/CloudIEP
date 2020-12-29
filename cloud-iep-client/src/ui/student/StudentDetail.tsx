@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const StudentDetail = () => {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const { id } = useParams<{ id : string }>();
+  const { id } = useParams<{ id: string }>();
   const baseUrl = getBaseUrl();
   const url = baseUrl + 'Student/' + id;
   const service = useStudentByUrl(url);
