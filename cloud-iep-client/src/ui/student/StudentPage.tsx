@@ -12,7 +12,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
-import { useAuth0 } from '../../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Student } from '../../students/Student';
 import useStudentsApi from '../../students/useStudentsApi';
 import ApiStatus from '../../types/ApiStatus';
@@ -52,14 +52,14 @@ const StudentPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [students, setStudents] = useState<Student[]>([]);
   const [student, setStudent] = useState<Student>(defaultStudent);
-  const { getTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     service.status === ApiStatus.Loaded && setStudents(service.result);
   }, [service]);
 
   const addStudent = async (newStudent: Student) => {
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     const result = await postRequest<Student>(
       'http://localhost:5000/api/Student',
       newStudent,
@@ -75,7 +75,7 @@ const StudentPage = () => {
   };
 
   const editStudent = async (existingStudent: Student) => {
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     await putRequest(
       'http://localhost:5000/api/Student/' + existingStudent.id,
       existingStudent,
@@ -91,7 +91,7 @@ const StudentPage = () => {
 
   const deleteStudent = async (studentId: string) => {
     // TODO: Confirm?
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     await deleteRequest(
       'http://localhost:5000/api/Student/' + studentId,
       token,

@@ -12,7 +12,7 @@ import { startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
-import { useAuth0 } from '../../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Student } from '../../students/Student';
 import ApiStatus from '../../types/ApiStatus';
 import { StudentPreview } from '../../users/StudentPreview';
@@ -56,14 +56,14 @@ const SimpleStudentPage = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [students, setStudents] = useState<StudentPreview[]>([]);
   const [student, setStudent] = useState<Student>(defaultStudent);
-  const { getTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     service.status === ApiStatus.Loaded && setStudents(service.result.students);
   }, [service]);
 
   const addStudent = async (newStudent: Student) => {
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     const result = await postRequest<Student>(
       'http://localhost:5000/api/Student',
       newStudent,
@@ -82,7 +82,7 @@ const SimpleStudentPage = () => {
   };
 
   const deleteStudent = async (studentId: string) => {
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     await deleteRequest(
       'http://localhost:5000/api/Student/' + studentId,
       token,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import getRequest from '../network/getRequest';
-import { useAuth0 } from '../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
 import { Student } from './Student';
@@ -9,12 +9,12 @@ const useStudentByUrl = (url: string) => {
   const [result, setResult] = useState<Api<Student>>({
     status: ApiStatus.Loading,
   });
-  const { getTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     async function fetchStudent(url: string) {
       try {
-        const token = await getTokenSilently();
+        const token = await getAccessTokenSilently();
         const response = await getRequest<Student>(url, token);
 
         const student = {
@@ -35,7 +35,7 @@ const useStudentByUrl = (url: string) => {
 
       fetchStudent(url);
     }
-  }, [getTokenSilently, url]);
+  }, [getAccessTokenSilently, url]);
 
   return result;
 };

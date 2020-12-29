@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import getRequest from '../network/getRequest';
-import { useAuth0 } from '../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
 import { Goal, Observation } from './Goal';
@@ -10,12 +10,12 @@ const useGoalByUrl = (url: string) => {
   const [result, setResult] = useState<Api<Goal>>({
     status: ApiStatus.Loading,
   });
-  const { getTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     async function fetchGoal(url: string) {
       try {
-        const token = await getTokenSilently();
+        const token = await getAccessTokenSilently();
         const response = await getRequest<Goal>(url, token);
 
         const goal = {
@@ -43,7 +43,7 @@ const useGoalByUrl = (url: string) => {
 
       fetchGoal(url);
     }
-  }, [getTokenSilently, url]);
+  }, [getAccessTokenSilently, url]);
 
   return result;
 };

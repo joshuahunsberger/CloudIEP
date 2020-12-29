@@ -27,7 +27,7 @@ import deleteRequest from '../../network/deleteRequest';
 import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
-import { useAuth0 } from '../../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import { GoalPreview } from '../../students/GoalPreview';
 import { Student } from '../../students/Student';
 import useStudentByUrl from '../../students/useStudentByUrl';
@@ -79,7 +79,7 @@ const StudentDetail = () => {
   const [student, setStudent] = useState<Student>(defaultStudent);
   const [goals, setGoals] = useState<GoalPreview[]>([]);
   const [goal, setGoal] = useState<Goal>(defaultGoal);
-  const { getTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
   const [editingFirstName, setEditingFirstName] = useState(false);
   const [pendingFirstName, setPendingFirstName] = useState('');
   const [editingLastName, setEditingLastName] = useState(false);
@@ -161,13 +161,13 @@ const StudentDetail = () => {
   };
 
   const updateStudent = async (pendingStudent: Student) => {
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     await putRequest(url, pendingStudent, token);
     setStudent(pendingStudent);
   };
 
   const addGoal = async (newGoal: Goal) => {
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     const result = await postRequest<Goal>(
       'http://localhost:5000/api/Goal',
       newGoal,
@@ -184,7 +184,7 @@ const StudentDetail = () => {
   };
 
   const deleteGoal = async (goalId: string) => {
-    const token = await getTokenSilently();
+    const token = await getAccessTokenSilently();
     await deleteRequest('http://localhost:5000/api/Goal/' + goalId, token);
 
     const updatedGoals = goals.filter((goal) => goal.goalId !== goalId);

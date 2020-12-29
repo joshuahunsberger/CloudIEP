@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { useAuth0 } from '../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import Home, { homeRoute } from '../ui/Home';
 import SimpleStudentPage, {
   studentsRoute,

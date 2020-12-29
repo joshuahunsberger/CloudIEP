@@ -17,7 +17,7 @@ import {
 import { ContactMail, Edit, Person } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
-import { useAuth0 } from '../../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import ApiStatus from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
 import { useSnackbar } from '../SnackbarProvider';
@@ -38,7 +38,7 @@ const Profile = () => {
   const classes = useStyles(theme);
   const snackbar = useSnackbar();
 
-  const { loading, user, getTokenSilently } = useAuth0();
+  const { isLoading, user, getAccessTokenSilently } = useAuth0();
   const [editingFirstName, setEditingFirstName] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [pendingFirstName, setPendingFirstName] = useState('');
@@ -97,7 +97,7 @@ const Profile = () => {
   };
 
   const updateFirstName = async (newFirstName: string) => {
-    var token = await getTokenSilently();
+    var token = await getAccessTokenSilently();
     await postRequest(
       'http://localhost:5000/api/User/FirstName',
       newFirstName,
@@ -106,7 +106,7 @@ const Profile = () => {
   };
 
   const updateLastName = async (newLastName: string) => {
-    var token = await getTokenSilently();
+    var token = await getAccessTokenSilently();
     await postRequest(
       'http://localhost:5000/api/User/LastName',
       newLastName,
@@ -114,7 +114,7 @@ const Profile = () => {
     );
   };
 
-  if (loading || service.status === ApiStatus.Loading) {
+  if (isLoading || service.status === ApiStatus.Loading) {
     return <div>Loading...</div>;
   }
 

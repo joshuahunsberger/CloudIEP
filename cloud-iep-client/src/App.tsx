@@ -4,7 +4,7 @@ import { blue } from '@material-ui/core/colors';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { useAuth0 } from './react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import Body from './ui/Body';
 import Header from './ui/Header';
 import { SnackbarProvider } from './ui/SnackbarProvider';
@@ -17,9 +17,9 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const { loading } = useAuth0();
+  const { isLoading } = useAuth0();
 
-  return loading ? (
+  return isLoading ? (
     <div>Loading...</div>
   ) : (
     <ThemeProvider theme={theme}>

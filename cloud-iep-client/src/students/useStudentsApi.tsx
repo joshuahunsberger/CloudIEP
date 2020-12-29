@@ -1,7 +1,7 @@
 import { GetTokenSilentlyOptions } from '@auth0/auth0-spa-js';
 import { useEffect, useState } from 'react';
 import getRequest from '../network/getRequest';
-import { useAuth0 } from '../react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
 import { Student } from './Student';
@@ -10,7 +10,7 @@ const useStudentsApi = () => {
   const [result, setResult] = useState<Api<Student[]>>({
     status: ApiStatus.Loading,
   });
-  const { getTokenSilently } = useAuth0();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     async function fetchStudents() {
@@ -19,7 +19,7 @@ const useStudentsApi = () => {
           scope: 'openid',
           audience: process.env.REACT_APP_AUTH0_AUDIENCE ?? '',
         };
-        const token = await getTokenSilently(options);
+        const token = await getAccessTokenSilently(options);
 
         const response = await getRequest<Student[]>(
           'http://localhost:5000/api/Student/',
@@ -40,7 +40,7 @@ const useStudentsApi = () => {
       }
     }
     fetchStudents();
-  }, [getTokenSilently]);
+  }, [getAccessTokenSilently]);
 
   return result;
 };
