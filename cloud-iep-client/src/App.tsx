@@ -8,7 +8,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Body from './ui/Body';
 import Header from './ui/Header';
 import { SnackbarProvider } from './ui/SnackbarProvider';
-import history from './utils/history';
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
 
 const theme = createMuiTheme({
   palette: {
