@@ -1,4 +1,3 @@
-import { GetTokenSilentlyOptions } from '@auth0/auth0-spa-js';
 import { useEffect, useState } from 'react';
 import getRequest from '../network/getRequest';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -15,11 +14,7 @@ const useStudentsApi = () => {
   useEffect(() => {
     async function fetchStudents() {
       try {
-        const options: GetTokenSilentlyOptions = {
-          scope: 'openid',
-          audience: process.env.REACT_APP_AUTH0_AUDIENCE ?? '',
-        };
-        const token = await getAccessTokenSilently(options);
+        const token = await getAccessTokenSilently();
 
         const response = await getRequest<Student[]>(
           'http://localhost:5000/api/Student/',
