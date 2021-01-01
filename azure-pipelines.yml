@@ -13,8 +13,11 @@ stages:
             inputs:
               version: 5.0.x
 
-          - script: dotnet build api/CloudIEP.Web
+          - task: DotNetCoreCLI@2
             displayName: Build Web API
+            inputs:
+              command: build
+              projects: 'api/CloudIEP.Web'
 
       - job: BuildReact
         steps:
