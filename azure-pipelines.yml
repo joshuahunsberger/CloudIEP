@@ -8,7 +8,13 @@ stages:
     jobs:
       - job: BuildAPI
         steps:
+          - task: UseDotNet@2
+            displayName: Use .NET 5 SDK
+            inputs:
+              version: 5.0.x
+
           - script: dotnet build api/CloudIEP.Web
+            displayName: Build Web API
 
       - job: BuildReact
         steps:
