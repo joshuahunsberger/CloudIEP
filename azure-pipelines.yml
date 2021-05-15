@@ -27,15 +27,12 @@ stages:
 
       - job: BuildReact
         steps:
-          - task: Npm@1
-            displayName: NPM Install
-            inputs:
-              workingDir: cloud-iep-client
-              command: install
+          - script: |
+              cd cloud-iep-client
+              yarn install
+            displayName: yarn install
 
-          - task: Npm@1
-            displayName: NPM Build
-            inputs:
-              workingDir: cloud-iep-client
-              command: custom
-              customCommand: run build
+          - script: |
+              cd cloud-iep-client
+              yarn build
+            displayName: yarn build
