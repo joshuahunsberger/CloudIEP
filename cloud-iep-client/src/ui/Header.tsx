@@ -48,7 +48,7 @@ function Header() {
           <Button onClick={() => loginWithRedirect({})}>Login</Button>
         )}
 
-        {isAuthenticated && (
+        {isAuthenticated && user && (
           <>
             <Link to="/profile">
               <Avatar src={user.picture} alt="Profile" />
