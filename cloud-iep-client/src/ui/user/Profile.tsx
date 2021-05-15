@@ -126,7 +126,7 @@ const Profile = () => {
       <Grid container alignContent="center">
         <Grid item xs={12}>
           <Avatar
-            src={user.picture}
+            src={user!.picture}
             alt="Profile"
             className={classes.largeAvatar}
           />
@@ -202,7 +202,7 @@ const Profile = () => {
                 <ListItemIcon>
                   <ContactMail />
                 </ListItemIcon>
-                <ListItemText primary="Email" secondary={user.email} />
+                <ListItemText primary="Email" secondary={user!.email} />
               </ListItem>
             </List>
           )}
