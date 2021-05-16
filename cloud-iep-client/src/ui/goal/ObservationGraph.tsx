@@ -58,7 +58,7 @@ const ObservationGraph = ({
           <XAxis dataKey="observationDate" />
           <YAxis domain={[0, 1]} />
           <Tooltip
-            formatter={(value) => {
+            formatter={(value: any) => {
               return [value, 'Observed Percentage'];
             }}
           />
