@@ -1,8 +1,7 @@
-﻿namespace CloudIEP.Web.Authorization
+﻿namespace CloudIEP.Web.Authorization;
+
+public class Scopes
 {
-    public class Scopes
-    {
-        public const string OpenIdScope = "openid";
-        public const string ReadStudentsScope = "read:students";
-    }
+    public const string OpenIdScope = "openid";
+    public const string ReadStudentsScope = "read:students";
 }
