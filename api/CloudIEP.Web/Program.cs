@@ -1,19 +1,14 @@
+using CloudIEP.Web;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace CloudIEP.Web;
-
-public class Program
-{
-    public static void Main(string[] args)
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureWebHostDefaults(webBuilder =>
     {
-        CreateHostBuilder(args).Build().Run();
-    }
+        webBuilder.UseStartup<Startup>();
+    });
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
-}
+var app = builder.Build();
+
+app.Run();
