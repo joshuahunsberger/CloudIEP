@@ -58,15 +58,11 @@ services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-app.UseRouting();
 app.UseCors(CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.MapControllers();
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", ApiTitle));
