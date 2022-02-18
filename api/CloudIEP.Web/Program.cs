@@ -31,19 +31,16 @@ services.AddCors(options => options.AddPolicy(CorsPolicy, builder =>
 services.AddControllers();
 
 string domain = $"https://{Configuration["Auth0:Domain"]}";
-services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.Authority = domain;
-    options.Audience = Configuration["Auth0:Audience"];
-    options.TokenValidationParameters = new TokenValidationParameters
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        NameClaimType = ClaimTypes.NameIdentifier
-    };
-});
+        options.Authority = domain;
+        options.Audience = Configuration["Auth0:Audience"];
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = ClaimTypes.NameIdentifier
+        };
+    });
 
 services.AddAuthorization(options =>
 {
