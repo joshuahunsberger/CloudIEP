@@ -4,11 +4,12 @@ import {
   Grid,
   makeStyles,
   Paper,
-  TextField,
   Typography,
   useTheme,
 } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DateRange } from '@mui/lab';
+import DatePicker from '@mui/lab/DatePicker';
+import { TextField } from '@mui/material';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Observation } from '../../goals/Goal';
 import { useSnackbar } from '../SnackbarProvider';
@@ -65,8 +66,10 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
     }
   };
 
-  const handleDateChange = (date: Date | null) => {
-    date && setObservation({ ...observation, observationDate: date });
+  const handleDateChange = (date: DateRange<Date> | null) => {
+    date &&
+      date[0] &&
+      setObservation({ ...observation, observationDate: date[0] });
   };
 
   const handleSuccessChange = (
@@ -114,18 +117,16 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
         </Grid>
         <form onSubmit={handleSubmit}>
           <Grid item className={classes.gridRow}>
-            <KeyboardDatePicker
-              autoOk
-              variant="inline"
-              inputVariant="outlined"
+            <DatePicker
               openTo="year"
-              format="MM/dd/yyyy"
-              margin="normal"
-              id="observation-date-picker"
+              inputFormat="MM/dd/yyyy"
               label="Observation Date"
-              views={['year', 'month', 'date']}
+              views={['year', 'month', 'day']}
               value={observation?.observationDate}
-              onChange={(date) => handleDateChange(date)}
+              onChange={(date: DateRange<Date> | null) =>
+                handleDateChange(date)
+              }
+              renderInput={(params) => <TextField {...params} />}
             />
           </Grid>
           <Grid

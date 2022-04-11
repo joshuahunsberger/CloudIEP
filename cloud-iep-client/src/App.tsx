@@ -1,8 +1,8 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import DateFnsUtils from '@date-io/date-fns';
 import { createMuiTheme, Grid, ThemeProvider } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { createBrowserHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
@@ -32,9 +32,9 @@ function App() {
               <Header />
             </Grid>
             <Grid item>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <Body />
-              </MuiPickersUtilsProvider>
+              </LocalizationProvider>
             </Grid>
           </Grid>
         </Router>

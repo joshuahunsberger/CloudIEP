@@ -1,5 +1,7 @@
-import { Button, makeStyles, TextField, useTheme } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { Button, makeStyles, useTheme } from '@material-ui/core';
+import { DateRange } from '@mui/lab';
+import DatePicker from '@mui/lab/DatePicker';
+import { TextField } from '@mui/material';
 import React, { FormEvent } from 'react';
 import { Student } from '../../students/Student';
 
@@ -30,8 +32,8 @@ const StudentForm = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const handleDateChange = (date: Date | null) => {
-    date && setStudent({ ...student, dateOfBirth: date });
+  const handleDateChange = (date: DateRange<Date> | null) => {
+    date && date[0] && setStudent({ ...student, dateOfBirth: date[0] });
   };
 
   return (
@@ -60,20 +62,15 @@ const StudentForm = ({
           setStudent({ ...student, lastName: e.currentTarget.value })
         }
       />
-      <KeyboardDatePicker
+      <DatePicker
         disableFuture
-        autoOk
-        variant="inline"
-        inputVariant="outlined"
         openTo="year"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="dob-picker"
+        inputFormat="MM/dd/yyyy"
         label="Date of Birth"
-        views={['year', 'month', 'date']}
-        maxDateMessage="Date of birth cannot be in the future"
+        views={['year', 'month', 'day']}
         value={student.dateOfBirth}
-        onChange={(date) => handleDateChange(date)}
+        onChange={(date: DateRange<Date> | null) => handleDateChange(date)}
+        renderInput={(params) => <TextField {...params} />}
       />
       {isEditing ? (
         <>

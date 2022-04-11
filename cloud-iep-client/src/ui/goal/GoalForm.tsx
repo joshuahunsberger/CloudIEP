@@ -1,5 +1,7 @@
-import { Button, makeStyles, TextField, useTheme } from '@material-ui/core';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { Button, makeStyles, useTheme } from '@material-ui/core';
+import { DateRange } from '@mui/lab';
+import DatePicker from '@mui/lab/DatePicker';
+import { TextField } from '@mui/material';
 import React, { FormEvent } from 'react';
 import { Goal } from '../../goals/Goal';
 
@@ -30,12 +32,12 @@ const GoalForm = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const handleBeginDateChange = (date: Date | null) => {
-    date && setGoal({ ...goal, beginDate: date });
+  const handleBeginDateChange = (date: DateRange<Date> | null) => {
+    date && date[0] && setGoal({ ...goal, beginDate: date[0] });
   };
 
-  const handleEndDateDateChange = (date: Date | null) => {
-    date && setGoal({ ...goal, endDate: date });
+  const handleEndDateDateChange = (date: DateRange<Date> | null) => {
+    date && date[0] && setGoal({ ...goal, endDate: date[0] });
   };
 
   return (
@@ -85,31 +87,25 @@ const GoalForm = ({
           setGoal({ ...goal, goalPercentage: Number(e.currentTarget.value) })
         }
       />
-      <KeyboardDatePicker
-        autoOk
-        variant="inline"
-        inputVariant="outlined"
+      <DatePicker
         openTo="year"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="goal-begin-date-picker"
+        inputFormat="MM/dd/yyyy"
         label="Goal Begin Date"
-        views={['year', 'month', 'date']}
+        views={['year', 'month', 'day']}
         value={goal.beginDate}
-        onChange={(date) => handleBeginDateChange(date)}
+        onChange={(date: DateRange<Date> | null) => handleBeginDateChange(date)}
+        renderInput={(params) => <TextField {...params} />}
       />
-      <KeyboardDatePicker
-        autoOk
-        variant="inline"
-        inputVariant="outlined"
+      <DatePicker
         openTo="year"
-        format="MM/dd/yyyy"
-        margin="normal"
-        id="goal-end-date-picker"
+        inputFormat="MM/dd/yyyy"
         label="Goal End Date"
-        views={['year', 'month', 'date']}
+        views={['year', 'month', 'day']}
         value={goal.endDate}
-        onChange={(date) => handleEndDateDateChange(date)}
+        onChange={(date: DateRange<Date> | null) =>
+          handleEndDateDateChange(date)
+        }
+        renderInput={(params) => <TextField {...params} />}
       />
       <Button
         type="submit"
