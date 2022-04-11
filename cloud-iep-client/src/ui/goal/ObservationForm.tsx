@@ -56,7 +56,11 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
       try {
         await addObservation(observation);
       } catch (error) {
-        snackBar.openSnackbar('Error: ' + error.message);
+        var errorMessage = 'Unknown Error';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        snackBar.openSnackbar('Error: ' + errorMessage);
       }
     }
   };
