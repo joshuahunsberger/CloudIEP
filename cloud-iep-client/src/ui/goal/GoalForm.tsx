@@ -87,7 +87,7 @@ const GoalForm = ({
         }
       />
       <DatePicker
-        openTo="year"
+        openTo="day"
         inputFormat="MM/dd/yyyy"
         label="Goal Begin Date"
         views={['year', 'month', 'day']}
@@ -96,7 +96,7 @@ const GoalForm = ({
         renderInput={(params) => <TextField {...params} />}
       />
       <DatePicker
-        openTo="year"
+        openTo="day"
         inputFormat="MM/dd/yyyy"
         label="Goal End Date"
         views={['year', 'month', 'day']}

@@ -115,7 +115,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
         <form onSubmit={handleSubmit}>
           <Grid item className={classes.gridRow}>
             <DatePicker
-              openTo="year"
+              openTo="day"
               inputFormat="MM/dd/yyyy"
               label="Observation Date"
               views={['year', 'month', 'day']}
