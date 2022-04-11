@@ -1,7 +1,6 @@
 import { Button, makeStyles, useTheme } from '@material-ui/core';
-import { DateRange } from '@mui/lab';
-import DatePicker from '@mui/lab/DatePicker';
 import { TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { FormEvent } from 'react';
 import { Student } from '../../students/Student';
 
@@ -32,8 +31,8 @@ const StudentForm = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const handleDateChange = (date: DateRange<Date> | null) => {
-    date && date[0] && setStudent({ ...student, dateOfBirth: date[0] });
+  const handleDateChange = (date: Date | null) => {
+    date && setStudent({ ...student, dateOfBirth: date });
   };
 
   return (
@@ -69,7 +68,7 @@ const StudentForm = ({
         label="Date of Birth"
         views={['year', 'month', 'day']}
         value={student.dateOfBirth}
-        onChange={(date: DateRange<Date> | null) => handleDateChange(date)}
+        onChange={(date) => handleDateChange(date)}
         renderInput={(params) => <TextField {...params} />}
       />
       {isEditing ? (

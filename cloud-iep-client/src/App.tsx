@@ -1,8 +1,8 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { createMuiTheme, Grid, ThemeProvider } from '@material-ui/core';
 import { blue } from '@material-ui/core/colors';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createBrowserHistory } from 'history';
 import React from 'react';
 import { Router } from 'react-router-dom';
