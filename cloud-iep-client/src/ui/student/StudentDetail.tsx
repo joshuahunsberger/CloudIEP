@@ -13,13 +13,14 @@ import {
   ListItemText,
   makeStyles,
   Paper,
-  TextField,
   Theme,
   Typography,
   useTheme,
 } from '@material-ui/core';
 import { ArrowBack, Cake, Edit, Person } from '@material-ui/icons';
-import { KeyboardDatePicker } from '@material-ui/pickers';
+import { DateRange } from '@mui/lab';
+import DatePicker from '@mui/lab/DatePicker';
+import { TextField } from '@mui/material';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -101,8 +102,8 @@ const StudentDetail = () => {
     setEditingDoB(false);
   };
 
-  const handleDateChange = (date: Date | null) => {
-    date && setPendingDoB(date);
+  const handleDateChange = (date: DateRange<Date> | null) => {
+    date && date[0] && setPendingDoB(date[0]);
   };
 
   const handleKeyDown = async (
@@ -288,22 +289,16 @@ const StudentDetail = () => {
               </ListItem>
               <ListItem>
                 {editingDoB ? (
-                  <KeyboardDatePicker
+                  <DatePicker
                     disableFuture
-                    autoOk
-                    fullWidth
-                    variant="inline"
-                    inputVariant="outlined"
-                    openTo="year"
-                    format="MM/dd/yyyy"
-                    margin="normal"
-                    id="dob-picker"
+                    inputFormat="MM/dd/yyyy"
                     label="Date of Birth"
-                    views={['year', 'month', 'date']}
-                    maxDateMessage="Date of birth cannot be in the future"
+                    views={['year', 'month', 'day']}
                     value={pendingDoB}
-                    onKeyDown={(event) => handleKeyDown(event, 'dob')}
-                    onChange={(date) => handleDateChange(date)}
+                    onChange={(date: DateRange<Date> | null) =>
+                      handleDateChange(date)
+                    }
+                    renderInput={(params) => <TextField {...params} />}
                   />
                 ) : (
                   <>
