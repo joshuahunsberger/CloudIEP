@@ -1,5 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
+import handleApiError from '../handleApiError';
 import postRequest from '../network/postRequest';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
@@ -23,8 +24,9 @@ const useUsersApi = () => {
           token,
         );
         setResult({ status: ApiStatus.Loaded, result: response });
-      } catch (error) {
-        setResult({ status: ApiStatus.Error, error });
+      } catch (err) {
+        var result = handleApiError<User>(err);
+        setResult(result);
       }
     }
     createUser();

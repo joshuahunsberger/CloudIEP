@@ -1,5 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
+import handleApiError from '../handleApiError';
 import getRequest from '../network/getRequest';
 import { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
@@ -34,7 +35,7 @@ const useGoalByUrl = (url: string) => {
         } as Goal;
         setResult({ status: ApiStatus.Loaded, result: goal });
       } catch (error) {
-        setResult({ status: ApiStatus.Error, error });
+        setResult(handleApiError<Goal>(error));
       }
     }
 
