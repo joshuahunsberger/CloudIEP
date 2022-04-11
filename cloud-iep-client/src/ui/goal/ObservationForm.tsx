@@ -7,9 +7,8 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import { DateRange } from '@mui/lab';
-import DatePicker from '@mui/lab/DatePicker';
 import { TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Observation } from '../../goals/Goal';
 import { useSnackbar } from '../SnackbarProvider';
@@ -66,10 +65,8 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
     }
   };
 
-  const handleDateChange = (date: DateRange<Date> | null) => {
-    date &&
-      date[0] &&
-      setObservation({ ...observation, observationDate: date[0] });
+  const handleDateChange = (date: Date | null) => {
+    date && setObservation({ ...observation, observationDate: date });
   };
 
   const handleSuccessChange = (
@@ -123,9 +120,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
               label="Observation Date"
               views={['year', 'month', 'day']}
               value={observation?.observationDate}
-              onChange={(date: DateRange<Date> | null) =>
-                handleDateChange(date)
-              }
+              onChange={(date) => handleDateChange(date)}
               renderInput={(params) => <TextField {...params} />}
             />
           </Grid>

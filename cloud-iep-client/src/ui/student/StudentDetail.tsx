@@ -18,9 +18,8 @@ import {
   useTheme,
 } from '@material-ui/core';
 import { ArrowBack, Cake, Edit, Person } from '@material-ui/icons';
-import { DateRange } from '@mui/lab';
-import DatePicker from '@mui/lab/DatePicker';
 import { TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -102,8 +101,8 @@ const StudentDetail = () => {
     setEditingDoB(false);
   };
 
-  const handleDateChange = (date: DateRange<Date> | null) => {
-    date && date[0] && setPendingDoB(date[0]);
+  const handleDateChange = (date: Date | null) => {
+    date && setPendingDoB(date);
   };
 
   const handleKeyDown = async (
@@ -295,9 +294,7 @@ const StudentDetail = () => {
                     label="Date of Birth"
                     views={['year', 'month', 'day']}
                     value={pendingDoB}
-                    onChange={(date: DateRange<Date> | null) =>
-                      handleDateChange(date)
-                    }
+                    onChange={(date) => handleDateChange(date)}
                     renderInput={(params) => <TextField {...params} />}
                   />
                 ) : (

@@ -1,7 +1,6 @@
 import { Button, makeStyles, useTheme } from '@material-ui/core';
-import { DateRange } from '@mui/lab';
-import DatePicker from '@mui/lab/DatePicker';
 import { TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { FormEvent } from 'react';
 import { Goal } from '../../goals/Goal';
 
@@ -32,12 +31,12 @@ const GoalForm = ({
   const theme = useTheme();
   const classes = useStyles(theme);
 
-  const handleBeginDateChange = (date: DateRange<Date> | null) => {
-    date && date[0] && setGoal({ ...goal, beginDate: date[0] });
+  const handleBeginDateChange = (date: Date | null) => {
+    date && setGoal({ ...goal, beginDate: date });
   };
 
-  const handleEndDateDateChange = (date: DateRange<Date> | null) => {
-    date && date[0] && setGoal({ ...goal, endDate: date[0] });
+  const handleEndDateDateChange = (date: Date | null) => {
+    date && setGoal({ ...goal, endDate: date });
   };
 
   return (
@@ -93,7 +92,7 @@ const GoalForm = ({
         label="Goal Begin Date"
         views={['year', 'month', 'day']}
         value={goal.beginDate}
-        onChange={(date: DateRange<Date> | null) => handleBeginDateChange(date)}
+        onChange={(date) => handleBeginDateChange(date)}
         renderInput={(params) => <TextField {...params} />}
       />
       <DatePicker
@@ -102,9 +101,7 @@ const GoalForm = ({
         label="Goal End Date"
         views={['year', 'month', 'day']}
         value={goal.endDate}
-        onChange={(date: DateRange<Date> | null) =>
-          handleEndDateDateChange(date)
-        }
+        onChange={(date) => handleEndDateDateChange(date)}
         renderInput={(params) => <TextField {...params} />}
       />
       <Button
