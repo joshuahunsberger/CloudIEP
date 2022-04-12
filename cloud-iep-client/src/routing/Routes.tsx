@@ -56,7 +56,7 @@ const Routes = () => {
           </RequireAuth>
         )}
       />
-      <Redirect key="redirect" to={homeRoute} />
+      <Route render={() => <Redirect key="redirect" to={homeRoute} />} />
     </Switch>
   );
 };
