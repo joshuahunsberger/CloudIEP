@@ -1,15 +1,18 @@
-import { Grid } from '@material-ui/core';
+import { useAuth0 } from '@auth0/auth0-react';
+import { CircularProgress, Grid } from '@material-ui/core';
 import React from 'react';
 import RouterRoutes from '../routing/Routes';
 import ErrorBoundary from './ErrorBoundary';
 
 function Body() {
+  const { isLoading } = useAuth0();
+
   return (
     <Grid container>
       <Grid item xs={false} sm={2} />
       <Grid item xs={12} sm={8}>
         <ErrorBoundary logError={console.log}>
-          <RouterRoutes />
+          {isLoading ? <CircularProgress /> : <RouterRoutes />}
         </ErrorBoundary>
       </Grid>
       <Grid item xs={false} sm={2} />
