@@ -22,7 +22,7 @@ import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Goal } from '../../goals/Goal';
 import deleteRequest from '../../network/deleteRequest';
 import getBaseUrl from '../../network/getBaseUrl';
@@ -53,7 +53,7 @@ const StudentDetail = () => {
   const url = baseUrl + 'Student/' + id;
   const service = useStudentByUrl(url);
   const snackBar = useSnackbar();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const defaultStudent: Student = {
     id: '',
@@ -208,7 +208,7 @@ const StudentDetail = () => {
       {service.status === ApiStatus.Loading && <CircularProgress />}
       {service.status === ApiStatus.Loaded && (
         <>
-          <IconButton onClick={history.goBack}>
+          <IconButton onClick={() => navigate(-1)}>
             <ArrowBack />
           </IconButton>
           <Paper className={classes.root}>
