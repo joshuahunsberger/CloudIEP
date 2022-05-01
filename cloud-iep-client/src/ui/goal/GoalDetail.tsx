@@ -15,7 +15,7 @@ import {
 import { ArrowBack, Edit } from '@material-ui/icons';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Goal, Observation } from '../../goals/Goal';
 import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
@@ -45,7 +45,7 @@ const GoalDetail = () => {
   const goalUrl = baseUrl + 'goal/' + id;
   const service = useGoalByUrl(goalUrl);
   const { getAccessTokenSilently } = useAuth0();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const defaultGoal: Goal = {
     id: '',
@@ -101,7 +101,7 @@ const GoalDetail = () => {
       {service.status === ApiStatus.Loading && <CircularProgress />}
       {service.status === ApiStatus.Loaded && (
         <>
-          <IconButton onClick={history.goBack}>
+          <IconButton onClick={() => navigate(-1)}>
             <ArrowBack />
           </IconButton>
           <Card className={classes.root}>
