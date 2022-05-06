@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import { Cloud } from '@mui/icons-material';
 import {
   AppBar,
   Avatar,
@@ -8,7 +9,6 @@ import {
   useTheme,
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { Cloud } from '@mui/icons-material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { studentsRoute } from './student/StudentPage';
