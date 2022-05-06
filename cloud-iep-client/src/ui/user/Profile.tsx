@@ -8,14 +8,14 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
   Paper,
   TextField,
   Theme,
   Typography,
   useTheme,
-} from '@material-ui/core';
-import { ContactMail, Edit, Person } from '@material-ui/icons';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { ContactMail, Edit, Person } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
 import ApiStatus from '../../types/ApiStatus';
@@ -159,7 +159,7 @@ const Profile = () => {
                           setPendingFirstName(firstName);
                           setEditingFirstName(true);
                         }}
-                      >
+                        size="large">
                         <Edit />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -191,7 +191,7 @@ const Profile = () => {
                           setPendingLastName(lastName);
                           setEditingLastName(true);
                         }}
-                      >
+                        size="large">
                         <Edit />
                       </IconButton>
                     </ListItemSecondaryAction>

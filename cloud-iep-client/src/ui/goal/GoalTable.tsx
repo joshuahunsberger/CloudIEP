@@ -7,8 +7,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+} from '@mui/material';
+import { Delete } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GoalPreview } from '../../students/GoalPreview';
@@ -38,45 +38,43 @@ const GoalTable: React.FC<GoalTableProps> = ({
     setOpen(false);
   };
 
-  return (
-    <>
-      <ConfirmDialog
-        isOpen={open}
-        title="Delete Goal"
-        content="Are you sure you want to delete this goal? You will lose any progress you have tracked."
-        confirmButtonText="Delete"
-        declineButtonText="Cancel"
-        confirm={confirmDelete}
-        forDelete={true}
-      />
-      <TableContainer component={Card}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Detail</TableCell>
-              <TableCell>Goal Name</TableCell>
-              <TableCell />
+  return <>
+    <ConfirmDialog
+      isOpen={open}
+      title="Delete Goal"
+      content="Are you sure you want to delete this goal? You will lose any progress you have tracked."
+      confirmButtonText="Delete"
+      declineButtonText="Cancel"
+      confirm={confirmDelete}
+      forDelete={true}
+    />
+    <TableContainer component={Card}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Detail</TableCell>
+            <TableCell>Goal Name</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {goals?.map((goal) => (
+            <TableRow key={goal.goalId}>
+              <TableCell>
+                <Link to={'/goal/' + goal.goalId}>View Goal</Link>
+              </TableCell>
+              <TableCell>{goal.goalName}</TableCell>
+              <TableCell>
+                <IconButton onClick={() => promptForDelete(goal.goalId)} size="large">
+                  <Delete />
+                </IconButton>
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {goals?.map((goal) => (
-              <TableRow key={goal.goalId}>
-                <TableCell>
-                  <Link to={'/goal/' + goal.goalId}>View Goal</Link>
-                </TableCell>
-                <TableCell>{goal.goalName}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => promptForDelete(goal.goalId)}>
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
-  );
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </>;
 };
 
 export default GoalTable;

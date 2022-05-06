@@ -8,11 +8,11 @@ import {
   List,
   ListItem,
   ListItemText,
-  makeStyles,
   Typography,
   useTheme,
-} from '@material-ui/core';
-import { ArrowBack, Edit } from '@material-ui/icons';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { ArrowBack, Edit } from '@mui/icons-material';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -96,97 +96,95 @@ const GoalDetail = () => {
     setIsEditing(false);
   };
 
-  return (
-    <>
-      {service.status === ApiStatus.Loading && <CircularProgress />}
-      {service.status === ApiStatus.Loaded && (
-        <>
-          <IconButton onClick={() => navigate(-1)}>
-            <ArrowBack />
+  return <>
+    {service.status === ApiStatus.Loading && <CircularProgress />}
+    {service.status === ApiStatus.Loaded && (
+      <>
+        <IconButton onClick={() => navigate(-1)} size="large">
+          <ArrowBack />
+        </IconButton>
+        <Card className={classes.root}>
+          <Typography variant="h4" align="center">
+            Goal
+          </Typography>
+          <IconButton size="large">
+            <Edit onClick={() => setIsEditing(true)} />
           </IconButton>
-          <Card className={classes.root}>
-            <Typography variant="h4" align="center">
-              Goal
-            </Typography>
-            <IconButton>
-              <Edit onClick={() => setIsEditing(true)} />
-            </IconButton>
-            {isEditing ? (
-              <GoalForm
-                goal={goal}
-                setGoal={setGoal}
-                handleSubmit={handleGoalSubmit}
-                cancel={cancelEditing}
-                isEditing={true}
-              />
-            ) : (
-              <List>
-                <ListItem>
-                  <ListItemText primary="Goal Name" secondary={goal.goalName} />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Goal Description"
-                    secondary={goal.goalDescription}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText primary="Category" secondary={goal.category} />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Goal Percentage"
-                    secondary={goal.goalPercentage}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Begin Date"
-                    secondary={goal.beginDate.toDateString()}
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="End Date"
-                    secondary={goal.endDate.toDateString()}
-                  />
-                </ListItem>
-              </List>
-            )}
-          </Card>
-          {isAdding ? (
-            <ObservationForm addObservation={addObservation} cancel={cancel} />
+          {isEditing ? (
+            <GoalForm
+              goal={goal}
+              setGoal={setGoal}
+              handleSubmit={handleGoalSubmit}
+              cancel={cancelEditing}
+              isEditing={true}
+            />
           ) : (
-            <>
-              <Grid container item direction="column" alignItems="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setIsAdding(true)}
-                  className={classes.button}
-                >
-                  Add Observation
-                </Button>
-                <Typography variant="h4" align="center">
-                  Observations
-                </Typography>
-                <ObservationTable observations={goal.observations} />
-              </Grid>
-              <ObservationGraph
-                observations={goal.observations}
-                goalPercentage={goal.goalPercentage}
-              />
-            </>
+            <List>
+              <ListItem>
+                <ListItemText primary="Goal Name" secondary={goal.goalName} />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Goal Description"
+                  secondary={goal.goalDescription}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Category" secondary={goal.category} />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Goal Percentage"
+                  secondary={goal.goalPercentage}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Begin Date"
+                  secondary={goal.beginDate.toDateString()}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="End Date"
+                  secondary={goal.endDate.toDateString()}
+                />
+              </ListItem>
+            </List>
           )}
-        </>
-      )}
-      {service.status === ApiStatus.Error && (
-        <Typography variant="h6">
-          There was an error retrieving this goal. {service.error.message}
-        </Typography>
-      )}
-    </>
-  );
+        </Card>
+        {isAdding ? (
+          <ObservationForm addObservation={addObservation} cancel={cancel} />
+        ) : (
+          <>
+            <Grid container item direction="column" alignItems="center">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsAdding(true)}
+                className={classes.button}
+              >
+                Add Observation
+              </Button>
+              <Typography variant="h4" align="center">
+                Observations
+              </Typography>
+              <ObservationTable observations={goal.observations} />
+            </Grid>
+            <ObservationGraph
+              observations={goal.observations}
+              goalPercentage={goal.goalPercentage}
+            />
+          </>
+        )}
+      </>
+    )}
+    {service.status === ApiStatus.Error && (
+      <Typography variant="h6">
+        There was an error retrieving this goal. {service.error.message}
+      </Typography>
+    )}
+  </>;
 };
 
 export const goalDetailRoute = '/goal/:id';

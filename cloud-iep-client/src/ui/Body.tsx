@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { CircularProgress, Grid } from '@material-ui/core';
+import { CircularProgress, Grid } from '@mui/material';
 import React from 'react';
 import RouterRoutes from '../routing/Routes';
 import ErrorBoundary from './ErrorBoundary';

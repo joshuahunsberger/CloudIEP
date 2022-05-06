@@ -1,6 +1,13 @@
 import { AppState, Auth0Provider } from '@auth0/auth0-react';
-import { createMuiTheme, Grid, ThemeProvider } from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
+import {
+  createTheme,
+  Grid,
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+  adaptV4Theme,
+} from '@mui/material';
+import { blue } from '@mui/material/colors';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
@@ -9,11 +16,18 @@ import Body from './ui/Body';
 import Header from './ui/Header';
 import { SnackbarProvider } from './ui/SnackbarProvider';
 
-const theme = createMuiTheme({
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
+
+const theme = createTheme(adaptV4Theme({
   palette: {
     primary: blue,
   },
-});
+}));
 
 function App() {
   // Example from documentation:
@@ -35,20 +49,22 @@ function App() {
       audience="https://cloudiepdev/api"
       onRedirectCallback={onRedirectCallback}
     >
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider>
-          <Grid container direction="column">
-            <Grid item>
-              <Header />
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider>
+            <Grid container direction="column">
+              <Grid item>
+                <Header />
+              </Grid>
+              <Grid item>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Body />
+                </LocalizationProvider>
+              </Grid>
             </Grid>
-            <Grid item>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <Body />
-              </LocalizationProvider>
-            </Grid>
-          </Grid>
-        </SnackbarProvider>
-      </ThemeProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </Auth0Provider>
   );
 }

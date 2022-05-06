@@ -1,12 +1,5 @@
-import {
-  Button,
-  Card,
-  Grid,
-  makeStyles,
-  Paper,
-  Typography,
-  useTheme,
-} from '@material-ui/core';
+import { Button, Card, Grid, Paper, Typography, useTheme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
@@ -104,7 +97,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
         container
         item
         direction="column"
-        justify="center"
+        justifyContent="center"
         alignItems="stretch"
       >
         <Grid item className={classes.gridRow}>
@@ -128,7 +121,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
             container
             item
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="flex-end"
             className={classes.gridRow}
           >

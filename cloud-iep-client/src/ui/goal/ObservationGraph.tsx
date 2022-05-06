@@ -1,4 +1,5 @@
-import { Card, makeStyles, Typography, useTheme } from '@material-ui/core';
+import { Card, Typography, useTheme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { format } from 'date-fns';
 import React from 'react';
 import {

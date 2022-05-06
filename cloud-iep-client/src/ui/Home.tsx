@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper, Typography } from '@mui/material';
 import React from 'react';
 
 function Home() {

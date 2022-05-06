@@ -1,4 +1,4 @@
-import { Snackbar } from '@material-ui/core';
+import { Snackbar } from '@mui/material';
 import React, { useContext, useState } from 'react';
 
 interface SnackbarContextState {
