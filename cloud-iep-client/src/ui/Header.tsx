@@ -1,5 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { AppBar, Avatar, Button, Toolbar, Typography, useTheme } from '@mui/material';
+import {
+  AppBar,
+  Avatar,
+  Button,
+  Toolbar,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Cloud } from '@mui/icons-material';
 import React from 'react';

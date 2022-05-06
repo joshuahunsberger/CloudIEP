@@ -16,18 +16,18 @@ import Body from './ui/Body';
 import Header from './ui/Header';
 import { SnackbarProvider } from './ui/SnackbarProvider';
 
-
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
 
-
-const theme = createTheme(adaptV4Theme({
-  palette: {
-    primary: blue,
-  },
-}));
+const theme = createTheme(
+  adaptV4Theme({
+    palette: {
+      primary: blue,
+    },
+  }),
+);
 
 function App() {
   // Example from documentation:

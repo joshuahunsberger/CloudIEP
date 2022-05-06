@@ -1,5 +1,13 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button, Card, CardContent, CircularProgress, Grid, Typography, useTheme } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -105,59 +113,61 @@ const SimpleStudentPage = () => {
     setIsAdding(false);
   };
 
-  return <>
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      className={classes.dataCard}
-    >
-      {service.status === ApiStatus.Loading && <CircularProgress />}
-      {service.status === ApiStatus.Loaded && (
-        <>
-          {isAdding ? (
-            <Card className={classes.card}>
-              <CardContent>
-                <Typography variant="h4" align="center">
-                  Add a Student
-                </Typography>
-                <StudentForm
-                  handleSubmit={handleSubmit}
-                  isEditing={false}
-                  cancelEditing={cancelEditing}
-                  student={student}
-                  setStudent={setStudent}
-                />
-              </CardContent>
-            </Card>
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => setIsAdding(true)}
-            >
-              Add a student
-            </Button>
-          )}
-          {service.result.students.length > 0 ? (
-            <SimpleStudentTable
-              students={students}
-              deleteStudent={deleteStudent}
-            />
-          ) : (
-            <Typography variant="h4">No Students. Add one above.</Typography>
-          )}
-        </>
-      )}
-      {service.status === ApiStatus.Error && (
-        <Typography variant="h6">
-          There was an error getting students. {service.error.message}
-        </Typography>
-      )}
-    </Grid>
-  </>;
+  return (
+    <>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        className={classes.dataCard}
+      >
+        {service.status === ApiStatus.Loading && <CircularProgress />}
+        {service.status === ApiStatus.Loaded && (
+          <>
+            {isAdding ? (
+              <Card className={classes.card}>
+                <CardContent>
+                  <Typography variant="h4" align="center">
+                    Add a Student
+                  </Typography>
+                  <StudentForm
+                    handleSubmit={handleSubmit}
+                    isEditing={false}
+                    cancelEditing={cancelEditing}
+                    student={student}
+                    setStudent={setStudent}
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={() => setIsAdding(true)}
+              >
+                Add a student
+              </Button>
+            )}
+            {service.result.students.length > 0 ? (
+              <SimpleStudentTable
+                students={students}
+                deleteStudent={deleteStudent}
+              />
+            ) : (
+              <Typography variant="h4">No Students. Add one above.</Typography>
+            )}
+          </>
+        )}
+        {service.status === ApiStatus.Error && (
+          <Typography variant="h6">
+            There was an error getting students. {service.error.message}
+          </Typography>
+        )}
+      </Grid>
+    </>
+  );
 };
 
 export const studentsRoute = '/students';

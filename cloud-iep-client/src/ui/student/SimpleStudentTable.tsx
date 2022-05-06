@@ -38,43 +38,48 @@ const SimpleStudentTable: React.FC<SimpleStudentTableProps> = ({
     setOpen(false);
   };
 
-  return <>
-    <ConfirmDialog
-      isOpen={open}
-      title="Delete Student"
-      content="Are you sure you want to delete this student?"
-      confirmButtonText="Delete"
-      declineButtonText="Cancel"
-      confirm={confirmDelete}
-      forDelete={true}
-    />
-    <TableContainer component={Card}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Detail</TableCell>
-            <TableCell>Student Name</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {students?.map((student) => (
-            <TableRow key={student.id}>
-              <TableCell>
-                <Link to={'/student/' + student.id}>View Student</Link>
-              </TableCell>
-              <TableCell>{student.fullName}</TableCell>
-              <TableCell>
-                <IconButton onClick={() => promptForDelete(student.id)} size="large">
-                  <Delete />
-                </IconButton>
-              </TableCell>
+  return (
+    <>
+      <ConfirmDialog
+        isOpen={open}
+        title="Delete Student"
+        content="Are you sure you want to delete this student?"
+        confirmButtonText="Delete"
+        declineButtonText="Cancel"
+        confirm={confirmDelete}
+        forDelete={true}
+      />
+      <TableContainer component={Card}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Detail</TableCell>
+              <TableCell>Student Name</TableCell>
+              <TableCell />
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </>;
+          </TableHead>
+          <TableBody>
+            {students?.map((student) => (
+              <TableRow key={student.id}>
+                <TableCell>
+                  <Link to={'/student/' + student.id}>View Student</Link>
+                </TableCell>
+                <TableCell>{student.fullName}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => promptForDelete(student.id)}
+                    size="large"
+                  >
+                    <Delete />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  );
 };
 
 export default SimpleStudentTable;
