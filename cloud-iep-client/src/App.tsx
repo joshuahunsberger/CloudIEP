@@ -1,13 +1,12 @@
 import { AppState, Auth0Provider } from '@auth0/auth0-react';
 import {
+  adaptV4Theme,
   createTheme,
   Grid,
-  ThemeProvider,
-  Theme,
   StyledEngineProvider,
-  adaptV4Theme,
 } from '@mui/material';
 import { blue } from '@mui/material/colors';
+import { Theme, ThemeProvider } from '@mui/material/styles';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
