@@ -1,5 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Card, CardContent, CircularProgress, Grid, Typography, useTheme } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -128,46 +135,48 @@ const StudentPage = () => {
     }
   };
 
-  return <>
-    <Card className={classes.card}>
-      <CardContent>
-        <Typography variant="h4" align="center">
-          {isEditing ? 'Edit Student' : 'Add a Student'}
-        </Typography>
-        <StudentForm
-          handleSubmit={handleSubmit}
-          isEditing={isEditing}
-          cancelEditing={cancelEditing}
-          student={student}
-          setStudent={setStudent}
-        />
-      </CardContent>
-    </Card>
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      className={classes.dataCard}
-    >
-      {service.status === ApiStatus.Loading && <CircularProgress />}
-      {service.status === ApiStatus.Loaded &&
-        (service.result.length > 0 ? (
-          <StudentTable
-            students={students}
-            setEditing={setEditing}
-            deleteStudent={deleteStudent}
+  return (
+    <>
+      <Card className={classes.card}>
+        <CardContent>
+          <Typography variant="h4" align="center">
+            {isEditing ? 'Edit Student' : 'Add a Student'}
+          </Typography>
+          <StudentForm
+            handleSubmit={handleSubmit}
+            isEditing={isEditing}
+            cancelEditing={cancelEditing}
+            student={student}
+            setStudent={setStudent}
           />
-        ) : (
-          <Typography variant="h4">No Students</Typography>
-        ))}
-      {service.status === ApiStatus.Error && (
-        <Typography variant="h6">
-          There was an error getting students. {service.error.message}
-        </Typography>
-      )}
-    </Grid>
-  </>;
+        </CardContent>
+      </Card>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        className={classes.dataCard}
+      >
+        {service.status === ApiStatus.Loading && <CircularProgress />}
+        {service.status === ApiStatus.Loaded &&
+          (service.result.length > 0 ? (
+            <StudentTable
+              students={students}
+              setEditing={setEditing}
+              deleteStudent={deleteStudent}
+            />
+          ) : (
+            <Typography variant="h4">No Students</Typography>
+          ))}
+        {service.status === ApiStatus.Error && (
+          <Typography variant="h6">
+            There was an error getting students. {service.error.message}
+          </Typography>
+        )}
+      </Grid>
+    </>
+  );
 };
 
 export const studentsRoute = '/students';

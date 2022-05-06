@@ -159,7 +159,8 @@ const Profile = () => {
                           setPendingFirstName(firstName);
                           setEditingFirstName(true);
                         }}
-                        size="large">
+                        size="large"
+                      >
                         <Edit />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -191,7 +192,8 @@ const Profile = () => {
                           setPendingLastName(lastName);
                           setEditingLastName(true);
                         }}
-                        size="large">
+                        size="large"
+                      >
                         <Edit />
                       </IconButton>
                     </ListItemSecondaryAction>
