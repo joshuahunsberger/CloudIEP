@@ -7,8 +7,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+} from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
 import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { Student } from '../../students/Student';
@@ -40,49 +40,47 @@ const StudentTable: React.FC<StudentTableProps> = ({
     setOpen(false);
   };
 
-  return (
-    <>
-      <ConfirmDialog
-        isOpen={open}
-        title="Delete Student"
-        content="Are you sure you want to delete this student?"
-        confirmButtonText="Delete"
-        declineButtonText="Cancel"
-        confirm={confirmDelete}
-      />
-      <TableContainer component={Card}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Date of Birth</TableCell>
-              <TableCell />
+  return <>
+    <ConfirmDialog
+      isOpen={open}
+      title="Delete Student"
+      content="Are you sure you want to delete this student?"
+      confirmButtonText="Delete"
+      declineButtonText="Cancel"
+      confirm={confirmDelete}
+    />
+    <TableContainer component={Card}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>First Name</TableCell>
+            <TableCell>Last Name</TableCell>
+            <TableCell>Date of Birth</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {students?.map((student) => (
+            <TableRow key={student.id}>
+              <TableCell>{student.firstName}</TableCell>
+              <TableCell>{student.lastName}</TableCell>
+              <TableCell>
+                {format(student.dateOfBirth, 'MM/dd/yyyy')}
+              </TableCell>
+              <TableCell>
+                <IconButton onClick={() => setEditing(student.id)} size="large">
+                  <Edit />
+                </IconButton>
+                <IconButton onClick={() => promptForDelete(student.id)} size="large">
+                  <Delete />
+                </IconButton>
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {students?.map((student) => (
-              <TableRow key={student.id}>
-                <TableCell>{student.firstName}</TableCell>
-                <TableCell>{student.lastName}</TableCell>
-                <TableCell>
-                  {format(student.dateOfBirth, 'MM/dd/yyyy')}
-                </TableCell>
-                <TableCell>
-                  <IconButton onClick={() => setEditing(student.id)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton onClick={() => promptForDelete(student.id)}>
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
-  );
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </>;
 };
 
 export default StudentTable;

@@ -11,13 +11,13 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
   Paper,
   Theme,
   Typography,
   useTheme,
-} from '@material-ui/core';
-import { ArrowBack, Cake, Edit, Person } from '@material-ui/icons';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { ArrowBack, Cake, Edit, Person } from '@mui/icons-material';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { add, startOfDay } from 'date-fns';
@@ -203,175 +203,173 @@ const StudentDetail = () => {
     setIsAdding(false);
   };
 
-  return (
-    <>
-      {service.status === ApiStatus.Loading && <CircularProgress />}
-      {service.status === ApiStatus.Loaded && (
-        <>
-          <IconButton onClick={() => navigate(-1)}>
-            <ArrowBack />
-          </IconButton>
-          <Paper className={classes.root}>
-            <Typography variant="h4" align="center">
-              Student Detail
-            </Typography>
-            <List>
-              <ListItem>
-                {editingFirstName ? (
-                  <TextField
-                    autoFocus
-                    fullWidth
-                    label="First Name"
-                    value={pendingFirstName}
-                    onChange={(event) =>
-                      setPendingFirstName(event.currentTarget.value)
-                    }
-                    onKeyDown={(event) => handleKeyDown(event, 'firstName')}
-                    onBlur={() => setEditingFirstName(false)}
-                  />
-                ) : (
-                  <>
-                    <ListItemIcon>
-                      <Person />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="First Name"
-                      secondary={student.firstName}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => {
-                          setPendingFirstName(student.firstName);
-                          setEditingFirstName(true);
-                        }}
-                      >
-                        <Edit />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </>
-                )}
-              </ListItem>
-              <ListItem>
-                {editingLastName ? (
-                  <TextField
-                    autoFocus
-                    fullWidth
-                    label="Last Name"
-                    value={pendingLastName}
-                    onChange={(event) =>
-                      setPendingLastName(event.currentTarget.value)
-                    }
-                    onKeyDown={(event) => handleKeyDown(event, 'lastName')}
-                    onBlur={() => setEditingLastName(false)}
-                  />
-                ) : (
-                  <>
-                    <ListItemIcon>
-                      <Person />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Last Name"
-                      secondary={student.lastName}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => {
-                          setPendingLastName(student.lastName);
-                          setEditingLastName(true);
-                        }}
-                      >
-                        <Edit />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </>
-                )}
-              </ListItem>
-              <ListItem>
-                {editingDoB ? (
-                  <DatePicker
-                    disableFuture
-                    inputFormat="MM/dd/yyyy"
-                    label="Date of Birth"
-                    views={['year', 'month', 'day']}
-                    value={pendingDoB}
-                    onChange={(date) => handleDateChange(date)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                ) : (
-                  <>
-                    <ListItemIcon>
-                      <Cake />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Date of Birth"
-                      secondary={service.result.dateOfBirth.toDateString()}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        onClick={() => {
-                          setPendingDoB(student.dateOfBirth);
-                          setEditingDoB(true);
-                        }}
-                      >
-                        <Edit />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </>
-                )}
-              </ListItem>
-            </List>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="center"
-            >
-              {isAdding ? (
-                <Card>
-                  <CardContent>
-                    <Typography variant="h4" align="center">
-                      Add a Goal
-                    </Typography>
-                    <GoalForm
-                      goal={goal}
-                      setGoal={setGoal}
-                      handleSubmit={handleSubmit}
-                      cancel={cancel}
-                    />
-                  </CardContent>
-                </Card>
+  return <>
+    {service.status === ApiStatus.Loading && <CircularProgress />}
+    {service.status === ApiStatus.Loaded && (
+      <>
+        <IconButton onClick={() => navigate(-1)} size="large">
+          <ArrowBack />
+        </IconButton>
+        <Paper className={classes.root}>
+          <Typography variant="h4" align="center">
+            Student Detail
+          </Typography>
+          <List>
+            <ListItem>
+              {editingFirstName ? (
+                <TextField
+                  autoFocus
+                  fullWidth
+                  label="First Name"
+                  value={pendingFirstName}
+                  onChange={(event) =>
+                    setPendingFirstName(event.currentTarget.value)
+                  }
+                  onKeyDown={(event) => handleKeyDown(event, 'firstName')}
+                  onBlur={() => setEditingFirstName(false)}
+                />
               ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setIsAdding(true)}
-                  className={classes.button}
-                >
-                  Add Goal
-                </Button>
+                <>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="First Name"
+                    secondary={student.firstName}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      onClick={() => {
+                        setPendingFirstName(student.firstName);
+                        setEditingFirstName(true);
+                      }}
+                      size="large">
+                      <Edit />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </>
               )}
+            </ListItem>
+            <ListItem>
+              {editingLastName ? (
+                <TextField
+                  autoFocus
+                  fullWidth
+                  label="Last Name"
+                  value={pendingLastName}
+                  onChange={(event) =>
+                    setPendingLastName(event.currentTarget.value)
+                  }
+                  onKeyDown={(event) => handleKeyDown(event, 'lastName')}
+                  onBlur={() => setEditingLastName(false)}
+                />
+              ) : (
+                <>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Last Name"
+                    secondary={student.lastName}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      onClick={() => {
+                        setPendingLastName(student.lastName);
+                        setEditingLastName(true);
+                      }}
+                      size="large">
+                      <Edit />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </>
+              )}
+            </ListItem>
+            <ListItem>
+              {editingDoB ? (
+                <DatePicker
+                  disableFuture
+                  inputFormat="MM/dd/yyyy"
+                  label="Date of Birth"
+                  views={['year', 'month', 'day']}
+                  value={pendingDoB}
+                  onChange={(date) => handleDateChange(date)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              ) : (
+                <>
+                  <ListItemIcon>
+                    <Cake />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Date of Birth"
+                    secondary={service.result.dateOfBirth.toDateString()}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      onClick={() => {
+                        setPendingDoB(student.dateOfBirth);
+                        setEditingDoB(true);
+                      }}
+                      size="large">
+                      <Edit />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </>
+              )}
+            </ListItem>
+          </List>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {isAdding ? (
+              <Card>
+                <CardContent>
+                  <Typography variant="h4" align="center">
+                    Add a Goal
+                  </Typography>
+                  <GoalForm
+                    goal={goal}
+                    setGoal={setGoal}
+                    handleSubmit={handleSubmit}
+                    cancel={cancel}
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsAdding(true)}
+                className={classes.button}
+              >
+                Add Goal
+              </Button>
+            )}
 
-              <Typography variant="h4" align="center">
-                Goals
+            <Typography variant="h4" align="center">
+              Goals
+            </Typography>
+            {goals.length > 0 ? (
+              <GoalTable goals={goals} deleteGoal={deleteGoal} />
+            ) : (
+              <Typography variant="h6" align="center">
+                You don't have any goals right now. Add one above.
               </Typography>
-              {goals.length > 0 ? (
-                <GoalTable goals={goals} deleteGoal={deleteGoal} />
-              ) : (
-                <Typography variant="h6" align="center">
-                  You don't have any goals right now. Add one above.
-                </Typography>
-              )}
-            </Grid>
-          </Paper>
-        </>
-      )}
-      {service.status === ApiStatus.Error && (
-        <Typography variant="h6">
-          There was an error retrieving this student. {service.error.message}
-        </Typography>
-      )}
-    </>
-  );
+            )}
+          </Grid>
+        </Paper>
+      </>
+    )}
+    {service.status === ApiStatus.Error && (
+      <Typography variant="h6">
+        There was an error retrieving this student. {service.error.message}
+      </Typography>
+    )}
+  </>;
 };
 
 export const studentDetailRoute = '/student/:id';

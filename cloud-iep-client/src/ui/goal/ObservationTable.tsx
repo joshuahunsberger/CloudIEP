@@ -6,7 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@material-ui/core';
+} from '@mui/material';
 import { format } from 'date-fns';
 import React from 'react';
 import { Observation } from '../../goals/Goal';
