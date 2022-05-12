@@ -45,7 +45,9 @@ function Header() {
         </Link>
         <div className={classes.gap} />
         {!isAuthenticated && (
-          <Button onClick={() => loginWithRedirect({})}>Login</Button>
+          <Button color="inherit" onClick={() => loginWithRedirect({})}>
+            Login
+          </Button>
         )}
 
         {isAuthenticated && user && (
@@ -53,7 +55,9 @@ function Header() {
             <Link to="/profile">
               <Avatar src={user.picture} alt="Profile" />
             </Link>
-            <Button onClick={() => logout()}>Log out</Button>
+            <Button color="inherit" onClick={() => logout()}>
+              Log out
+            </Button>
           </>
         )}
       </Toolbar>
