@@ -21,11 +21,9 @@ import {
   ListItemText,
   Paper,
   TextField,
-  Theme,
   Typography,
-  useTheme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -43,18 +41,25 @@ import GoalForm from '../goal/GoalForm';
 import GoalTable from '../goal/GoalTable';
 import { useSnackbar } from '../SnackbarProvider';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+const PREFIX = 'StudentDetail';
+
+const classes = {
+  root: `${PREFIX}-root`,
+  button: `${PREFIX}-button`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+  [`& .${classes.root}`]: {
     marginTop: theme.spacing(4),
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     margin: theme.spacing(2),
   },
 }));
 
 const StudentDetail = () => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
   const { id } = useParams<{ id: string }>();
   const baseUrl = getBaseUrl();
   const url = baseUrl + 'Student/' + id;
@@ -211,7 +216,7 @@ const StudentDetail = () => {
   };
 
   return (
-    <>
+    <Root>
       {service.status === ApiStatus.Loading && <CircularProgress />}
       {service.status === ApiStatus.Loaded && (
         <>
@@ -443,7 +448,7 @@ const StudentDetail = () => {
           There was an error retrieving this student. {service.error.message}
         </Typography>
       )}
-    </>
+    </Root>
   );
 };
 

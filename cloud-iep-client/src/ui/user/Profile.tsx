@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import { ContactMail, Edit, Person } from '@mui/icons-material';
 import {
   Avatar,
   Grid,
@@ -10,23 +11,28 @@ import {
   ListItemText,
   Paper,
   TextField,
-  Theme,
   Typography,
-  useTheme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import { ContactMail, Edit, Person } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
 import ApiStatus from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
 import { useSnackbar } from '../SnackbarProvider';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+const PREFIX = 'Profile';
+
+const classes = {
+  root: `${PREFIX}-root`,
+  largeAvatar: `${PREFIX}-largeAvatar`,
+};
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  [`&.${classes.root}`]: {
     marginTop: theme.spacing(4),
   },
-  largeAvatar: {
+
+  [`& .${classes.largeAvatar}`]: {
     margin: theme.spacing(1),
     width: theme.spacing(15),
     height: theme.spacing(15),
@@ -34,8 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const Profile = () => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
   const snackbar = useSnackbar();
 
   const { isLoading, user, getAccessTokenSilently } = useAuth0();
@@ -119,7 +123,7 @@ const Profile = () => {
   }
 
   return (
-    <Paper className={classes.root}>
+    <StyledPaper className={classes.root}>
       <Typography variant="h2" align="center">
         Profile
       </Typography>
@@ -213,7 +217,7 @@ const Profile = () => {
           )}
         </Grid>
       </Grid>
-    </Paper>
+    </StyledPaper>
   );
 };
 

@@ -1,15 +1,22 @@
-import { Button, useTheme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { FormEvent } from 'react';
 import { Student } from '../../students/Student';
 
-const useStyles = makeStyles((theme) => ({
-  form: {
+const PREFIX = 'StudentForm';
+
+const classes = {
+  form: `${PREFIX}-form`,
+  button: `${PREFIX}-button`,
+};
+
+const Root = styled('form')(({ theme }) => ({
+  [`&.${classes.form}`]: {
     marginTop: theme.spacing(1),
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     margin: theme.spacing(3, 0, 0),
   },
 }));
@@ -29,15 +36,12 @@ const StudentForm = ({
   isEditing,
   cancelEditing,
 }: StudentFormProps) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
-
   const handleDateChange = (date: Date | null) => {
     date && setStudent({ ...student, dateOfBirth: date });
   };
 
   return (
-    <form className={classes.form} onSubmit={handleSubmit}>
+    <Root className={classes.form} onSubmit={handleSubmit}>
       <TextField
         variant="outlined"
         margin="normal"
@@ -105,7 +109,7 @@ const StudentForm = ({
       >
         Cancel
       </Button>
-    </form>
+    </Root>
   );
 };
 

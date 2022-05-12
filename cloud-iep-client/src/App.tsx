@@ -1,12 +1,7 @@
 import { AppState, Auth0Provider } from '@auth0/auth0-react';
-import {
-  adaptV4Theme,
-  createTheme,
-  Grid,
-  StyledEngineProvider,
-} from '@mui/material';
+import { createTheme, Grid, StyledEngineProvider } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import { Theme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
@@ -15,18 +10,11 @@ import Body from './ui/Body';
 import Header from './ui/Header';
 import { SnackbarProvider } from './ui/SnackbarProvider';
 
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
-
-const theme = createTheme(
-  adaptV4Theme({
-    palette: {
-      primary: blue,
-    },
-  }),
-);
+const theme = createTheme({
+  palette: {
+    primary: blue,
+  },
+});
 
 function App() {
   // Example from documentation:

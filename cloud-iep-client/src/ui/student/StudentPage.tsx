@@ -5,9 +5,8 @@ import {
   CircularProgress,
   Grid,
   Typography,
-  useTheme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
@@ -20,24 +19,33 @@ import { useSnackbar } from '../SnackbarProvider';
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable';
 
-const useStyles = makeStyles((theme) => ({
-  card: {
+const PREFIX = 'StudentPage';
+
+const classes = {
+  card: `${PREFIX}-card`,
+  dataCard: `${PREFIX}-dataCard`,
+  noStudents: `${PREFIX}-noStudents`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+  [`& .${classes.card}`]: {
     marginTop: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
-  dataCard: {
+
+  [`& .${classes.dataCard}`]: {
     marginTop: theme.spacing(4),
   },
-  noStudents: {
+
+  [`& .${classes.noStudents}`]: {
     align: 'center',
   },
 }));
 
 const StudentPage = () => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
   const service = useStudentsApi();
   const snackBar = useSnackbar();
 
@@ -136,7 +144,7 @@ const StudentPage = () => {
   };
 
   return (
-    <>
+    <Root>
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h4" align="center">
@@ -175,7 +183,7 @@ const StudentPage = () => {
           </Typography>
         )}
       </Grid>
-    </>
+    </Root>
   );
 };
 

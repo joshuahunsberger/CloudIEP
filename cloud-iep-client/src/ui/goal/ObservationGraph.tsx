@@ -1,5 +1,5 @@
-import { Card, Typography, useTheme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Card, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { format } from 'date-fns';
 import React from 'react';
 import {
@@ -14,8 +14,14 @@ import {
 } from 'recharts';
 import { Observation } from '../../goals/Goal';
 
-const useStyles = makeStyles((theme) => ({
-  card: {
+const PREFIX = 'ObservationGraph';
+
+const classes = {
+  card: `${PREFIX}-card`,
+};
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  [`&.${classes.card}`]: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(1),
   },
@@ -35,9 +41,6 @@ const ObservationGraph = ({
   observations,
   goalPercentage,
 }: ObservationGraphProps) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
-
   const makeGraphData = (): ObservationGraphData[] => {
     return observations.map(
       (o) =>
@@ -49,7 +52,7 @@ const ObservationGraph = ({
   };
 
   return (
-    <Card className={classes.card}>
+    <StyledCard className={classes.card}>
       <Typography variant="h4" align="center">
         Observation History
       </Typography>
@@ -74,7 +77,7 @@ const ObservationGraph = ({
           <Line type="monotone" dataKey="observationPercentage" />
         </LineChart>
       </ResponsiveContainer>
-    </Card>
+    </StyledCard>
   );
 };
 
