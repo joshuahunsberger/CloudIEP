@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import { ArrowBack, Edit } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -12,7 +13,6 @@ import {
   useTheme,
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { ArrowBack, Edit } from '@mui/icons-material';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -108,8 +108,8 @@ const GoalDetail = () => {
             <Typography variant="h4" align="center">
               Goal
             </Typography>
-            <IconButton size="large">
-              <Edit onClick={() => setIsEditing(true)} />
+            <IconButton onClick={() => setIsEditing(true)} size="large">
+              <Edit />
             </IconButton>
             {isEditing ? (
               <GoalForm
