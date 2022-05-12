@@ -1,5 +1,13 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import {
+  ArrowBack,
+  Cake,
+  Check,
+  Close,
+  Edit,
+  Person,
+} from '@mui/icons-material';
+import {
   Button,
   Card,
   CardContent,
@@ -12,13 +20,12 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Paper,
+  TextField,
   Theme,
   Typography,
   useTheme,
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { ArrowBack, Cake, Edit, Person } from '@mui/icons-material';
-import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
@@ -218,17 +225,37 @@ const StudentDetail = () => {
             <List>
               <ListItem>
                 {editingFirstName ? (
-                  <TextField
-                    autoFocus
-                    fullWidth
-                    label="First Name"
-                    value={pendingFirstName}
-                    onChange={(event) =>
-                      setPendingFirstName(event.currentTarget.value)
-                    }
-                    onKeyDown={(event) => handleKeyDown(event, 'firstName')}
-                    onBlur={() => setEditingFirstName(false)}
-                  />
+                  <>
+                    <TextField
+                      autoFocus
+                      fullWidth
+                      label="First Name"
+                      value={pendingFirstName}
+                      onChange={(event) =>
+                        setPendingFirstName(event.currentTarget.value)
+                      }
+                      onKeyDown={(event) => handleKeyDown(event, 'firstName')}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        onClick={async () => {
+                          try {
+                            await updateFirstName(pendingFirstName);
+                            snackBar.openSnackbar('First name saved.');
+                          } catch (error) {
+                            console.log(error);
+                            snackBar.openSnackbar('Error saving first name.');
+                          }
+                          hideAllFields();
+                        }}
+                      >
+                        <Check />
+                      </IconButton>
+                      <IconButton onClick={() => setEditingFirstName(false)}>
+                        <Close />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
                 ) : (
                   <>
                     <ListItemIcon>
@@ -254,17 +281,37 @@ const StudentDetail = () => {
               </ListItem>
               <ListItem>
                 {editingLastName ? (
-                  <TextField
-                    autoFocus
-                    fullWidth
-                    label="Last Name"
-                    value={pendingLastName}
-                    onChange={(event) =>
-                      setPendingLastName(event.currentTarget.value)
-                    }
-                    onKeyDown={(event) => handleKeyDown(event, 'lastName')}
-                    onBlur={() => setEditingLastName(false)}
-                  />
+                  <>
+                    <TextField
+                      autoFocus
+                      fullWidth
+                      label="Last Name"
+                      value={pendingLastName}
+                      onChange={(event) =>
+                        setPendingLastName(event.currentTarget.value)
+                      }
+                      onKeyDown={(event) => handleKeyDown(event, 'lastName')}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        onClick={async () => {
+                          try {
+                            await updateLastName(pendingLastName);
+                            snackBar.openSnackbar('Last name saved.');
+                          } catch (error) {
+                            console.log(error);
+                            snackBar.openSnackbar('Error saving last name.');
+                          }
+                          hideAllFields();
+                        }}
+                      >
+                        <Check />
+                      </IconButton>
+                      <IconButton onClick={() => setEditingLastName(false)}>
+                        <Close />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
                 ) : (
                   <>
                     <ListItemIcon>
@@ -290,15 +337,38 @@ const StudentDetail = () => {
               </ListItem>
               <ListItem>
                 {editingDoB ? (
-                  <DatePicker
-                    disableFuture
-                    inputFormat="MM/dd/yyyy"
-                    label="Date of Birth"
-                    views={['year', 'month', 'day']}
-                    value={pendingDoB}
-                    onChange={(date) => handleDateChange(date)}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
+                  <>
+                    <DatePicker
+                      disableFuture
+                      inputFormat="MM/dd/yyyy"
+                      label="Date of Birth"
+                      views={['year', 'month', 'day']}
+                      value={pendingDoB}
+                      onChange={(date) => handleDateChange(date)}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        onClick={async () => {
+                          try {
+                            await updateDoB(pendingDoB);
+                            snackBar.openSnackbar('Date of birth saved.');
+                          } catch (error) {
+                            console.log(error);
+                            snackBar.openSnackbar(
+                              'Error saving Date of Birth.',
+                            );
+                          }
+                          hideAllFields();
+                        }}
+                      >
+                        <Check />
+                      </IconButton>
+                      <IconButton onClick={() => setEditingDoB(false)}>
+                        <Close />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </>
                 ) : (
                   <>
                     <ListItemIcon>
