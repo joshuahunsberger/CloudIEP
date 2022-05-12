@@ -1,15 +1,22 @@
-import { Button, useTheme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { FormEvent } from 'react';
 import { Goal } from '../../goals/Goal';
 
-const useStyles = makeStyles((theme) => ({
-  form: {
+const PREFIX = 'GoalForm';
+
+const classes = {
+  form: `${PREFIX}-form`,
+  button: `${PREFIX}-button`,
+};
+
+const Root = styled('form')(({ theme }) => ({
+  [`&.${classes.form}`]: {
     marginTop: theme.spacing(1),
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     margin: theme.spacing(3, 0, 0),
   },
 }));
@@ -29,9 +36,6 @@ const GoalForm = ({
   cancel,
   isEditing,
 }: GoalFormProps) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
-
   const handleBeginDateChange = (date: Date | null) => {
     date && setGoal({ ...goal, beginDate: date });
   };
@@ -41,7 +45,7 @@ const GoalForm = ({
   };
 
   return (
-    <form className={classes.form} onSubmit={handleSubmit}>
+    <Root className={classes.form} onSubmit={handleSubmit}>
       <TextField
         variant="outlined"
         margin="normal"
@@ -124,7 +128,7 @@ const GoalForm = ({
       >
         Cancel
       </Button>
-    </form>
+    </Root>
   );
 };
 

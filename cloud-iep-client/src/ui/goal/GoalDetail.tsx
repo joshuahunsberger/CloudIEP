@@ -10,9 +10,8 @@ import {
   ListItem,
   ListItemText,
   Typography,
-  useTheme,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { styled } from '@mui/material/styles';
 import { add, startOfDay } from 'date-fns';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -28,18 +27,25 @@ import ObservationForm from './ObservationForm';
 import ObservationGraph from './ObservationGraph';
 import ObservationTable from './ObservationTable';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
+const PREFIX = 'GoalDetail';
+
+const classes = {
+  root: `${PREFIX}-root`,
+  button: `${PREFIX}-button`,
+};
+
+// TODO jss-to-styled codemod: The Fragment root was replaced by div. Change the tag if needed.
+const Root = styled('div')(({ theme }) => ({
+  [`& .${classes.root}`]: {
     marginTop: theme.spacing(4),
   },
-  button: {
+
+  [`& .${classes.button}`]: {
     margin: theme.spacing(2),
   },
 }));
 
 const GoalDetail = () => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
   const { id } = useParams<{ id: string }>();
   const baseUrl = getBaseUrl();
   const goalUrl = baseUrl + 'goal/' + id;
@@ -97,7 +103,7 @@ const GoalDetail = () => {
   };
 
   return (
-    <>
+    <Root>
       {service.status === ApiStatus.Loading && <CircularProgress />}
       {service.status === ApiStatus.Loaded && (
         <>
@@ -185,7 +191,7 @@ const GoalDetail = () => {
           There was an error retrieving this goal. {service.error.message}
         </Typography>
       )}
-    </>
+    </Root>
   );
 };
 

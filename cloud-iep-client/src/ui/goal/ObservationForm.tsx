@@ -1,23 +1,41 @@
-import { Button, Card, Grid, Paper, Typography, useTheme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import { TextField } from '@mui/material';
+import {
+  Button,
+  Card,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Observation } from '../../goals/Goal';
 import { useSnackbar } from '../SnackbarProvider';
 
-const useStyles = makeStyles((theme) => ({
-  button: {
+const PREFIX = 'ObservationForm';
+
+const classes = {
+  button: `${PREFIX}-button`,
+  card: `${PREFIX}-card`,
+  gridRow: `${PREFIX}-gridRow`,
+  paper: `${PREFIX}-paper`,
+};
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  [`& .${classes.button}`]: {
     margin: theme.spacing(3, 0, 0),
   },
-  card: {
+
+  [`&.${classes.card}`]: {
     padding: theme.spacing(2),
     margin: theme.spacing(2, 0),
   },
-  gridRow: {
+
+  [`& .${classes.gridRow}`]: {
     margin: theme.spacing(2, 0, 2),
   },
-  paper: {
+
+  [`& .${classes.paper}`]: {
     padding: theme.spacing(2),
     textAlign: 'center',
   },
@@ -29,8 +47,6 @@ interface ObservationFormProps {
 }
 
 const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
-  const theme = useTheme();
-  const classes = useStyles(theme);
   const snackBar = useSnackbar();
   const [observation, setObservation] = useState<Observation>({
     observationDate: new Date(),
@@ -92,7 +108,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
   };
 
   return (
-    <Card className={classes.card}>
+    <StyledCard className={classes.card}>
       <Grid
         container
         item
@@ -179,7 +195,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
           </Button>
         </form>
       </Grid>
-    </Card>
+    </StyledCard>
   );
 };
 

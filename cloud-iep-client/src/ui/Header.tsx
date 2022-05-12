@@ -1,39 +1,40 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Cloud } from '@mui/icons-material';
-import {
-  AppBar,
-  Avatar,
-  Button,
-  Toolbar,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { AppBar, Avatar, Button, Toolbar, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { studentsRoute } from './student/StudentPage';
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
+const PREFIX = 'Header';
+
+const classes = {
+  icon: `${PREFIX}-icon`,
+  homeLink: `${PREFIX}-homeLink`,
+  gap: `${PREFIX}-gap`,
+};
+
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  [`& .${classes.icon}`]: {
     marginRight: theme.spacing(2),
   },
-  homeLink: {
+
+  [`& .${classes.homeLink}`]: {
     textDecoration: 'none',
     color: 'inherit',
     margin: theme.spacing(0, 2),
   },
-  gap: {
+
+  [`& .${classes.gap}`]: {
     flex: 1,
   },
 }));
 
 function Header() {
-  const theme = useTheme();
-  const classes = useStyles(theme);
   const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
   return (
-    <AppBar position="static">
+    <StyledAppBar position="static">
       <Toolbar>
         <Cloud className={classes.icon} />
         <Link to="/" className={classes.homeLink}>
@@ -61,7 +62,7 @@ function Header() {
           </>
         )}
       </Toolbar>
-    </AppBar>
+    </StyledAppBar>
   );
 }
 
