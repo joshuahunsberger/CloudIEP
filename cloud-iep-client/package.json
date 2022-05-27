@@ -40,13 +40,14 @@
     "prettier:fix": "prettier --write 'src/**/*.{ts,tsx}'"
   },
   "eslintConfig": {
-    "extends": "react-app",
+    "extends": [
+      "react-app",
+      "plugin:prettier/recommended"
+    ],
     "plugins": [
       "prettier"
     ],
-    "rules": {
-      "prettier/prettier": "error"
-    }
+    "rules": {}
   },
   "browserslist": {
     "production": [
@@ -62,8 +63,9 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.35",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.3",
-    "prettier": "2.0.4"
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "2.6.2"
   }
 }
