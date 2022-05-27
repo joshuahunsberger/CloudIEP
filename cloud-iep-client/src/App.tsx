@@ -21,7 +21,7 @@ function App() {
   // https://github.com/auth0/auth0-react/blob/master/EXAMPLES.md#1-protecting-a-route-in-a-react-router-dom-app
   // Suggested changes: https://github.com/auth0/auth0-react/issues/332#issuecomment-1044483033
   const navigate = useNavigate();
-  const onRedirectCallback = (appState: AppState) => {
+  const onRedirectCallback = (appState?: AppState) => {
     // Use the router's history module to replace the url
     // Replaced with React Router navigate in v6
     navigate(appState?.returnTo || window.location.pathname);
