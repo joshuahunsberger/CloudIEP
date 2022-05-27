@@ -1,6 +1,6 @@
 import React from 'react';
-import useWeatherForecastsService from './useWeatherForecastsService';
 import ApiStatus from './types/ApiStatus';
+import useWeatherForecastsService from './useWeatherForecastsService';
 
 const WeatherForecasts: React.FC<{}> = () => {
   const service = useWeatherForecastsService();
@@ -11,10 +11,12 @@ const WeatherForecasts: React.FC<{}> = () => {
       {service.status === ApiStatus.Loaded &&
         service.result.map((forecast) => (
           <div key={forecast.date.valueOf()}>
-            <b>Date:</b> {forecast.date}
-            <br />
-            Temp (C): {forecast.temperatureC} Temp (F): {forecast.temperatureF}{' '}
-            Summary: {forecast.summary}
+            <>
+              <b>Date:</b> {forecast.date}
+              <br />
+              Temp (C): {forecast.temperatureC} Temp (F):{' '}
+              {forecast.temperatureF} Summary: {forecast.summary}
+            </>
           </div>
         ))}
       {service.status === ApiStatus.Error && (
