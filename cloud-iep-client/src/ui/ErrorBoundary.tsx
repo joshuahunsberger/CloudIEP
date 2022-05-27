@@ -3,6 +3,7 @@ import React from 'react';
 
 interface ErrorBoundaryProps {
   logError?: (error: Error, errorInfo: any) => void;
+  children: JSX.Element;
 }
 
 interface ErrorBoundaryState {
