@@ -1,15 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="CosmosDB\" />
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.16.2" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+	</PropertyGroup>
+	<ItemGroup>
+		<Folder Include="Models\" />
+		<Folder Include="CosmosDB\" />
+		<Folder Include="Exceptions\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.16.2" />
+	</ItemGroup>
 </Project>

@@ -1,24 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
-    <UserSecretsId>7ffa8ead-e964-45d4-97b0-30c91a116fed</UserSecretsId>
-  </PropertyGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Options\" />
-    <Folder Include="IoC\" />
-    <Folder Include="Authorization\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+		<UserSecretsId>7ffa8ead-e964-45d4-97b0-30c91a116fed</UserSecretsId>
+	</PropertyGroup>
+	<ItemGroup>
+		<Folder Include="Options\" />
+		<Folder Include="IoC\" />
+		<Folder Include="Authorization\" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj">
+			<GlobalPropertiesToRemove>
+			</GlobalPropertiesToRemove>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.2" />
+	</ItemGroup>
 </Project>
