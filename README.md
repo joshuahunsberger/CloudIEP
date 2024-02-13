@@ -39,15 +39,18 @@ You will also need to create the containers/collections listed below (partitione
 
 The API project is making use of the Secret Manager tool for managing application secrets.
 See more here:
-https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1
+https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=windows#secret-manager
 
-To configure secrets, navigate to api/CloudIEP.Web and run the `dotnet user-secrets` command for your operating system (https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows#set-multiple-secrets)
+To configure secrets, navigate to api/CloudIEP.Web and run the `dotnet user-secrets` command.
+
+For setting multiple secrets, see [this link](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspn.etcore-8.0&tabs=windows#set-multiple-secrets)
 
 If the following values existed as user-secrets.json
 ```
 {
   "Auth0:Audience": "...",
   "Auth0:Domain": "...",
+  "Auth0:SwaggerClientId": "...",
   "Auth0:Token": "...",
   "CosmosDB:DatabaseName": "...",
   "CosmosDB:Endpoint": "...",
@@ -62,7 +65,7 @@ If the following values existed as user-secrets.json
 ```
 You could run the following command in bash:
 
-`cat ./input.json | dotnet user-secrets set`
+`cat ./user-secrets.json | dotnet user-secrets set`
 
 To run the project locally, you open the solution in the /api directory in your preferred version of Visual Studio.
 
