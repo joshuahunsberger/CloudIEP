@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using CloudIEP.Web;
 using CloudIEP.Web.Authorization;
 using CloudIEP.Web.IoC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,11 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 const string CorsPolicy = "CorsPolicy";
-const string ApiTitle = "CloudIEP";
-const string ApiVersion = "v1";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +28,7 @@ services.AddCors(options => options.AddPolicy(CorsPolicy, builder =>
 
 services.AddControllers();
 
-string domain = $"https://{Configuration["Auth0:Domain"]}";
+var domain = $"https://{Configuration["Auth0:Domain"]}";
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -51,10 +49,7 @@ services.AddAuthorization(options =>
 services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 
-services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc(ApiVersion, new OpenApiInfo { Title = ApiTitle, Version = ApiVersion });
-});
+services.AddSwaggerGen(c => c.ConfigureSwaggerGenOptions(domain));
 
 var app = builder.Build();
 
@@ -64,7 +59,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", ApiTitle));
+app.UseSwaggerDocs();
 
 app.Run();
