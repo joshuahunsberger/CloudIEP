@@ -12,5 +12,3 @@ services:
     hostname: cosmosdb.domain
     ports:
       - 8081
-    networks:
-      - internal
