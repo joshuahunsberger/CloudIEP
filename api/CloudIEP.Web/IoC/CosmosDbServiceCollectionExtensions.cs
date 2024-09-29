@@ -14,7 +14,8 @@ public static class CosmosDbServiceCollectionExtensions
 {
     public static IServiceCollection AddCosmosDb(this IServiceCollection services, CosmosDbOptions cosmosDbOptions)
     {
-        var documentClient = new DocumentClient(cosmosDbOptions.Endpoint, cosmosDbOptions.Key, new JsonSerializerSettings
+        var documentClient = new DocumentClient(new System.Uri("https://cosmosdb.domain:8081"), "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", new JsonSerializerSettings
+        //var documentClient = new DocumentClient(cosmosDbOptions.Endpoint, cosmosDbOptions.Key, new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             DefaultValueHandling = DefaultValueHandling.Ignore,
