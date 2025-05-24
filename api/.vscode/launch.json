@@ -5,7 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run API",
+            "name": "Run Aspire",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/CloudIEP.AppHost/CloudIEP.AppHost.csproj"
+        },
+        {
+            "name": "Run API outside of Aspire",
             "type": "dotnet",
             "request": "launch",
             "projectPath": "${workspaceFolder}/CloudIEP.Web/CloudIEP.Web.csproj"
