@@ -29,10 +29,10 @@ stages:
         steps:
           - script: |
               cd cloud-iep-client
-              yarn install
-            displayName: yarn install
+              npm install
+            displayName: npm install
 
           - script: |
               cd cloud-iep-client
-              yarn build
-            displayName: yarn build
+              npm build
+            displayName: npm build
