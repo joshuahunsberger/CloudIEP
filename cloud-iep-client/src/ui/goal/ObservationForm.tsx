@@ -65,7 +65,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
       try {
         await addObservation(observation);
       } catch (error) {
-        var errorMessage = 'Unknown Error';
+        let errorMessage = 'Unknown Error';
         if (error instanceof Error) {
           errorMessage = error.message;
         }
@@ -81,7 +81,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
   const handleSuccessChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    var success = Number(e.currentTarget.value);
+    let success = Number(e.currentTarget.value);
     if (success < 0) success = 0;
     setObservation({
       ...observation,
@@ -92,7 +92,7 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
   const handleTotalChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    var total = Number(e.currentTarget.value);
+    let total = Number(e.currentTarget.value);
     if (total < 0) total = 0;
     setObservation({
       ...observation,

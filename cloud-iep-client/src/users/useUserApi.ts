@@ -25,7 +25,7 @@ const useUsersApi = () => {
         );
         setResult({ status: ApiStatus.Loaded, result: response });
       } catch (err) {
-        var result = handleApiError<User>(err);
+        const result = handleApiError<User>(err);
         setResult(result);
       }
     }

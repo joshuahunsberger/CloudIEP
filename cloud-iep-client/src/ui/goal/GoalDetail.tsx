@@ -76,8 +76,8 @@ const GoalDetail = () => {
   }, [service]);
 
   const addObservation = async (newObservation: Observation) => {
-    var url = goalUrl + '/observation';
-    var token = await getAccessTokenSilently();
+    const url = goalUrl + '/observation';
+    const token = await getAccessTokenSilently();
     await postRequest<Observation>(url, newObservation, token);
     setIsAdding(false);
     setGoal({
@@ -94,7 +94,7 @@ const GoalDetail = () => {
 
   const handleGoalSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var token = await getAccessTokenSilently();
+    const token = await getAccessTokenSilently();
     await putRequest(goalUrl, goal, token);
     setIsEditing(false);
   };

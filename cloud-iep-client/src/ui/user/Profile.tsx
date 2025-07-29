@@ -101,7 +101,7 @@ const Profile = () => {
   };
 
   const updateFirstName = async (newFirstName: string) => {
-    var token = await getAccessTokenSilently();
+    const token = await getAccessTokenSilently();
     await postRequest(
       'http://localhost:5000/api/User/FirstName',
       newFirstName,
@@ -110,7 +110,7 @@ const Profile = () => {
   };
 
   const updateLastName = async (newLastName: string) => {
-    var token = await getAccessTokenSilently();
+    const token = await getAccessTokenSilently();
     await postRequest(
       'http://localhost:5000/api/User/LastName',
       newLastName,
