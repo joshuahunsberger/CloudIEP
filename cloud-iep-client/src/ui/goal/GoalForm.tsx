@@ -1,8 +1,8 @@
 import { Button, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import React, { FormEvent } from 'react';
-import { Goal } from '../../goals/Goal';
+import React, { type FormEvent } from 'react';
+import type { Goal } from '../../goals/Goal';
 
 const PREFIX = 'GoalForm';
 

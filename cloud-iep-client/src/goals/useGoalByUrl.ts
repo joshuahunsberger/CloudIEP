@@ -2,9 +2,10 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import handleApiError from '../handleApiError';
 import getRequest from '../network/getRequest';
-import { Api } from '../types/Api';
+import type { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
-import { Goal, Observation } from './Goal';
+import type { Goal } from './Goal';
+import type { Observation } from "./Observation";
 import { sortObservationsByDate } from './observationSort';
 
 const useGoalByUrl = (url: string) => {

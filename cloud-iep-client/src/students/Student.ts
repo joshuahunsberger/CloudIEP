@@ -1,4 +1,5 @@
-import { GoalPreview } from './GoalPreview';
+import type { GoalPreview } from "./GoalPreview";
+
 
 export interface Student {
   id: string;

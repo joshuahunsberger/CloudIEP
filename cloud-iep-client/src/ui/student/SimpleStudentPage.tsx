@@ -9,12 +9,12 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { startOfDay } from 'date-fns';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { type FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
-import { Student } from '../../students/Student';
+import type { Student } from '../../students/Student';
 import ApiStatus from '../../types/ApiStatus';
-import { StudentPreview } from '../../users/StudentPreview';
+import type { StudentPreview } from '../../users/StudentPreview';
 import useUsersApi from '../../users/useUserApi';
 import { useSnackbar } from '../SnackbarProvider';
 import SimpleStudentTable from './SimpleStudentTable';

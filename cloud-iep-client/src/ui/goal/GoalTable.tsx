@@ -1,3 +1,4 @@
+import { Delete } from '@mui/icons-material';
 import {
   Card,
   IconButton,
@@ -8,10 +9,9 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { Delete } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { GoalPreview } from '../../students/GoalPreview';
+import type { GoalPreview } from '../../students/GoalPreview';
 import ConfirmDialog from '../ConfirmDialog';
 
 interface GoalTableProps {

@@ -2,9 +2,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import handleApiError from '../handleApiError';
 import postRequest from '../network/postRequest';
-import { Api } from '../types/Api';
+import type { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
-import { User } from './User';
+import type { User } from './User';
 
 const useUsersApi = () => {
   const [result, setResult] = useState<Api<User>>({

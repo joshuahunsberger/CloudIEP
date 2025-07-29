@@ -8,8 +8,8 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { Observation } from '../../goals/Goal';
+import React, { type ChangeEvent, type FormEvent, useState } from 'react';
+import type { Observation } from "../../goals/Observation";
 import { useSnackbar } from '../SnackbarProvider';
 
 const PREFIX = 'ObservationForm';

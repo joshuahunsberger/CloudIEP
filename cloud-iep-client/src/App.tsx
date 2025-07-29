@@ -1,4 +1,4 @@
-import { AppState, Auth0Provider } from '@auth0/auth0-react';
+import { type AppState, Auth0Provider } from '@auth0/auth0-react';
 import { createTheme, Grid, StyledEngineProvider } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { ThemeProvider } from '@mui/material/styles';

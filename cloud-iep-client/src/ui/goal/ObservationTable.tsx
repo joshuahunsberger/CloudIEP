@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import React from 'react';
-import { Observation } from '../../goals/Goal';
+import type { Observation } from "../../goals/Observation";
 
 interface ObservationTableProps {
   observations: ReadonlyArray<Observation>;

@@ -1,12 +1,8 @@
+import type { Observation } from "./Observation";
+
 interface Objective {
   objectiveName: string;
   complete: boolean;
-}
-
-export interface Observation {
-  observationDate: Date;
-  successCount: number;
-  totalCount: number;
 }
 
 export interface Goal {

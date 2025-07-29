@@ -13,9 +13,10 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { add, startOfDay } from 'date-fns';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { type FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Goal, Observation } from '../../goals/Goal';
+import type { Goal } from '../../goals/Goal';
+import type { Observation } from "../../goals/Observation";
 import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
 import getBaseUrl from '../../network/getBaseUrl';

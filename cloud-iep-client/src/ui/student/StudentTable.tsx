@@ -11,7 +11,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 import { format } from 'date-fns';
 import React, { useState } from 'react';
-import { Student } from '../../students/Student';
+import type { Student } from '../../students/Student';
 import ConfirmDialog from '../ConfirmDialog';
 
 interface StudentTableProps {

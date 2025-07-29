@@ -1,4 +1,4 @@
-import { StudentPreview } from './StudentPreview';
+import type { StudentPreview} from './StudentPreview';
 export interface User {
   id: string;
   auth0Id: string;
