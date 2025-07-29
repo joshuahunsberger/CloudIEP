@@ -20,9 +20,9 @@ var services = builder.Services;
 
 services.AddData(Configuration);
 
-services.AddCors(options => options.AddPolicy(CorsPolicy, builder =>
+services.AddCors(options => options.AddPolicy(CorsPolicy, policyBuilder =>
 {
-    builder.WithOrigins("http://localhost:3000")
+    policyBuilder.WithOrigins("http://localhost:5173")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials();
