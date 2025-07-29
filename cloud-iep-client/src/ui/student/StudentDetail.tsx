@@ -104,7 +104,9 @@ const StudentDetail = () => {
       setStudent(studentResponse);
       setGoals(studentResponse.goals);
     };
-    service.status === ApiStatus.Loaded && updateFromService(service.result);
+    if (service.status === ApiStatus.Loaded) {
+      updateFromService(service.result);
+    }
   }, [service]);
 
   const hideAllFields = () => {
@@ -114,7 +116,9 @@ const StudentDetail = () => {
   };
 
   const handleDateChange = (date: Date | null) => {
-    date && setPendingDoB(date);
+    if (date) {
+      setPendingDoB(date);
+    }
   };
 
   const handleKeyDown = async (

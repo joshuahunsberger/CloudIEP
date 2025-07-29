@@ -8,7 +8,6 @@ import {
   TableRow,
 } from '@mui/material';
 import { format } from 'date-fns';
-import React from 'react';
 import type { Observation } from "../../goals/Observation";
 
 interface ObservationTableProps {

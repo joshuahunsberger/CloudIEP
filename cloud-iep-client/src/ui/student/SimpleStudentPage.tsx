@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { startOfDay } from 'date-fns';
-import React, { type FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
 import type { Student } from '../../students/Student';
@@ -69,7 +69,9 @@ const SimpleStudentPage = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    service.status === ApiStatus.Loaded && setStudents(service.result.students);
+    if (service.status === ApiStatus.Loaded) {
+      setStudents(service.result.students);
+    }
   }, [service]);
 
   const addStudent = async (newStudent: Student) => {

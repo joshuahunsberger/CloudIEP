@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import React, { type ChangeEvent, type FormEvent, useState } from 'react';
+import { type ChangeEvent, type FormEvent, useState } from 'react';
 import type { Observation } from "../../goals/Observation";
 import { useSnackbar } from '../SnackbarProvider';
 
@@ -75,7 +75,9 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
   };
 
   const handleDateChange = (date: Date | null) => {
-    date && setObservation({ ...observation, observationDate: date });
+    if (date) {
+      setObservation({ ...observation, observationDate: date });
+    }
   };
 
   const handleSuccessChange = (

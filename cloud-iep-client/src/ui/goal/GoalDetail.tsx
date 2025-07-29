@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { add, startOfDay } from 'date-fns';
-import React, { type FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Goal } from '../../goals/Goal';
 import type { Observation } from "../../goals/Observation";
@@ -72,7 +72,9 @@ const GoalDetail = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    service.status === ApiStatus.Loaded && setGoal(service.result);
+    if (service.status === ApiStatus.Loaded) {
+      setGoal(service.result);
+    }
   }, [service]);
 
   const addObservation = async (newObservation: Observation) => {

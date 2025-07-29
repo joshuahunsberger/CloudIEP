@@ -1,7 +1,6 @@
 import { Card, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { format } from 'date-fns';
-import React from 'react';
 import {
   CartesianGrid,
   Line,
@@ -62,7 +61,7 @@ const ObservationGraph = ({
           <XAxis dataKey="observationDate" />
           <YAxis domain={[0, 1]} />
           <Tooltip
-            formatter={(value: any) => {
+            formatter={(value: number) => {
               return [value, 'Observed Percentage'];
             }}
           />
