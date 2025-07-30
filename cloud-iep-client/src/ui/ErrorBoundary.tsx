@@ -2,14 +2,14 @@ import { Typography } from '@mui/material';
 import React from 'react';
 
 interface ErrorBoundaryProps {
-  logError?: (error: Error, errorInfo: any) => void;
+  logError?: (error: Error, errorInfo: React.ErrorInfo) => void;
   children: JSX.Element;
 }
 
 interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
-  errorInfo?: any;
+  errorInfo?: React.ErrorInfo;
 }
 
 class ErrorBoundary extends React.Component<
@@ -23,9 +23,9 @@ class ErrorBoundary extends React.Component<
   }
 
   static getDerivedStateFromError(error: Error) {
-    return { hasError: true };
+    return { hasError: true, error };
   }
-  componentDidCatch(error: Error, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ ...this.state, error });
     this.setState({ ...this.state, errorInfo });
     this.props.logError?.(error, errorInfo);
