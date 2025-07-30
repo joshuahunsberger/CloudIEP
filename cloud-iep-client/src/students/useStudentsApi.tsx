@@ -28,7 +28,7 @@ const useStudentsApi = () => {
               firstName: s.firstName,
               lastName: s.lastName,
               dateOfBirth: new Date(s.dateOfBirth),
-            } as Student),
+            }) as Student,
         );
         setResult({ status: ApiStatus.Loaded, result: students });
       } catch (error) {

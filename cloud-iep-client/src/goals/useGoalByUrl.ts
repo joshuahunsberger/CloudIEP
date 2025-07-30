@@ -30,7 +30,7 @@ const useGoalByUrl = (url: string) => {
                 ({
                   ...obs,
                   observationDate: new Date(obs.observationDate),
-                } as Observation),
+                }) as Observation,
             )
             .sort(sortObservationsByDate),
         } as Goal;

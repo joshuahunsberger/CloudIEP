@@ -46,7 +46,7 @@ const ObservationGraph = ({
         ({
           observationDate: format(o.observationDate, 'MM/dd/yyyy'),
           observationPercentage: o.successCount / o.totalCount,
-        } as ObservationGraphData),
+        }) as ObservationGraphData,
     );
   };
 
