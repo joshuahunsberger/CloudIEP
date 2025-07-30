@@ -1,10 +1,9 @@
-import { AppState, Auth0Provider } from '@auth0/auth0-react';
+import { type AppState, Auth0Provider } from '@auth0/auth0-react';
 import { createTheme, Grid, StyledEngineProvider } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { ThemeProvider } from '@mui/material/styles';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import React from 'react';
 import { BrowserRouter, useNavigate } from 'react-router-dom';
 import Body from './ui/Body';
 import Header from './ui/Header';
@@ -29,9 +28,9 @@ function App() {
 
   return (
     <Auth0Provider
-      domain={process.env.REACT_APP_AUTH0_DOMAIN ?? ''}
-      clientId={process.env.REACT_APP_AUTH0_CLIENTID ?? ''}
-      redirectUri="http://localhost:3000/logincallback"
+      domain={import.meta.env.VITE_REACT_APP_AUTH0_DOMAIN ?? ''}
+      clientId={import.meta.env.VITE_REACT_APP_AUTH0_CLIENTID ?? ''}
+      redirectUri="http://localhost:5173/logincallback"
       scope="openid"
       audience="https://cloudiepdev/api"
       onRedirectCallback={onRedirectCallback}

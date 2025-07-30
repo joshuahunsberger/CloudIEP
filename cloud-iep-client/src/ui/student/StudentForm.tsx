@@ -1,8 +1,8 @@
 import { Button, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import React, { FormEvent } from 'react';
-import { Student } from '../../students/Student';
+import { type FormEvent } from 'react';
+import type { Student } from '../../students/Student';
 
 const PREFIX = 'StudentForm';
 
@@ -37,7 +37,9 @@ const StudentForm = ({
   cancelEditing,
 }: StudentFormProps) => {
   const handleDateChange = (date: Date | null) => {
-    date && setStudent({ ...student, dateOfBirth: date });
+    if (date) {
+      setStudent({ ...student, dateOfBirth: date });
+    }
   };
 
   return (

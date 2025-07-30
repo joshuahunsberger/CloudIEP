@@ -8,14 +8,14 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { startOfDay } from 'date-fns';
-import React, { FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
-import { Student } from '../../students/Student';
+import type { Student } from '../../students/Student';
 import useStudentsApi from '../../students/useStudentsApi';
 import ApiStatus from '../../types/ApiStatus';
-import { useSnackbar } from '../SnackbarProvider';
+import { useSnackbar } from '../SnackbarHooks';
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable';
 
@@ -63,12 +63,14 @@ const StudentPage = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    service.status === ApiStatus.Loaded && setStudents(service.result);
+    if (service.status === ApiStatus.Loaded) {
+      setStudents(service.result);
+    }
   }, [service]);
 
   const addStudent = async (newStudent: Student) => {
     const token = await getAccessTokenSilently();
-    const result = await postRequest<Student>(
+    const result = await postRequest<Student, Student>(
       'http://localhost:5000/api/Student',
       newStudent,
       token,

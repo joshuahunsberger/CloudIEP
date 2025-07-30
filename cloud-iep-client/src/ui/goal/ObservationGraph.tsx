@@ -1,7 +1,6 @@
 import { Card, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { format } from 'date-fns';
-import React from 'react';
 import {
   CartesianGrid,
   Line,
@@ -12,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Observation } from '../../goals/Goal';
+import type { Observation } from '../../goals/Observation';
 
 const PREFIX = 'ObservationGraph';
 
@@ -47,7 +46,7 @@ const ObservationGraph = ({
         ({
           observationDate: format(o.observationDate, 'MM/dd/yyyy'),
           observationPercentage: o.successCount / o.totalCount,
-        } as ObservationGraphData),
+        }) as ObservationGraphData,
     );
   };
 
@@ -62,7 +61,7 @@ const ObservationGraph = ({
           <XAxis dataKey="observationDate" />
           <YAxis domain={[0, 1]} />
           <Tooltip
-            formatter={(value: any) => {
+            formatter={(value: number) => {
               return [value, 'Observed Percentage'];
             }}
           />

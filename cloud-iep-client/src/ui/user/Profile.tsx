@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
 import ApiStatus from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
-import { useSnackbar } from '../SnackbarProvider';
+import { useSnackbar } from '../SnackbarHooks';
 
 const PREFIX = 'Profile';
 
@@ -101,7 +101,7 @@ const Profile = () => {
   };
 
   const updateFirstName = async (newFirstName: string) => {
-    var token = await getAccessTokenSilently();
+    const token = await getAccessTokenSilently();
     await postRequest(
       'http://localhost:5000/api/User/FirstName',
       newFirstName,
@@ -110,7 +110,7 @@ const Profile = () => {
   };
 
   const updateLastName = async (newLastName: string) => {
-    var token = await getAccessTokenSilently();
+    const token = await getAccessTokenSilently();
     await postRequest(
       'http://localhost:5000/api/User/LastName',
       newLastName,

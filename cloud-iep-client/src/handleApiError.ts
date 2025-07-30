@@ -1,8 +1,8 @@
-import { Api } from './types/Api';
+import type { Api } from './types/Api';
 import ApiStatus from './types/ApiStatus';
 
 const handleApiError = <T>(err: unknown): Api<T> => {
-  var error = new Error('Unknown error');
+  let error = new Error('Unknown error');
   if (err instanceof Error) {
     error = err;
   }

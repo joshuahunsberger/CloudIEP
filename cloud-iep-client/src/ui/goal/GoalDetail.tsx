@@ -13,9 +13,10 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { add, startOfDay } from 'date-fns';
-import React, { FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Goal, Observation } from '../../goals/Goal';
+import type { Goal } from '../../goals/Goal';
+import type { Observation } from '../../goals/Observation';
 import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
 import getBaseUrl from '../../network/getBaseUrl';
@@ -71,13 +72,15 @@ const GoalDetail = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    service.status === ApiStatus.Loaded && setGoal(service.result);
+    if (service.status === ApiStatus.Loaded) {
+      setGoal(service.result);
+    }
   }, [service]);
 
   const addObservation = async (newObservation: Observation) => {
-    var url = goalUrl + '/observation';
-    var token = await getAccessTokenSilently();
-    await postRequest<Observation>(url, newObservation, token);
+    const url = goalUrl + '/observation';
+    const token = await getAccessTokenSilently();
+    await postRequest<Observation, Observation>(url, newObservation, token);
     setIsAdding(false);
     setGoal({
       ...goal,
@@ -93,7 +96,7 @@ const GoalDetail = () => {
 
   const handleGoalSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    var token = await getAccessTokenSilently();
+    const token = await getAccessTokenSilently();
     await putRequest(goalUrl, goal, token);
     setIsEditing(false);
   };

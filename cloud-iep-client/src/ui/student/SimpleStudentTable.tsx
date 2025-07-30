@@ -11,7 +11,7 @@ import {
 import { Delete } from '@mui/icons-material';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { StudentPreview } from '../../users/StudentPreview';
+import type { StudentPreview } from '../../users/StudentPreview';
 import ConfirmDialog from '../ConfirmDialog';
 
 interface SimpleStudentTableProps {

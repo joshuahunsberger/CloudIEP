@@ -9,14 +9,14 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { startOfDay } from 'date-fns';
-import React, { FormEvent, useEffect, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
-import { Student } from '../../students/Student';
+import type { Student } from '../../students/Student';
 import ApiStatus from '../../types/ApiStatus';
-import { StudentPreview } from '../../users/StudentPreview';
+import type { StudentPreview } from '../../users/StudentPreview';
 import useUsersApi from '../../users/useUserApi';
-import { useSnackbar } from '../SnackbarProvider';
+import { useSnackbar } from '../SnackbarHooks';
 import SimpleStudentTable from './SimpleStudentTable';
 import StudentForm from './StudentForm';
 
@@ -69,12 +69,14 @@ const SimpleStudentPage = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    service.status === ApiStatus.Loaded && setStudents(service.result.students);
+    if (service.status === ApiStatus.Loaded) {
+      setStudents(service.result.students);
+    }
   }, [service]);
 
   const addStudent = async (newStudent: Student) => {
     const token = await getAccessTokenSilently();
-    const result = await postRequest<Student>(
+    const result = await postRequest<Student, Student>(
       'http://localhost:5000/api/Student',
       newStudent,
       token,

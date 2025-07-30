@@ -1,6 +1,6 @@
 import handleErrors from './handleErrors';
 
-const putRequest = async (url: string, body: any, token?: string) => {
+const putRequest = async <TBody>(url: string, body: TBody, token?: string) => {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
 

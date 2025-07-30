@@ -26,20 +26,20 @@ import {
 import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { add, startOfDay } from 'date-fns';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { type FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Goal } from '../../goals/Goal';
+import type { Goal } from '../../goals/Goal';
 import deleteRequest from '../../network/deleteRequest';
 import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
-import { GoalPreview } from '../../students/GoalPreview';
-import { Student } from '../../students/Student';
+import type { GoalPreview } from '../../students/GoalPreview';
+import type { Student } from '../../students/Student';
 import useStudentByUrl from '../../students/useStudentByUrl';
 import ApiStatus from '../../types/ApiStatus';
 import GoalForm from '../goal/GoalForm';
 import GoalTable from '../goal/GoalTable';
-import { useSnackbar } from '../SnackbarProvider';
+import { useSnackbar } from '../SnackbarHooks';
 
 const PREFIX = 'StudentDetail';
 
@@ -104,7 +104,9 @@ const StudentDetail = () => {
       setStudent(studentResponse);
       setGoals(studentResponse.goals);
     };
-    service.status === ApiStatus.Loaded && updateFromService(service.result);
+    if (service.status === ApiStatus.Loaded) {
+      updateFromService(service.result);
+    }
   }, [service]);
 
   const hideAllFields = () => {
@@ -114,7 +116,9 @@ const StudentDetail = () => {
   };
 
   const handleDateChange = (date: Date | null) => {
-    date && setPendingDoB(date);
+    if (date) {
+      setPendingDoB(date);
+    }
   };
 
   const handleKeyDown = async (
@@ -180,7 +184,7 @@ const StudentDetail = () => {
 
   const addGoal = async (newGoal: Goal) => {
     const token = await getAccessTokenSilently();
-    const result = await postRequest<Goal>(
+    const result = await postRequest<Goal, Goal>(
       'http://localhost:5000/api/Goal',
       newGoal,
       token,

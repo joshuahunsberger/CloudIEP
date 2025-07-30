@@ -1,10 +1,10 @@
 import handleErrors from './handleErrors';
 
-async function postRequest<T>(
+async function postRequest<TBody, TResponse>(
   url: string,
-  body: any,
+  body?: TBody,
   token?: string,
-): Promise<T> {
+): Promise<TResponse> {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
@@ -23,7 +23,7 @@ async function postRequest<T>(
     .then((request) => handleErrors(request))
     .then(
       (response) =>
-        (response.status === 204 ? {} : response.json()) as Promise<T>,
+        (response.status === 204 ? {} : response.json()) as Promise<TResponse>,
     );
 }
 

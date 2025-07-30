@@ -2,9 +2,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import handleApiError from '../handleApiError';
 import getRequest from '../network/getRequest';
-import { Api } from '../types/Api';
+import type { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
-import { Student } from './Student';
+import type { Student } from './Student';
 
 const useStudentsApi = () => {
   const [result, setResult] = useState<Api<Student[]>>({
@@ -28,7 +28,7 @@ const useStudentsApi = () => {
               firstName: s.firstName,
               lastName: s.lastName,
               dateOfBirth: new Date(s.dateOfBirth),
-            } as Student),
+            }) as Student,
         );
         setResult({ status: ApiStatus.Loaded, result: students });
       } catch (error) {
