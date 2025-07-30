@@ -80,7 +80,7 @@ const GoalDetail = () => {
   const addObservation = async (newObservation: Observation) => {
     const url = goalUrl + '/observation';
     const token = await getAccessTokenSilently();
-    await postRequest<Observation>(url, newObservation, token);
+    await postRequest<Observation, Observation>(url, newObservation, token);
     setIsAdding(false);
     setGoal({
       ...goal,

@@ -70,7 +70,7 @@ const StudentPage = () => {
 
   const addStudent = async (newStudent: Student) => {
     const token = await getAccessTokenSilently();
-    const result = await postRequest<Student>(
+    const result = await postRequest<Student, Student>(
       'http://localhost:5000/api/Student',
       newStudent,
       token,

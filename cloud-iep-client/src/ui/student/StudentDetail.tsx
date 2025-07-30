@@ -184,7 +184,7 @@ const StudentDetail = () => {
 
   const addGoal = async (newGoal: Goal) => {
     const token = await getAccessTokenSilently();
-    const result = await postRequest<Goal>(
+    const result = await postRequest<Goal, Goal>(
       'http://localhost:5000/api/Goal',
       newGoal,
       token,
