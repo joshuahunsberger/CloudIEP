@@ -23,7 +23,9 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
   const [closeDuration, setCloseDuration] = useState(5000);
 
   const openSnackbar = (message: string, closeDuration?: number) => {
-    closeDuration && setCloseDuration(closeDuration);
+    if (closeDuration !== undefined) {
+      setCloseDuration(closeDuration);
+    }
     setMessage(message);
     setOpen(true);
   };
