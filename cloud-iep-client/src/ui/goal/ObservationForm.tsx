@@ -9,7 +9,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { type ChangeEvent, type FormEvent, useState } from 'react';
-import type { Observation } from "../../goals/Observation";
+import type { Observation } from '../../goals/Observation';
 import { useSnackbar } from '../SnackbarHooks';
 
 const PREFIX = 'ObservationForm';

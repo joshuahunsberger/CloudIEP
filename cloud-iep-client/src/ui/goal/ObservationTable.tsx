@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { format } from 'date-fns';
-import type { Observation } from "../../goals/Observation";
+import type { Observation } from '../../goals/Observation';
 
 interface ObservationTableProps {
   observations: ReadonlyArray<Observation>;

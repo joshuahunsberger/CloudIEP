@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import type { Observation } from "../../goals/Observation";
+import type { Observation } from '../../goals/Observation';
 
 const PREFIX = 'ObservationGraph';
 

@@ -1,4 +1,4 @@
-import type { Observation } from "./Observation";
+import type { Observation } from './Observation';
 
 interface Objective {
   objectiveName: string;

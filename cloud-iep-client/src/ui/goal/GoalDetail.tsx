@@ -16,7 +16,7 @@ import { add, startOfDay } from 'date-fns';
 import { type FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Goal } from '../../goals/Goal';
-import type { Observation } from "../../goals/Observation";
+import type { Observation } from '../../goals/Observation';
 import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
 import getBaseUrl from '../../network/getBaseUrl';

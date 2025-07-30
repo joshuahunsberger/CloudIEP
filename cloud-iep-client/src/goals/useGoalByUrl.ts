@@ -5,7 +5,7 @@ import getRequest from '../network/getRequest';
 import type { Api } from '../types/Api';
 import ApiStatus from '../types/ApiStatus';
 import type { Goal } from './Goal';
-import type { Observation } from "./Observation";
+import type { Observation } from './Observation';
 import { sortObservationsByDate } from './observationSort';
 
 const useGoalByUrl = (url: string) => {

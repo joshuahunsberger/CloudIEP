@@ -1,5 +1,5 @@
 import { differenceInDays } from 'date-fns';
-import type { Observation } from "./Observation";
+import type { Observation } from './Observation';
 
 export const sortObservationsByDate = (
   a: Observation,

@@ -1,4 +1,3 @@
-
 export interface Observation {
   observationDate: Date;
   successCount: number;
