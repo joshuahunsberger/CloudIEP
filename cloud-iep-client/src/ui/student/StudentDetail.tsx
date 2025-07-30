@@ -39,7 +39,7 @@ import useStudentByUrl from '../../students/useStudentByUrl';
 import ApiStatus from '../../types/ApiStatus';
 import GoalForm from '../goal/GoalForm';
 import GoalTable from '../goal/GoalTable';
-import { useSnackbar } from '../SnackbarProvider';
+import { useSnackbar } from '../SnackbarHooks';
 
 const PREFIX = 'StudentDetail';
 

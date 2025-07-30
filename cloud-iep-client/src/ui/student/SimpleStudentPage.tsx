@@ -16,7 +16,7 @@ import type { Student } from '../../students/Student';
 import ApiStatus from '../../types/ApiStatus';
 import type { StudentPreview } from '../../users/StudentPreview';
 import useUsersApi from '../../users/useUserApi';
-import { useSnackbar } from '../SnackbarProvider';
+import { useSnackbar } from '../SnackbarHooks';
 import SimpleStudentTable from './SimpleStudentTable';
 import StudentForm from './StudentForm';
 

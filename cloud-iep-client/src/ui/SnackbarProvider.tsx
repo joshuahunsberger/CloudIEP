@@ -1,17 +1,14 @@
 import { Snackbar } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import { SnackbarContext } from './SnackbarContext';
 
-interface SnackbarContextState {
+export interface SnackbarContextState {
   isOpen: boolean;
   message: string;
   closeDuration: number;
   openSnackbar: (message: string, closeDuration?: number) => void;
   closeSnackbar: () => void;
 }
-
-const SnackbarContext = React.createContext({} as SnackbarContextState);
-
-export const useSnackbar = () => useContext(SnackbarContext);
 
 interface SnackbarProviderProps {
   children: React.ReactNode;

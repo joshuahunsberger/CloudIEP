@@ -18,7 +18,7 @@ import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
 import ApiStatus from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
-import { useSnackbar } from '../SnackbarProvider';
+import { useSnackbar } from '../SnackbarHooks';
 
 const PREFIX = 'Profile';
 
