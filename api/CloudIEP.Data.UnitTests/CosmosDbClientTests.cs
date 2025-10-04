@@ -1,11 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using CloudIEP.Data.CosmosDB;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Cosmos;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace CloudIEP.Data.UnitTests;
@@ -14,34 +11,14 @@ namespace CloudIEP.Data.UnitTests;
 // https://github.com/Azure-Samples/PartitionedRepository/blob/master/TodoService.Infrastructure.UnitTests/Data/CosmosDbClientTests.cs
 public class CosmosDbClientFixture : IDisposable
 {
-    public CosmosDbClientFixture()
-    {
-        DocumentUri = UriFactory.CreateDocumentUri(DatabaseName, CollectionName, DocumentId);
-
-        CreateDocumentResponse();
-    }
-
-    private void CreateDocumentResponse()
-    {
-        var documentJson = JsonConvert.SerializeObject(Document);
-        var jsonReader = new JsonTextReader(new StringReader(documentJson));
-
-        var document = new Document();
-        document.LoadFrom(jsonReader);
-
-        DocumentResponse = new ResourceResponse<Document>(document);
-    }
-
     public string DatabaseName { get; } = "foo";
     public string CollectionName { get; } = "bar";
     public string DocumentId { get; } = "foobar";
     public object Document { get; } = new { Id = "foobar", Note = "Note" };
-    public Uri DocumentUri { get; }
-    public ResourceResponse<Document> DocumentResponse { get; private set; }
 
-    public CosmosDbClient CreateCosmosDbClientForTesting(IDocumentClient documentClient)
+    public CosmosDbClient CreateCosmosDbClientForTesting(CosmosClient cosmosClient)
     {
-        return new CosmosDbClient(DatabaseName, CollectionName, documentClient);
+        return new CosmosDbClient(DatabaseName, CollectionName, cosmosClient);
     }
 
     public void Dispose() { }
@@ -58,13 +35,13 @@ public class CosmosDbClientTests : IClassFixture<CosmosDbClientFixture>
 
     [Theory]
     [InlineData(null, null, null, "databaseName")]
-    [InlineData("foo", null, null, "collectionName")]
-    [InlineData("foo", "bar", null, "documentClient")]
+    [InlineData("foo", null, null, "containerName")]
+    [InlineData("foo", "bar", null, "cosmosClient")]
     public void CosmosDbClient_WithNullArgument_ShouldThrowArgumentNullException(string databaseName,
-        string collectionName, IDocumentClient documentClient, string paramName)
+        string containerName, CosmosClient cosmosClient, string paramName)
     {
         var ex = Assert.Throws<ArgumentNullException>(() =>
-            new CosmosDbClient(databaseName, collectionName, documentClient));
+            new CosmosDbClient(databaseName, containerName, cosmosClient));
 
         Assert.Equal(paramName, ex.ParamName);
     }
@@ -72,87 +49,69 @@ public class CosmosDbClientTests : IClassFixture<CosmosDbClientFixture>
     [Fact]
     public void CosmosDbClient_WithNonNullArguments_ShouldReturnNewInstance()
     {
-        var documentClientStub = new Mock<IDocumentClient>();
-        var sut = _fixture.CreateCosmosDbClientForTesting(documentClientStub.Object);
+        var cosmosClientStub = new Mock<CosmosClient>();
+        var sut = _fixture.CreateCosmosDbClientForTesting(cosmosClientStub.Object);
 
         Assert.NotNull(sut);
     }
 
     [Fact]
-    public async void ReadDocumentAsync_WhenCalled_ShouldCallReadDocumentAsyncOnDocumentClient()
+    public async void ReadDocumentAsync_WhenCalled_ShouldCallReadItemOnContainer()
     {
-        var documentClientMock = new Mock<IDocumentClient>();
-        documentClientMock.Setup(x => x.ReadDocumentAsync(It.IsAny<Uri>(), null, default(CancellationToken)))
-            .ReturnsAsync(_fixture.DocumentResponse);
-        var sut = _fixture.CreateCosmosDbClientForTesting(documentClientMock.Object);
+        var containerMock = new Mock<Container>();
+        var cosmosClientMock = new Mock<CosmosClient>();
+        containerMock.Setup(x => x.ReadItemAsync<object>(It.IsAny<string>(), It.IsAny<PartitionKey>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ItemResponse<object>>());
+        cosmosClientMock.Setup(x => x.GetContainer(_fixture.DatabaseName, _fixture.CollectionName)).Returns(containerMock.Object);
+        var sut = _fixture.CreateCosmosDbClientForTesting(cosmosClientMock.Object);
 
-        await sut.ReadDocumentAsync(_fixture.DocumentId);
+        await sut.ReadDocumentAsync<object>(_fixture.DocumentId);
 
-        documentClientMock.Verify(
-            x => x.ReadDocumentAsync(
-                It.Is<Uri>(uri => uri == _fixture.DocumentUri),
-                null,
-                default(CancellationToken)),
-            Times.Once);
+        containerMock.Verify(x => x.ReadItemAsync<object>(_fixture.DocumentId, It.IsAny<PartitionKey>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public async void CreateDocumentAsync_WhenCalled_ShouldCallCreateDocumentAsyncOnDocumentClient()
+    public async void CreateDocumentAsync_WhenCalled_ShouldCallCreateItemOnContainer()
     {
-        var documentClientMock = new Mock<IDocumentClient>();
-        documentClientMock.Setup(x =>
-                x.CreateDocumentAsync(It.IsAny<Uri>(), It.IsAny<object>(), null, false, default(CancellationToken)))
-            .ReturnsAsync(_fixture.DocumentResponse);
-        var sut = _fixture.CreateCosmosDbClientForTesting(documentClientMock.Object);
+        var containerMock = new Mock<Container>();
+        var cosmosClientMock = new Mock<CosmosClient>();
+        containerMock.Setup(x => x.CreateItemAsync<object>(It.IsAny<object>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ItemResponse<object>>());
+        cosmosClientMock.Setup(x => x.GetContainer(_fixture.DatabaseName, _fixture.CollectionName)).Returns(containerMock.Object);
+        var sut = _fixture.CreateCosmosDbClientForTesting(cosmosClientMock.Object);
 
-        await sut.CreateDocumentAsync(_fixture.Document);
+        await sut.CreateDocumentAsync<object>(_fixture.Document);
 
-        documentClientMock.Verify(
-            x => x.CreateDocumentAsync(
-                It.Is<Uri>(uri =>
-                    uri == UriFactory.CreateDocumentCollectionUri(_fixture.DatabaseName, _fixture.CollectionName)),
-                It.Is<object>(document => document == _fixture.Document),
-                null,
-                false,
-                default(CancellationToken)),
-            Times.Once);
+        containerMock.Verify(x => x.CreateItemAsync<object>(_fixture.Document, It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public async void ReplaceAsync_WhenCalled_ShouldCallReplaceDocumentAsyncOnDocumentClient()
+    public async void ReplaceAsync_WhenCalled_ShouldCallReplaceItemOnContainer()
     {
-        var documentClientMock = new Mock<IDocumentClient>();
-        documentClientMock.Setup(x =>
-                x.ReplaceDocumentAsync(It.IsAny<Uri>(), It.IsAny<object>(), null, default(CancellationToken)))
-            .ReturnsAsync(_fixture.DocumentResponse);
-        var sut = _fixture.CreateCosmosDbClientForTesting(documentClientMock.Object);
+        var containerMock = new Mock<Container>();
+        var cosmosClientMock = new Mock<CosmosClient>();
+        containerMock.Setup(x => x.ReplaceItemAsync<object>(It.IsAny<object>(), It.IsAny<string>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ItemResponse<object>>());
+        cosmosClientMock.Setup(x => x.GetContainer(_fixture.DatabaseName, _fixture.CollectionName)).Returns(containerMock.Object);
+        var sut = _fixture.CreateCosmosDbClientForTesting(cosmosClientMock.Object);
 
-        await sut.ReplaceDocumentAsync(_fixture.DocumentId, _fixture.Document);
+        await sut.ReplaceDocumentAsync<object>(_fixture.DocumentId, _fixture.Document);
 
-        documentClientMock.Verify(
-            x => x.ReplaceDocumentAsync(
-                It.Is<Uri>(uri => uri == _fixture.DocumentUri),
-                It.Is<object>(document => document == _fixture.Document),
-                null,
-                default(CancellationToken)),
-            Times.Once);
+        containerMock.Verify(x => x.ReplaceItemAsync<object>(_fixture.Document, _fixture.DocumentId, It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public async void DeleteAsync_WhenCalled_ShouldCallDeleteDocumentAsyncOnDocumentClient()
+    public async void DeleteAsync_WhenCalled_ShouldCallDeleteItemOnContainer()
     {
-        var documentClientMock = new Mock<IDocumentClient>();
-        documentClientMock.Setup(x => x.DeleteDocumentAsync(It.IsAny<Uri>(), null, default(CancellationToken)))
-            .ReturnsAsync(_fixture.DocumentResponse);
-        var sut = _fixture.CreateCosmosDbClientForTesting(documentClientMock.Object);
+        var containerMock = new Mock<Container>();
+        var cosmosClientMock = new Mock<CosmosClient>();
+        containerMock.Setup(x => x.DeleteItemAsync<object>(It.IsAny<string>(), It.IsAny<PartitionKey>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ItemResponse<object>>());
+        cosmosClientMock.Setup(x => x.GetContainer(_fixture.DatabaseName, _fixture.CollectionName)).Returns(containerMock.Object);
+        var sut = _fixture.CreateCosmosDbClientForTesting(cosmosClientMock.Object);
 
-        await sut.DeleteDocumentAsync(_fixture.DocumentId);
+        await sut.DeleteDocumentAsync<object>(_fixture.DocumentId, PartitionKey.None);
 
-        documentClientMock.Verify(
-            x => x.DeleteDocumentAsync(
-                It.Is<Uri>(uri => uri == _fixture.DocumentUri),
-                null,
-                default(CancellationToken)),
-            Times.Once);
+        containerMock.Verify(x => x.DeleteItemAsync<object>(_fixture.DocumentId, PartitionKey.None, It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

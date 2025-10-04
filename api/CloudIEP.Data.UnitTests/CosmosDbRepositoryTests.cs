@@ -1,16 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Net;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using CloudIEP.Data.CosmosDB;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Cosmos;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace CloudIEP.Data.UnitTests;
@@ -40,27 +35,9 @@ public class CosmosDbRepositoryFixture : IDisposable
         return sut.Object;
     }
 
-    // A workaround due to https://github.com/Azure/azure-cosmosdb-dotnet/issues/121.
-    public DocumentClientException CreateDocumentClientExceptionForTesting(HttpStatusCode statusCode)
+    public CosmosException CreateCosmosExceptionForTesting(HttpStatusCode statusCode)
     {
-        var type = typeof(DocumentClientException);
-
-        var documentClientExceptionInstance = type.Assembly.CreateInstance(type.FullName, false,
-            BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { new Error(), null, statusCode },
-            null,
-            null);
-
-        return (DocumentClientException)documentClientExceptionInstance;
-    }
-
-    public Document CreateDocument(FakeEntity fakeEntity)
-    {
-        var modelString = JsonConvert.SerializeObject(fakeEntity);
-        var jsonReader = new JsonTextReader(new StringReader(modelString));
-        var document = new Document();
-        document.LoadFrom(jsonReader);
-
-        return document;
+        return new CosmosException("Test exception", statusCode, 0, "test", 0);
     }
     public void Dispose() { }
 }
@@ -87,26 +64,28 @@ public class CosmosDbRepositoryTests : IClassFixture<CosmosDbRepositoryFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_WhenDocumentClientExceptionWithStatusCodeBesidesNotFoundIsCaught_ShouldRethrow()
+    public async Task GetByIdAsync_WhenCosmosExceptionWithStatusCodeBesidesNotFoundIsCaught_ShouldRethrow()
     {
         var clientStub = new Mock<ICosmosDbClient>();
         clientStub.Setup(x =>
-                x.ReadDocumentAsync(It.IsAny<string>(), It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.BadRequest));
+                x.ReadDocumentAsync<FakeEntity>(It.IsAny<string>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.BadRequest));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
-        var dce = await Assert.ThrowsAsync<DocumentClientException>(async () => await sut.GetByIdAsync(""));
+        var ce = await Assert.ThrowsAsync<CosmosException>(async () => await sut.GetByIdAsync(""));
 
-        Assert.Equal(HttpStatusCode.BadRequest, dce.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, ce.StatusCode);
     }
 
     [Fact]
     public async Task GetByIdAsync_WhenIdExists_ShouldReturnDocumentWithTheId()
     {
+        var responseMock = new Mock<ItemResponse<FakeEntity>>();
+        responseMock.Setup(x => x.Resource).Returns(_fixture.FakeEntity);
         var clientStub = new Mock<ICosmosDbClient>();
         clientStub.Setup(x =>
-                x.ReadDocumentAsync(_fixture.FakeEntity.Id, It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(() => _fixture.CreateDocument(_fixture.FakeEntity));
+                x.ReadDocumentAsync<FakeEntity>(_fixture.FakeEntity.Id, It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(responseMock.Object);
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
         var result = await sut.GetByIdAsync(_fixture.FakeEntity.Id);

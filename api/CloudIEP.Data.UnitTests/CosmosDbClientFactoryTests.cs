@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using CloudIEP.Data.CosmosDB;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Cosmos;
 using Moq;
 using Xunit;
 
@@ -16,9 +16,9 @@ public class CosmosDbClientFactoryFixture : IDisposable
     public string DatabaseName { get; } = "foobar";
     public List<string> CollectionNames { get; } = new List<string> { "foo", "bar" };
 
-    public CosmosDbClientFactory CreateCosmosDbClientFactoryForTesting(IDocumentClient documentClient)
+    public CosmosDbClientFactory CreateCosmosDbClientFactoryForTesting(CosmosClient cosmosClient)
     {
-        return new CosmosDbClientFactory(DatabaseName, CollectionNames, documentClient);
+        return new CosmosDbClientFactory(DatabaseName, CollectionNames, cosmosClient);
     }
 
     public void Dispose() { }
@@ -36,12 +36,12 @@ public class CosmosDbClientFactoryTests : IClassFixture<CosmosDbClientFactoryFix
     [Theory]
     [InlineData(null, null, null, "databaseName")]
     [InlineData("foo", null, null, "collectionNames")]
-    [InlineData("foo", new[] { "bar" }, null, "documentClient")]
+    [InlineData("foo", new[] { "bar" }, null, "cosmosClient")]
     public void CosmosDbClientFactory_WithNullArgument_ShouldThrowArgumentNullException(string databaseName,
-        IEnumerable<string> collectionNames, DocumentClient documentClient, string paramName)
+        IEnumerable<string> collectionNames, CosmosClient cosmosClient, string paramName)
     {
         var ex = Assert.Throws<ArgumentNullException>(() =>
-            new CosmosDbClientFactory(databaseName, collectionNames?.ToList(), documentClient));
+            new CosmosDbClientFactory(databaseName, collectionNames?.ToList(), cosmosClient));
 
         Assert.Equal(paramName, ex.ParamName);
     }
@@ -49,8 +49,8 @@ public class CosmosDbClientFactoryTests : IClassFixture<CosmosDbClientFactoryFix
     [Fact]
     public void CosmosClientFactory_WithNonNullArguments_ShouldCreateNewInstance()
     {
-        var documentClientStub = new Mock<IDocumentClient>();
-        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(documentClientStub.Object);
+        var cosmosClientStub = new Mock<CosmosClient>();
+        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(cosmosClientStub.Object);
 
         Assert.NotNull(sut);
     }
@@ -58,8 +58,8 @@ public class CosmosDbClientFactoryTests : IClassFixture<CosmosDbClientFactoryFix
     [Fact]
     public void GetClient_WithNonExistingCollectionName_ShouldThrowArgumentException()
     {
-        var documentClientStub = new Mock<IDocumentClient>();
-        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(documentClientStub.Object);
+        var cosmosClientStub = new Mock<CosmosClient>();
+        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(cosmosClientStub.Object);
         const string collectionName = "abc";
 
         var ex = Assert.Throws<ArgumentException>(() => sut.GetClient(collectionName));
@@ -70,8 +70,8 @@ public class CosmosDbClientFactoryTests : IClassFixture<CosmosDbClientFactoryFix
     [Fact]
     public void GetClient_WithExistingCollectionName_ShouldReturnNewCosmosClient()
     {
-        var documentClientStub = new Mock<IDocumentClient>();
-        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(documentClientStub.Object);
+        var cosmosClientStub = new Mock<CosmosClient>();
+        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(cosmosClientStub.Object);
         var collectionName = _fixture.CollectionNames[0];
 
         var result = sut.GetClient(collectionName);
@@ -82,25 +82,24 @@ public class CosmosDbClientFactoryTests : IClassFixture<CosmosDbClientFactoryFix
     [Fact]
     public async void EnsureDbSetupAsync_WhenCalled_ShouldVerifyDatabaseAndCollectionsExistence()
     {
-        var documentClientMock = new Mock<IDocumentClient>();
-        documentClientMock.Setup(x => x.ReadDatabaseAsync(It.IsAny<Uri>(), null))
-            .ReturnsAsync(new ResourceResponse<Database>());
-        documentClientMock.Setup(x => x.ReadDocumentCollectionAsync(It.IsAny<Uri>(), null))
-            .ReturnsAsync(new ResourceResponse<DocumentCollection>());
-        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(documentClientMock.Object);
+        var databaseMock = new Mock<Database>();
+        var containerMock = new Mock<Container>();
+        var cosmosClientMock = new Mock<CosmosClient>();
+        
+        cosmosClientMock.Setup(x => x.GetDatabase(_fixture.DatabaseName)).Returns(databaseMock.Object);
+        databaseMock.Setup(x => x.ReadAsync(It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<DatabaseResponse>());
+        databaseMock.Setup(x => x.GetContainer(It.IsAny<string>())).Returns(containerMock.Object);
+        containerMock.Setup(x => x.ReadContainerAsync(It.IsAny<ContainerRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Mock.Of<ContainerResponse>());
+        
+        var sut = _fixture.CreateCosmosDbClientFactoryForTesting(cosmosClientMock.Object);
 
         await sut.EnsureDbSetupAsync();
 
-        var databaseUri = UriFactory.CreateDatabaseUri(_fixture.DatabaseName);
-        var collectionUris = _fixture.CollectionNames
-            .Select(x => UriFactory.CreateDocumentCollectionUri(_fixture.DatabaseName, x))
-            .ToList();
-
-        documentClientMock.Verify(
-            x => x.ReadDatabaseAsync(It.Is<Uri>(uri => uri.Equals(databaseUri)), null), Times.Once);
-        documentClientMock.Verify(
-            x => x.ReadDocumentCollectionAsync(It.Is<Uri>(uri => uri.Equals(collectionUris[0])), null), Times.Once);
-        documentClientMock.Verify(
-            x => x.ReadDocumentCollectionAsync(It.Is<Uri>(uri => uri.Equals(collectionUris[1])), null), Times.Once);
+        cosmosClientMock.Verify(x => x.GetDatabase(_fixture.DatabaseName), Times.Once);
+        databaseMock.Verify(x => x.ReadAsync(It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+        databaseMock.Verify(x => x.GetContainer(_fixture.CollectionNames[0]), Times.Once);
+        databaseMock.Verify(x => x.GetContainer(_fixture.CollectionNames[1]), Times.Once);
     }
 }

@@ -4,9 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Newtonsoft.Json;
+using Microsoft.Azure.Cosmos;
 
 namespace CloudIEP.Data.CosmosDB;
 
@@ -36,14 +34,10 @@ public abstract class CosmosDbRepository<T> : IRepository<T>, IDocumentCollectio
         try
         {
             var cosmosDbClient = _cosmosDbClientFactory.GetClient(CollectionName);
-            var document = await cosmosDbClient.ReadDocumentAsync(id, new RequestOptions
-            {
-                PartitionKey = ResolvePartitionKey(id)
-            });
-
-            return JsonConvert.DeserializeObject<T>(document.ToString());
+            var response = await cosmosDbClient.ReadDocumentAsync<T>(id, ResolvePartitionKey(id));
+            return response.Resource;
         }
-        catch (DocumentClientException e)
+        catch (CosmosException e)
         {
             if (e.StatusCode == HttpStatusCode.NotFound)
             {
@@ -60,10 +54,10 @@ public abstract class CosmosDbRepository<T> : IRepository<T>, IDocumentCollectio
         {
             entity.Id = GenerateId(entity);
             var cosmosDbClient = _cosmosDbClientFactory.GetClient(CollectionName);
-            var document = await cosmosDbClient.CreateDocumentAsync(entity);
-            return JsonConvert.DeserializeObject<T>(document.ToString());
+            var response = await cosmosDbClient.CreateDocumentAsync<T>(entity, ResolvePartitionKey(entity.Id));
+            return response.Resource;
         }
-        catch (DocumentClientException e)
+        catch (CosmosException e)
         {
             if (e.StatusCode == HttpStatusCode.Conflict)
             {
@@ -79,9 +73,9 @@ public abstract class CosmosDbRepository<T> : IRepository<T>, IDocumentCollectio
         try
         {
             var cosmosDbClient = _cosmosDbClientFactory.GetClient(CollectionName);
-            await cosmosDbClient.ReplaceDocumentAsync(entity.Id, entity);
+            await cosmosDbClient.ReplaceDocumentAsync<T>(entity.Id, entity, ResolvePartitionKey(entity.Id));
         }
-        catch (DocumentClientException e)
+        catch (CosmosException e)
         {
             if (e.StatusCode == HttpStatusCode.NotFound)
             {
@@ -97,12 +91,9 @@ public abstract class CosmosDbRepository<T> : IRepository<T>, IDocumentCollectio
         try
         {
             var cosmosDbClient = _cosmosDbClientFactory.GetClient(CollectionName);
-            await cosmosDbClient.DeleteDocumentAsync(entity.Id, new RequestOptions
-            {
-                PartitionKey = ResolvePartitionKey(entity.Id)
-            });
+            await cosmosDbClient.DeleteDocumentAsync<T>(entity.Id, ResolvePartitionKey(entity.Id));
         }
-        catch (DocumentClientException e)
+        catch (CosmosException e)
         {
             if (e.StatusCode == HttpStatusCode.NotFound)
             {
@@ -115,5 +106,5 @@ public abstract class CosmosDbRepository<T> : IRepository<T>, IDocumentCollectio
 
     public abstract string CollectionName { get; }
     public virtual string GenerateId(T entity) => Guid.NewGuid().ToString();
-    public virtual PartitionKey ResolvePartitionKey(string entityId) => null;
+    public virtual PartitionKey? ResolvePartitionKey(string entityId) => null;
 }

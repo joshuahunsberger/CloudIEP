@@ -1,5 +1,5 @@
 ﻿using CloudIEP.Data.CosmosDB;
-using Microsoft.Azure.Documents;
+using Microsoft.Azure.Cosmos;
 
 namespace CloudIEP.Data;
 
@@ -13,5 +13,5 @@ public class UserRepository : CosmosDbRepository<Models.User>, IUserRepository
 
     public override string CollectionName => "Users";
     public override string GenerateId(Models.User entity) => entity.Auth0Id;
-    public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
+    public override PartitionKey? ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
 }

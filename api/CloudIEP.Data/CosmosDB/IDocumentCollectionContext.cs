@@ -1,5 +1,5 @@
 ﻿using CloudIEP.Data.Models;
-using Microsoft.Azure.Documents;
+using Microsoft.Azure.Cosmos;
 
 namespace CloudIEP.Data.CosmosDB;
 
@@ -14,5 +14,5 @@ public interface IDocumentCollectionContext<in T> where T : Entity
 
     string GenerateId(T entity);
 
-    PartitionKey ResolvePartitionKey(string entityId);
+    PartitionKey? ResolvePartitionKey(string entityId);
 }

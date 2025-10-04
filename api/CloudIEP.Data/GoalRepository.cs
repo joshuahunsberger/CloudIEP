@@ -1,6 +1,6 @@
 ﻿using CloudIEP.Data.CosmosDB;
 using CloudIEP.Data.Models;
-using Microsoft.Azure.Documents;
+using Microsoft.Azure.Cosmos;
 
 namespace CloudIEP.Data;
 
@@ -13,5 +13,5 @@ public class GoalRepository : CosmosDbRepository<Goal>, IGoalRepository
     public GoalRepository(ICosmosDbClientFactory factory) : base(factory) { }
 
     public override string CollectionName => "Goals";
-    public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
+    public override PartitionKey? ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
 }
