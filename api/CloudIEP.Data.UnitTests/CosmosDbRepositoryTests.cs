@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using CloudIEP.Data.CosmosDB;
 using CloudIEP.Data.Exceptions;
@@ -52,12 +53,12 @@ public class CosmosDbRepositoryTests : IClassFixture<CosmosDbRepositoryFixture>
     }
 
     [Fact]
-    public async Task GetByIdAsync_WhenDocumentClientExceptionWithStatusCodeNotFoundIsCaught_ShouldThrowEntityNotFoundException()
+    public async Task GetByIdAsync_WhenCosmosExceptionWithStatusCodeNotFoundIsCaught_ShouldThrowEntityNotFoundException()
     {
         var clientStub = new Mock<ICosmosDbClient>();
         clientStub.Setup(x =>
-                x.ReadDocumentAsync(It.IsAny<string>(), It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.NotFound));
+                x.ReadDocumentAsync<FakeEntity>(It.IsAny<string>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.NotFound));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await sut.GetByIdAsync(""));
@@ -96,39 +97,40 @@ public class CosmosDbRepositoryTests : IClassFixture<CosmosDbRepositoryFixture>
     }
 
     [Fact]
-    public async Task AddAsync_WhenDocumentClientExceptionWithStatusCodeConflictIsCaught_ShouldThrowEntityAlreadyExistsException()
+    public async Task AddAsync_WhenCosmosExceptionWithStatusCodeConflictIsCaught_ShouldThrowEntityAlreadyExistsException()
     {
         var clientStub = new Mock<ICosmosDbClient>();
         clientStub.Setup(
-                x => x.CreateDocumentAsync(It.IsAny<FakeEntity>(), null, false, It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.Conflict));
+                x => x.CreateDocumentAsync<FakeEntity>(It.IsAny<FakeEntity>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.Conflict));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
         await Assert.ThrowsAsync<EntityAlreadyExistsException>(async () => await sut.AddAsync(new FakeEntity()));
     }
 
     [Fact]
-
-    public async Task AddAsync_WhenDocumentClientExceptionWithStatusCodeBesidesConflictIsCaught_ShouldRethrow()
+    public async Task AddAsync_WhenCosmosExceptionWithStatusCodeBesidesConflictIsCaught_ShouldRethrow()
     {
         var clientStub = new Mock<ICosmosDbClient>();
         clientStub.Setup(
-                x => x.CreateDocumentAsync(It.IsAny<FakeEntity>(), null, false, It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.BadRequest));
+                x => x.CreateDocumentAsync<FakeEntity>(It.IsAny<FakeEntity>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.BadRequest));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
-        var dce = await Assert.ThrowsAsync<DocumentClientException>(
+        var ce = await Assert.ThrowsAsync<CosmosException>(
             async () => await sut.AddAsync(new FakeEntity()));
 
-        Assert.Equal(HttpStatusCode.BadRequest, dce.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, ce.StatusCode);
     }
 
     [Fact]
     public async Task AddAsync_GivenAnEntity_ShouldAddTheEntityAndReturnIt()
     {
+        var responseMock = new Mock<ItemResponse<FakeEntity>>();
+        responseMock.Setup(x => x.Resource).Returns(_fixture.FakeEntity);
         var clientStub = new Mock<ICosmosDbClient>();
-        clientStub.Setup(x => x.CreateDocumentAsync(_fixture.FakeEntity, null, false, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(() => _fixture.CreateDocument(_fixture.FakeEntity));
+        clientStub.Setup(x => x.CreateDocumentAsync<FakeEntity>(_fixture.FakeEntity, It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(responseMock.Object);
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
         var result = await sut.AddAsync(_fixture.FakeEntity);
@@ -139,98 +141,103 @@ public class CosmosDbRepositoryTests : IClassFixture<CosmosDbRepositoryFixture>
     }
 
     [Fact]
-    public async Task UpdateAsync_WhenDocumentClientExceptionIsCaughtWithStatusCodeNotFound_ShouldThrowEntityNotFoundExistsException()
+    public async Task UpdateAsync_WhenCosmosExceptionIsCaughtWithStatusCodeNotFound_ShouldThrowEntityNotFoundExistsException()
     {
         var clientStub = new Mock<ICosmosDbClient>();
         clientStub.Setup(x =>
-                x.ReplaceDocumentAsync(It.IsAny<string>(), It.IsAny<FakeEntity>(), null,
-                    It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.NotFound));
+                x.ReplaceDocumentAsync<FakeEntity>(It.IsAny<string>(), It.IsAny<FakeEntity>(), It.IsAny<PartitionKey?>(),
+                    It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.NotFound));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await sut.UpdateAsync(new FakeEntity()));
     }
 
     [Fact]
-    public async Task UpdateAsync_WhenDocumentClientExceptionIsCaughtWithStatusCodeBesidesNotFound_ShouldRethrow()
+    public async Task UpdateAsync_WhenCosmosExceptionIsCaughtWithStatusCodeBesidesNotFound_ShouldRethrow()
     {
         var clientStub = new Mock<ICosmosDbClient>();
         clientStub.Setup(x =>
-                x.ReplaceDocumentAsync(It.IsAny<string>(), It.IsAny<FakeEntity>(), null,
-                    It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.BadRequest));
+                x.ReplaceDocumentAsync<FakeEntity>(It.IsAny<string>(), It.IsAny<FakeEntity>(), It.IsAny<PartitionKey?>(),
+                    It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.BadRequest));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
-        var dce = await Assert.ThrowsAsync<DocumentClientException>(async () =>
+        var ce = await Assert.ThrowsAsync<CosmosException>(async () =>
             await sut.UpdateAsync(new FakeEntity()));
 
-        Assert.Equal(HttpStatusCode.BadRequest, dce.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, ce.StatusCode);
     }
 
     [Fact]
     public async Task UpdateAsync_GivenAnEntity_ShouldCallReplaceDocumentAsync()
     {
+        var responseMock = new Mock<ItemResponse<FakeEntity>>();
         var clientMock = new Mock<ICosmosDbClient>();
         clientMock.Setup(
-                x => x.ReplaceDocumentAsync(
+                x => x.ReplaceDocumentAsync<FakeEntity>(
                     It.IsAny<string>(),
                     It.IsAny<FakeEntity>(),
-                    null,
+                    It.IsAny<PartitionKey?>(),
+                    It.IsAny<ItemRequestOptions>(),
                     It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Document());
+            .ReturnsAsync(responseMock.Object);
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientMock.Object);
 
         await sut.UpdateAsync(_fixture.FakeEntity);
 
         clientMock.Verify(
-            x => x.ReplaceDocumentAsync(
+            x => x.ReplaceDocumentAsync<FakeEntity>(
                 It.Is<string>(entityId => entityId == _fixture.FakeEntity.Id),
                 It.Is<FakeEntity>(entity =>
                     entity.Id == _fixture.FakeEntity.Id && entity.Note == _fixture.FakeEntity.Note),
-                null,
+                It.IsAny<PartitionKey?>(),
+                It.IsAny<ItemRequestOptions>(),
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
     [Fact]
-    public async Task DeleteAsync_WhenDocumentClientExceptionWithStatusCodeNotFoundIsCaught_ShouldThrowEntityNotFoundException()
+    public async Task DeleteAsync_WhenCosmosExceptionWithStatusCodeNotFoundIsCaught_ShouldThrowEntityNotFoundException()
     {
         var clientStub = new Mock<ICosmosDbClient>();
-        clientStub.Setup(x => x.DeleteDocumentAsync(It.IsAny<string>(), It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.NotFound));
+        clientStub.Setup(x => x.DeleteDocumentAsync<FakeEntity>(It.IsAny<string>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.NotFound));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await sut.DeleteAsync(new FakeEntity()));
     }
 
     [Fact]
-    public async Task DeleteAsync_WhenDocumentClientExceptionWithStatusCodeBesidesNotFoundIsCaught_ShouldRethrow()
+    public async Task DeleteAsync_WhenCosmosExceptionWithStatusCodeBesidesNotFoundIsCaught_ShouldRethrow()
     {
         var clientStub = new Mock<ICosmosDbClient>();
-        clientStub.Setup(x => x.DeleteDocumentAsync(It.IsAny<string>(), It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()))
-            .Throws(_fixture.CreateDocumentClientExceptionForTesting(HttpStatusCode.BadRequest));
+        clientStub.Setup(x => x.DeleteDocumentAsync<FakeEntity>(It.IsAny<string>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .Throws(_fixture.CreateCosmosExceptionForTesting(HttpStatusCode.BadRequest));
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientStub.Object);
 
-        var dce = await Assert.ThrowsAsync<DocumentClientException>(async () =>
+        var ce = await Assert.ThrowsAsync<CosmosException>(async () =>
             await sut.DeleteAsync(new FakeEntity()));
 
-        Assert.Equal(HttpStatusCode.BadRequest, dce.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, ce.StatusCode);
     }
 
     [Fact]
     public async Task DeleteAsync_GivenAnEntity_ShouldCallDeleteDocumentAsync()
     {
+        var responseMock = new Mock<ItemResponse<FakeEntity>>();
         var clientMock = new Mock<ICosmosDbClient>();
-        clientMock.Setup(x => x.DeleteDocumentAsync(It.IsAny<string>(), It.IsAny<RequestOptions>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Document());
+        clientMock.Setup(x => x.DeleteDocumentAsync<FakeEntity>(It.IsAny<string>(), It.IsAny<PartitionKey?>(), It.IsAny<ItemRequestOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(responseMock.Object);
         var sut = _fixture.CreateCosmosDbRepositoryForTesting(clientMock.Object);
 
         await sut.DeleteAsync(_fixture.FakeEntity);
 
         clientMock.Verify(
-            x => x.DeleteDocumentAsync(
+            x => x.DeleteDocumentAsync<FakeEntity>(
                 It.Is<string>(entityId => entityId == _fixture.FakeEntity.Id),
-                It.IsAny<RequestOptions>(),
+                It.IsAny<PartitionKey?>(),
+                It.IsAny<ItemRequestOptions>(),
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }
