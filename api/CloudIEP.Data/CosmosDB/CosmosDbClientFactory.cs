@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Cosmos;
 
 namespace CloudIEP.Data.CosmosDB;
 
@@ -20,13 +19,13 @@ public class CosmosDbClientFactory : ICosmosDbClientFactory
 {
     private readonly string _databaseName;
     private readonly List<string> _collectionNames;
-    private readonly IDocumentClient _documentClient;
+    private readonly CosmosClient _cosmosClient;
 
-    public CosmosDbClientFactory(string databaseName, List<string> collectionNames, IDocumentClient documentClient)
+    public CosmosDbClientFactory(string databaseName, List<string> collectionNames, CosmosClient cosmosClient)
     {
         _databaseName = databaseName ?? throw new ArgumentNullException(nameof(databaseName));
         _collectionNames = collectionNames ?? throw new ArgumentNullException(nameof(collectionNames));
-        _documentClient = documentClient ?? throw new ArgumentNullException(nameof(documentClient));
+        _cosmosClient = cosmosClient ?? throw new ArgumentNullException(nameof(cosmosClient));
     }
 
     public ICosmosDbClient GetClient(string collectionName)
@@ -36,17 +35,18 @@ public class CosmosDbClientFactory : ICosmosDbClientFactory
             throw new ArgumentException($"Unable to find collection: {collectionName}");
         }
 
-        return new CosmosDbClient(_databaseName, collectionName, _documentClient);
+        return new CosmosDbClient(_databaseName, collectionName, _cosmosClient);
     }
 
     public async Task EnsureDbSetupAsync()
     {
-        await _documentClient.ReadDatabaseAsync(UriFactory.CreateDatabaseUri(_databaseName));
+        var database = _cosmosClient.GetDatabase(_databaseName);
+        await database.ReadAsync();
 
         foreach (var collectionName in _collectionNames)
         {
-            await _documentClient.ReadDocumentCollectionAsync(
-                UriFactory.CreateDocumentCollectionUri(_databaseName, collectionName));
+            var container = database.GetContainer(collectionName);
+            await container.ReadContainerAsync();
         }
     }
 }

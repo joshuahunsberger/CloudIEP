@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.Linq;
+using Microsoft.Azure.Cosmos;
 
 namespace CloudIEP.Data.CosmosDB;
 
@@ -15,78 +13,71 @@ namespace CloudIEP.Data.CosmosDB;
 
 public interface ICosmosDbClient
 {
-    Task<Document> ReadDocumentAsync(string documentId, RequestOptions options = null,
-        CancellationToken cancellationToken = default(CancellationToken));
+    Task<ItemResponse<T>> ReadDocumentAsync<T>(string documentId, PartitionKey? partitionKey = null,
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken));
 
-    Task<IEnumerable<T>> ReadDocumentsAsync<T>(RequestOptions options = null, CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> ReadDocumentsAsync<T>(QueryRequestOptions options = null, CancellationToken cancellationToken = default);
 
-    Task<Document> CreateDocumentAsync(object document, RequestOptions options = null,
-        bool disableAutomaticIdGeneration = false,
-        CancellationToken cancellationToken = default(CancellationToken));
+    Task<ItemResponse<T>> CreateDocumentAsync<T>(T document, PartitionKey? partitionKey = null, 
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken));
 
-    Task<Document> ReplaceDocumentAsync(string documentId, object document, RequestOptions options = null,
-        CancellationToken cancellationToken = default(CancellationToken));
+    Task<ItemResponse<T>> ReplaceDocumentAsync<T>(string documentId, T document, PartitionKey? partitionKey = null, 
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken));
 
-    Task<Document> DeleteDocumentAsync(string documentId, RequestOptions options = null,
-        CancellationToken cancellationToken = default(CancellationToken));
+    Task<ItemResponse<T>> DeleteDocumentAsync<T>(string documentId, PartitionKey? partitionKey,
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken));
 }
 
 public class CosmosDbClient : ICosmosDbClient
 {
     private readonly string _databaseName;
-    private readonly string _collectionName;
-    private readonly IDocumentClient _documentClient;
+    private readonly string _containerName;
+    private readonly CosmosClient _cosmosClient;
+    private readonly Container _container;
 
-    public CosmosDbClient(string databaseName, string collectionName, IDocumentClient documentClient)
+    public CosmosDbClient(string databaseName, string containerName, CosmosClient cosmosClient)
     {
         _databaseName = databaseName ?? throw new ArgumentNullException(nameof(databaseName));
-        _collectionName = collectionName ?? throw new ArgumentNullException(nameof(collectionName));
-        _documentClient = documentClient ?? throw new ArgumentNullException(nameof(documentClient));
+        _containerName = containerName ?? throw new ArgumentNullException(nameof(containerName));
+        _cosmosClient = cosmosClient ?? throw new ArgumentNullException(nameof(cosmosClient));
+        _container = _cosmosClient.GetContainer(_databaseName, _containerName);
     }
 
-    public async Task<Document> ReadDocumentAsync(string documentId, RequestOptions options = null,
-        CancellationToken cancellationToken = default(CancellationToken))
+    public async Task<ItemResponse<T>> ReadDocumentAsync<T>(string documentId, PartitionKey? partitionKey = null,
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken))
     {
-        return await _documentClient.ReadDocumentAsync(
-            UriFactory.CreateDocumentUri(_databaseName, _collectionName, documentId), options, cancellationToken);
+        return await _container.ReadItemAsync<T>(documentId, partitionKey ?? PartitionKey.None, options, cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> ReadDocumentsAsync<T>(RequestOptions options = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<T>> ReadDocumentsAsync<T>(QueryRequestOptions options = null, CancellationToken cancellationToken = default)
     {
-        using var queryable = _documentClient
-            .CreateDocumentQuery<T>(UriFactory.CreateDocumentCollectionUri(_databaseName, _collectionName), new FeedOptions { MaxItemCount = 10 })
-            .AsDocumentQuery();
+        var queryDefinition = new QueryDefinition("SELECT * FROM c");
+        var query = _container.GetItemQueryIterator<T>(queryDefinition, requestOptions: options);
+        
         var returnList = new List<T>();
-        while (queryable.HasMoreResults)
+        while (query.HasMoreResults)
         {
-            foreach (T t in await queryable.ExecuteNextAsync<T>(cancellationToken))
-            {
-                returnList.Add(t);
-            }
+            var response = await query.ReadNextAsync(cancellationToken);
+            returnList.AddRange(response);
         }
         return returnList;
     }
 
-    public async Task<Document> CreateDocumentAsync(object document, RequestOptions options = null,
-        bool disableAutomaticIdGeneration = false, CancellationToken cancellationToken = default(CancellationToken))
+    public async Task<ItemResponse<T>> CreateDocumentAsync<T>(T document, PartitionKey? partitionKey = null, 
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken))
     {
-        return await _documentClient.CreateDocumentAsync(
-            UriFactory.CreateDocumentCollectionUri(_databaseName, _collectionName), document, options,
-            disableAutomaticIdGeneration, cancellationToken);
+        return await _container.CreateItemAsync<T>(document, partitionKey, options, cancellationToken);
     }
 
-    public async Task<Document> ReplaceDocumentAsync(string documentId, object document,
-        RequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken))
+    public async Task<ItemResponse<T>> ReplaceDocumentAsync<T>(string documentId, T document, PartitionKey? partitionKey = null, 
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken))
     {
-        return await _documentClient.ReplaceDocumentAsync(
-            UriFactory.CreateDocumentUri(_databaseName, _collectionName, documentId), document, options,
-            cancellationToken);
+        return await _container.ReplaceItemAsync<T>(document, documentId, partitionKey, options, cancellationToken);
     }
 
-    public async Task<Document> DeleteDocumentAsync(string documentId, RequestOptions options = null,
-        CancellationToken cancellationToken = default(CancellationToken))
+    public async Task<ItemResponse<T>> DeleteDocumentAsync<T>(string documentId, PartitionKey? partitionKey,
+        ItemRequestOptions options = null, CancellationToken cancellationToken = default(CancellationToken))
     {
-        return await _documentClient.DeleteDocumentAsync(
-            UriFactory.CreateDocumentUri(_databaseName, _collectionName, documentId), options, cancellationToken);
+        return await _container.DeleteItemAsync<T>(documentId, partitionKey ?? PartitionKey.None, options, cancellationToken);
     }
 }

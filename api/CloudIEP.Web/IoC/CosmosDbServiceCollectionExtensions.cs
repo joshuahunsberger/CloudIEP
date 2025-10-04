@@ -2,11 +2,9 @@
 using CloudIEP.Data;
 using CloudIEP.Data.CosmosDB;
 using CloudIEP.Web.Options;
-using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace CloudIEP.Web.IoC;
 
@@ -14,17 +12,19 @@ public static class CosmosDbServiceCollectionExtensions
 {
     public static IServiceCollection AddCosmosDb(this IServiceCollection services, CosmosDbOptions cosmosDbOptions)
     {
-        var documentClient = new DocumentClient(cosmosDbOptions.Endpoint, cosmosDbOptions.Key, new JsonSerializerSettings
+        var cosmosClientOptions = new CosmosClientOptions
         {
-            NullValueHandling = NullValueHandling.Ignore,
-            DefaultValueHandling = DefaultValueHandling.Ignore,
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        });
-        documentClient.OpenAsync().Wait();
+            SerializerOptions = new CosmosSerializationOptions
+            {
+                PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+            }
+        };
+
+        var cosmosClient = new CosmosClient(cosmosDbOptions.Endpoint.ToString(), cosmosDbOptions.Key, cosmosClientOptions);
 
         var collectionNames = cosmosDbOptions.Collections.Select(n => n.Name).ToList();
 
-        var cosmosDbClientFactory = new CosmosDbClientFactory(cosmosDbOptions.DatabaseName, collectionNames, documentClient);
+        var cosmosDbClientFactory = new CosmosDbClientFactory(cosmosDbOptions.DatabaseName, collectionNames, cosmosClient);
         cosmosDbClientFactory.EnsureDbSetupAsync().Wait();
 
         services.AddSingleton<ICosmosDbClientFactory>(cosmosDbClientFactory);

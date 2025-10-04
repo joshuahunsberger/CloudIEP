@@ -1,6 +1,6 @@
 ﻿using CloudIEP.Data.CosmosDB;
 using CloudIEP.Data.Models;
-using Microsoft.Azure.Documents;
+using Microsoft.Azure.Cosmos;
 
 namespace CloudIEP.Data;
 
@@ -13,5 +13,5 @@ public class StudentRepository : CosmosDbRepository<Student>, IStudentRepository
     public StudentRepository(ICosmosDbClientFactory factory) : base(factory) { }
 
     public override string CollectionName => "Students";
-    public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
+    public override PartitionKey? ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
 }
