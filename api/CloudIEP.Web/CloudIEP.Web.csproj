@@ -4,6 +4,7 @@
 		<TargetFramework>net9.0</TargetFramework>
 		<DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
 		<UserSecretsId>7ffa8ead-e964-45d4-97b0-30c91a116fed</UserSecretsId>
+		<AzureCosmosDisableNewtonsoftJsonCheck>true</AzureCosmosDisableNewtonsoftJsonCheck>
 	</PropertyGroup>
 	<ItemGroup>
 		<Folder Include="Options\" />
