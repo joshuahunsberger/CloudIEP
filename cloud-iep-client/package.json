@@ -19,7 +19,7 @@
     "date-fns": "^2.11.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^6.30.3",
     "recharts": "^2.15.3"
   },
   "scripts": {
