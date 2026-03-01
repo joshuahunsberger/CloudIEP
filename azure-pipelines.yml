@@ -28,9 +28,9 @@ stages:
       - job: BuildReact
         steps:
           - task: UseNode@1
-            displayName: Use Node LTS (22.x
+            displayName: Use Node LTS (24.x)
             inputs:
-              versionSpec: '22.x'
+              version: '24.x'
 
           - script: |
               cd cloud-iep-client
@@ -39,5 +39,5 @@ stages:
 
           - script: |
               cd cloud-iep-client
-              npm build
+              npm run build
             displayName: npm build
