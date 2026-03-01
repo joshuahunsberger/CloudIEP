@@ -30,11 +30,9 @@ function App() {
     <Auth0Provider
       domain={import.meta.env.VITE_REACT_APP_AUTH0_DOMAIN ?? ''}
       clientId={import.meta.env.VITE_REACT_APP_AUTH0_CLIENTID ?? ''}
-      authorizationParams={{
-        redirect_uri: "http://localhost:5173/logincallback",
-        audience: "https://cloudiepdev/api",
-        scope: "openid"
-      }}
+      redirectUri="http://localhost:5173/logincallback"
+      scope="openid"
+      audience="https://cloudiepdev/api"
       onRedirectCallback={onRedirectCallback}
     >
       <StyledEngineProvider injectFirst>
