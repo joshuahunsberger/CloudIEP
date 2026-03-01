@@ -97,21 +97,29 @@ const GoalForm = ({
       />
       <DatePicker
         openTo="day"
-        inputFormat="MM/dd/yyyy"
+        format="MM/dd/yyyy"
         label="Goal Begin Date"
         views={['year', 'month', 'day']}
         value={goal.beginDate}
         onChange={(date) => handleBeginDateChange(date)}
-        renderInput={(params) => <TextField {...params} />}
+        slotProps={{
+          textField: {
+            fullWidth: true,
+          },
+        }}
       />
       <DatePicker
         openTo="day"
-        inputFormat="MM/dd/yyyy"
+        format="MM/dd/yyyy"
         label="Goal End Date"
         views={['year', 'month', 'day']}
         value={goal.endDate}
         onChange={(date) => handleEndDateDateChange(date)}
-        renderInput={(params) => <TextField {...params} />}
+        slotProps={{
+          textField: {
+            fullWidth: true,
+          },
+        }}
       />
       <Button
         type="submit"

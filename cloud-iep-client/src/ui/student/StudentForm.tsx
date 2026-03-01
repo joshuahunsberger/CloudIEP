@@ -71,12 +71,16 @@ const StudentForm = ({
       <DatePicker
         disableFuture
         openTo="year"
-        inputFormat="MM/dd/yyyy"
+        format="MM/dd/yyyy"
         label="Date of Birth"
         views={['year', 'month', 'day']}
         value={student.dateOfBirth}
         onChange={(date) => handleDateChange(date)}
-        renderInput={(params) => <TextField {...params} />}
+        slotProps={{
+          textField: {
+            fullWidth: true,
+          },
+        }}
       />
       {isEditing ? (
         <>

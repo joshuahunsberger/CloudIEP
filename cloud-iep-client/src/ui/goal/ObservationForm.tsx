@@ -127,12 +127,16 @@ const ObservationForm = ({ addObservation, cancel }: ObservationFormProps) => {
           <Grid item className={classes.gridRow}>
             <DatePicker
               openTo="day"
-              inputFormat="MM/dd/yyyy"
+              format="MM/dd/yyyy"
               label="Observation Date"
               views={['year', 'month', 'day']}
               value={observation?.observationDate}
               onChange={(date) => handleDateChange(date)}
-              renderInput={(params) => <TextField {...params} />}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                },
+              }}
             />
           </Grid>
           <Grid

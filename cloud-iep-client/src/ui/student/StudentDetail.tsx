@@ -349,12 +349,16 @@ const StudentDetail = () => {
                   <>
                     <DatePicker
                       disableFuture
-                      inputFormat="MM/dd/yyyy"
+                      format="MM/dd/yyyy"
                       label="Date of Birth"
                       views={['year', 'month', 'day']}
                       value={pendingDoB}
                       onChange={(date) => handleDateChange(date)}
-                      renderInput={(params) => <TextField {...params} />}
+                      slotProps={{
+                        textField: {
+                          fullWidth: true,
+                        },
+                      }}
                     />
                     <ListItemSecondaryAction>
                       <IconButton
