@@ -39,5 +39,5 @@ stages:
 
           - script: |
               cd cloud-iep-client
-              npm build
+              npm run build
             displayName: npm build
