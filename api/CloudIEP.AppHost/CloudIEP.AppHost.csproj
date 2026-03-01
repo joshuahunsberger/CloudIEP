@@ -7,7 +7,7 @@
     <UserSecretsId>ae1b90ef-8bae-4f24-bd62-ba98543f62f5</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.5.2" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.1.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../CloudIEP.Web/CloudIEP.Web.csproj" />
