@@ -30,7 +30,7 @@ stages:
           - task: UseNode@1
             displayName: Use Node LTS (24.x)
             inputs:
-              versionSpec: '24.x'
+              version: '24.x'
 
           - script: |
               cd cloud-iep-client
