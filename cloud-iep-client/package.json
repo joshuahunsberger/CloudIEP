@@ -30,7 +30,8 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier --check 'src/**/*.{ts,tsx}'",
     "prettier:fix": "prettier --write 'src/**/*.{ts,tsx}'",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "browserslist": {
     "production": [
