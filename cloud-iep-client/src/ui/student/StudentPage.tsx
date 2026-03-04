@@ -14,7 +14,7 @@ import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
 import type { Student } from '../../students/Student';
 import useStudentsApi from '../../students/useStudentsApi';
-import ApiStatus from '../../types/ApiStatus';
+import { ApiStatus } from '../../types/ApiStatus';
 import { useSnackbar } from '../SnackbarHooks';
 import StudentForm from './StudentForm';
 import StudentTable from './StudentTable';

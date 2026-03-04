@@ -1,5 +1,5 @@
 import type { Api } from './types/Api';
-import ApiStatus from './types/ApiStatus';
+import { ApiStatus } from './types/ApiStatus';
 
 const handleApiError = <T>(err: unknown): Api<T> => {
   let error = new Error('Unknown error');

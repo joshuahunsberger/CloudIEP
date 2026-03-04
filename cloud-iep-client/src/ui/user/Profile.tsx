@@ -16,7 +16,7 @@ import {
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 import postRequest from '../../network/postRequest';
-import ApiStatus from '../../types/ApiStatus';
+import { ApiStatus } from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
 import { useSnackbar } from '../SnackbarHooks';
 

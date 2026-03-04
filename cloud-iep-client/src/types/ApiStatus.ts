@@ -1,7 +1,9 @@
-enum ApiStatus {
-  Loading = 'loading',
-  Loaded = 'loaded',
-  Error = 'error',
-}
+const ApiStatus = {
+  Loading: 'loading',
+  Loaded: 'loaded',
+  Error: 'error',
+} as const;
 
-export default ApiStatus;
+type ApiStatus = typeof ApiStatus[keyof typeof ApiStatus];
+
+export { ApiStatus };

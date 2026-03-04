@@ -22,7 +22,7 @@ import useGoalByUrl from '../../goals/useGoalByUrl';
 import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
-import ApiStatus from '../../types/ApiStatus';
+import { ApiStatus } from '../../types/ApiStatus';
 import GoalForm from './GoalForm';
 import ObservationForm from './ObservationForm';
 import ObservationGraph from './ObservationGraph';

@@ -13,7 +13,7 @@ import { type FormEvent, useEffect, useState } from 'react';
 import deleteRequest from '../../network/deleteRequest';
 import postRequest from '../../network/postRequest';
 import type { Student } from '../../students/Student';
-import ApiStatus from '../../types/ApiStatus';
+import { ApiStatus } from '../../types/ApiStatus';
 import type { StudentPreview } from '../../users/StudentPreview';
 import useUsersApi from '../../users/useUserApi';
 import { useSnackbar } from '../SnackbarHooks';

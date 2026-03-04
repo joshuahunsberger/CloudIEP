@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import handleApiError from '../handleApiError';
 import getRequest from '../network/getRequest';
 import type { Api } from '../types/Api';
-import ApiStatus from '../types/ApiStatus';
+import { ApiStatus } from '../types/ApiStatus';
 import type { Student } from './Student';
 
 const useStudentsApi = () => {
