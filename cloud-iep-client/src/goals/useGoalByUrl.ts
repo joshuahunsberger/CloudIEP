@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import handleApiError from '../handleApiError';
 import getRequest from '../network/getRequest';
 import type { Api } from '../types/Api';
-import ApiStatus from '../types/ApiStatus';
+import { ApiStatus } from '../types/ApiStatus';
 import type { Goal } from './Goal';
 import type { Observation } from './Observation';
 import { sortObservationsByDate } from './observationSort';

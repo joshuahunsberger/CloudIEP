@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import React from 'react';
+import type { JSX } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import GoalDetail, { goalDetailRoute } from '../ui/goal/GoalDetail';
 import Home, { homeRoute } from '../ui/Home';

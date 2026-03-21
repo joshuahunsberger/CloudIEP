@@ -1,5 +1,5 @@
 import React from 'react';
-import ApiStatus from './types/ApiStatus';
+import { ApiStatus } from './types/ApiStatus';
 import useWeatherForecastsService from './useWeatherForecastsService';
 
 const WeatherForecasts: React.FC = () => {

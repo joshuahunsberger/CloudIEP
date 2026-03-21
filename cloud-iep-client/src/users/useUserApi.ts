@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import handleApiError from '../handleApiError';
 import postRequest from '../network/postRequest';
 import type { Api } from '../types/Api';
-import ApiStatus from '../types/ApiStatus';
+import { ApiStatus } from '../types/ApiStatus';
 import type { User } from './User';
 
 const useUsersApi = () => {

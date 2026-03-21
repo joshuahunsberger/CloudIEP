@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { WeatherForecast } from './WeatherForecast';
-import { Api } from './types/Api';
+import type { WeatherForecast } from './WeatherForecast';
 import getRequest from './network/getRequest';
-import ApiStatus from './types/ApiStatus';
+import type { Api } from './types/Api';
+import { ApiStatus } from './types/ApiStatus';
 
 const useWeatherForecastsService = () => {
   const [result, setResult] = useState<Api<WeatherForecast[]>>({

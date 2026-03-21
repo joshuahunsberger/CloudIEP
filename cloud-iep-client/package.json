@@ -23,14 +23,15 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc -b && vite build",
     "test": "vite test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier --check 'src/**/*.{ts,tsx}'",
     "prettier:fix": "prettier --write 'src/**/*.{ts,tsx}'",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit"
   },
   "browserslist": {
     "production": [
@@ -50,11 +51,11 @@
     "@vitejs/plugin-react": "^5.1.4",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1",
+    "typescript-eslint": "^8.57.1",
     "vite": "^7.3.1"
   }
 }

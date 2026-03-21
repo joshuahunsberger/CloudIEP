@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface ErrorBoundaryProps {
   logError?: (error: Error, errorInfo: React.ErrorInfo) => void;

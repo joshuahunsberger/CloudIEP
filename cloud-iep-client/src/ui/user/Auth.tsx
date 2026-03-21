@@ -1,7 +1,6 @@
 import { CircularProgress, Typography } from '@mui/material';
-import React from 'react';
 import { Navigate } from 'react-router-dom';
-import ApiStatus from '../../types/ApiStatus';
+import { ApiStatus } from '../../types/ApiStatus';
 import useUsersApi from '../../users/useUserApi';
 import { homeRoute } from '../Home';
 

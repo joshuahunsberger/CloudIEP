@@ -2,7 +2,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Cloud } from '@mui/icons-material';
 import { AppBar, Avatar, Button, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { studentsRoute } from './student/StudentPage';
 

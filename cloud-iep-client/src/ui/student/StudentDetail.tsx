@@ -36,7 +36,7 @@ import putRequest from '../../network/putRequest';
 import type { GoalPreview } from '../../students/GoalPreview';
 import type { Student } from '../../students/Student';
 import useStudentByUrl from '../../students/useStudentByUrl';
-import ApiStatus from '../../types/ApiStatus';
+import { ApiStatus } from '../../types/ApiStatus';
 import GoalForm from '../goal/GoalForm';
 import GoalTable from '../goal/GoalTable';
 import { useSnackbar } from '../SnackbarHooks';
