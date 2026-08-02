@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using CloudIEP.Data;
 using CloudIEP.Web;
 using CloudIEP.Web.Authorization;
 using CloudIEP.Web.IoC;
@@ -15,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 var Configuration = builder.Configuration;
+
+builder.AddCloudIEPData();
 
 var services = builder.Services;
 
