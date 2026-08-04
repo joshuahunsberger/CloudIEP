@@ -11,10 +11,26 @@ public class CloudIEPDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>().ToContainer("Users");
-        modelBuilder.Entity<Goal>().ToContainer("Goals");
-        modelBuilder.Entity<Student>().ToContainer("Students");
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>(builder =>
+        {
+            builder.ToContainer("Users");
+            builder.HasPartitionKey(u => u.Id);
+            builder.HasKey(u => u.Id);
+        });
+        modelBuilder.Entity<Goal>(builder =>
+        {
+            builder.ToContainer("Goals");
+            builder.HasPartitionKey(g => g.Id);
+            builder.HasKey(g => g.Id);
+        });
+        modelBuilder.Entity<Student>(builder =>
+        {
+            builder.ToContainer("Students");
+            builder.HasPartitionKey(s => s.Id);
+            builder.HasKey(s => s.Id);
+        });
     }
 
     public DbSet<User> Users { get; set; }
