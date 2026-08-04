@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../CloudIEP.Web/CloudIEP.Web.csproj" />
+    <ProjectReference Include="..\CloudIEP.DatabaseSeeder\CloudIEP.DatabaseSeeder.csproj" />
   </ItemGroup>
 </Project>
