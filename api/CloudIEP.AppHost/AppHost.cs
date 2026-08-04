@@ -16,11 +16,16 @@ var goals = db.AddContainer("Goals", "/id");
 var students = db.AddContainer("Students", "/id");
 var users = db.AddContainer("Users", "/id");
 
+var seeder = builder.AddProject<CloudIEP_DatabaseSeeder>("seeder")
+    .WithReference(db)
+    .WaitFor(db);
+
 var api = builder.AddProject<CloudIEP_Web>("api")
     .WithReference(db)
     .WithReference(goals)
     .WithReference(students)
-    .WithReference(users);
+    .WithReference(users)
+    .WaitFor(seeder);
 
 builder.AddViteApp("client", "../../cloud-iep-client")
     .WithEndpoint("http", endpoint =>
