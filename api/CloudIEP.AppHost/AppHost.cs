@@ -28,7 +28,7 @@ var api = builder.AddProject<CloudIEP_Web>("api")
     .WithReference(goals)
     .WithReference(students)
     .WithReference(users)
-    .WaitFor(seeder);
+    .WaitForCompletion(seeder);
 
 builder.AddViteApp("client", "../../cloud-iep-client")
     .WithEndpoint("http", endpoint =>
