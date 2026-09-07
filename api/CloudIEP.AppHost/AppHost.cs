@@ -37,6 +37,7 @@ builder.AddViteApp("client", "../../cloud-iep-client")
         endpoint.IsProxied = false;
     })
     .WithReference(api)
-    .WithEnvironment("VITE_API_URL", api.GetEndpoint("http"));
+    .WaitFor(api)
+    .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"));
 
 builder.Build().Run();
