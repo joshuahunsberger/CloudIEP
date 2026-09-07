@@ -71,7 +71,7 @@ const StudentPage = () => {
   const addStudent = async (newStudent: Student) => {
     const token = await getAccessTokenSilently();
     const result = await postRequest<Student, Student>(
-      'http://localhost:5000/api/Student',
+      '/api/Student',
       newStudent,
       token,
     );
@@ -87,7 +87,7 @@ const StudentPage = () => {
   const editStudent = async (existingStudent: Student) => {
     const token = await getAccessTokenSilently();
     await putRequest(
-      'http://localhost:5000/api/Student/' + existingStudent.id,
+      '/api/Student/' + existingStudent.id,
       existingStudent,
       token,
     );
@@ -103,7 +103,7 @@ const StudentPage = () => {
     // TODO: Confirm?
     const token = await getAccessTokenSilently();
     await deleteRequest(
-      'http://localhost:5000/api/Student/' + studentId,
+      '/api/Student/' + studentId,
       token,
     );
 

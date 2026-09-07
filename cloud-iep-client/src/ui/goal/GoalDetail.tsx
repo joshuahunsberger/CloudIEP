@@ -19,7 +19,6 @@ import type { Goal } from '../../goals/Goal';
 import type { Observation } from '../../goals/Observation';
 import { sortObservationsByDate } from '../../goals/observationSort';
 import useGoalByUrl from '../../goals/useGoalByUrl';
-import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
 import { ApiStatus } from '../../types/ApiStatus';
@@ -48,8 +47,7 @@ const Root = styled('div')(({ theme }) => ({
 
 const GoalDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const baseUrl = getBaseUrl();
-  const goalUrl = baseUrl + 'goal/' + id;
+  const goalUrl = '/api/Goal/' + id;
   const service = useGoalByUrl(goalUrl);
   const { getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();

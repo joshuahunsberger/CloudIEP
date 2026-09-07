@@ -18,7 +18,7 @@ const useStudentsApi = () => {
         const token = await getAccessTokenSilently();
 
         const response = await getRequest<Student[]>(
-          'http://localhost:5000/api/Student/',
+          '/api/Student/',
           token,
         );
         const students = response.map(

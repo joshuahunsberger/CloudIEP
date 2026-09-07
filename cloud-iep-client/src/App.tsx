@@ -31,7 +31,7 @@ function App() {
       domain={import.meta.env.VITE_REACT_APP_AUTH0_DOMAIN ?? ''}
       clientId={import.meta.env.VITE_REACT_APP_AUTH0_CLIENTID ?? ''}
       authorizationParams={{
-        redirect_uri: "http://localhost:5173/logincallback",
+        redirect_uri: `${window.location.origin}/logincallback`,
         audience: "https://cloudiepdev/api",
         scope: "openid"
       }}
