@@ -493,4 +493,6 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp,visualstudiocode,rider
 
+**/.idea/**/projectSettingsUpdater.xml
+
 .DS_Store
