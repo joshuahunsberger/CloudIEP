@@ -1,6 +1,6 @@
-﻿using CloudIEP.Data.CosmosDB;
+using System.Threading.Tasks;
+using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
-using Microsoft.Azure.Documents;
 
 namespace CloudIEP.Data;
 
@@ -8,10 +8,21 @@ public interface IGoalRepository : IRepository<Goal>
 {
 }
 
-public class GoalRepository : CosmosDbRepository<Goal>, IGoalRepository
+public class GoalRepository : EfRepository<Goal>, IGoalRepository
 {
-    public GoalRepository(ICosmosDbClientFactory factory) : base(factory) { }
+    public GoalRepository(CloudIEPDbContext context) : base(context) { }
 
-    public override string CollectionName => "Goals";
-    public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
+    public override async Task UpdateAsync(Goal entity)
+    {
+        var existing = await DbSet.FindAsync(entity.Id);
+        if (existing == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        Context.Entry(existing).CurrentValues.SetValues(entity);
+        existing.Objectives = entity.Objectives;
+        existing.Observations = entity.Observations;
+        await Context.SaveChangesAsync();
+    }
 }
