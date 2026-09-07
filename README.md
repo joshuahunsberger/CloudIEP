@@ -6,108 +6,106 @@
 
 To run this locally, you need the following applications:
 
-- Visual Studio or Visual Studio Code
-- dotnet SDK
-- Node
-- NPM or Yarn
-- Docker Desktop (If you want to run the API in a container)
+- Visual Studio, JetBrains Rider, or Visual Studio Code
+- .NET 10 SDK
+- Node.js & NPM
+- Docker or compatible container runtime (Required to run the Cosmos DB emulator container via Aspire)
+
+### Running Locally with Aspire
+
+The easiest way to run the entire application stack is with **Aspire**:
+
+```bash
+dotnet run --project api/CloudIEP.AppHost
+```
+
+Aspire will automatically orchestrate:
+1. **Azure Cosmos DB Emulator**: Starts the emulator container with Data Explorer enabled.
+2. **Containers**: Creates the required containers (`Students`, `Users`, `Goals` partitioned by `/id`).
+3. **Database Seeder**: Runs `CloudIEP.DatabaseSeeder` to populate initial test students and goals.
+4. **Web API**: Launches `CloudIEP.Web` with the emulator connection string injected.
+5. **React Client**: Launches `cloud-iep-client` with Vite and connects it to the API.
+
+---
 
 ### Auth0 Setup
 
-This application uses Auth0 for authentication.  You can create a free account at auth0.com.  You can follow the relevant steps in this tutorial to get your account set up: https://auth0.com/docs/quickstart/spa/react/02-calling-an-api
+This application uses Auth0 for authentication. You can create a free account at [auth0.com](https://auth0.com).
 
 Once your account is setup, you need the following values:
-- API Identifier (to be used as Audience)
-- Domain of your API
-- Client ID from your Single Page Application Auth0 Application
+- **API Identifier** (used as Audience)
+- **Domain** of your API
+- **Client ID** from your Single Page Application Auth0 Application
 
-### Cosmos DB Setup
+---
 
-The data store for this application is Cosmos DB.  You can either set up a free account in Azure using the Cosmos DB free tier or use the Cosmos Emulator on Windows (https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator).  This app was set up using the SQL API.
+### Cosmos DB & Data Access Setup
 
-Once set up, you need the following values:
-- URL of your instance
-- Access key
-- Database name
+The data layer uses the **Entity Framework Core Cosmos Provider** (`Aspire.Microsoft.EntityFrameworkCore.Cosmos`) backed by an EF Core DbContext (`CloudIEPDbContext`).
 
-You will also need to create the containers/collections listed below (partitioned by /id):
-- Students
-- Users
-- Goals
+- **When using Aspire**: Cosmos DB provisioning and container creation are fully automated.
+- **When running standalone**: You can connect to an existing Azure Cosmos DB instance or local emulator by setting the `CloudIEPDev` connection string.
 
-### ASP.NET Core API Setup
+The database requires three containers partitioned by `/id`:
+- `Students`
+- `Users`
+- `Goals`
 
-The API project is making use of the Secret Manager tool for managing application secrets.
-See more here:
-https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-8.0&tabs=windows#secret-manager
+---
 
-To configure secrets, navigate to api/CloudIEP.Web and run the `dotnet user-secrets` command.
+### ASP.NET Core API Setup (Standalone)
 
-For setting multiple secrets, see [this link](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspn.etcore-8.0&tabs=windows#set-multiple-secrets)
+If you are running the API without the Aspire AppHost, configure your secrets using the `dotnet user-secrets` tool in `api/CloudIEP.Web`:
 
-If the following values existed as user-secrets.json
-```
+```json
 {
   "Auth0:Audience": "...",
   "Auth0:Domain": "...",
   "Auth0:SwaggerClientId": "...",
-  "Auth0:Token": "...",
-  "CosmosDB:DatabaseName": "...",
-  "CosmosDB:Endpoint": "...",
-  "CosmosDB:Key": "...",
-  "CosmosDB:Collections:0:Name": "Students",
-  "CosmosDB:Collections:0:PartitionKey": "Id",
-  "CosmosDB:Collections:1:Name": "Users",
-  "CosmosDB:Collections:1:PartitionKey": "Id",
-  "CosmosDB:Collections:2:Name": "Goals",
-  "CosmosDB:Collections:2:PartitionKey": "Id",
+  "ConnectionStrings:CloudIEPDev": "AccountEndpoint=https://localhost:8081/;AccountKey=..."
 }
 ```
-You could run the following command in bash:
 
-`cat ./user-secrets.json | dotnet user-secrets set`
-
-To run the project locally, you open the solution in the /api directory in your preferred version of Visual Studio.
-
-Alternatively, you can run the docker compose command in the api directory:
-
-`docker-compose -f "docker-compose.yml" up -d --build`
-
-### React Client Setup
-
-Some configuration for the React application comes from a .env file.  Add a .env.local file to the root of the cloud-iep-client folder with the following values:
-
-```
-REACT_APP_AUTH0_DOMAIN=...
-REACT_APP_AUTH0_CLIENTID=...
-REACT_APP_AUTH0_AUDIENCE=...
+You can set these via bash:
+```bash
+cat ./user-secrets.json | dotnet user-secrets set
 ```
 
-Once that file is setup, you can run the following commands in the cloud-iep-client/ directory:
-```
-yarn install
-yarn start
+To run the API standalone:
+```bash
+dotnet run --project api/CloudIEP.Web
 ```
 
-or
+---
 
+### React Client Setup (Standalone)
+
+Add a `.env.local` file to the root of the `cloud-iep-client/` folder:
+
+```bash
+VITE_REACT_APP_AUTH0_DOMAIN=...
+VITE_REACT_APP_AUTH0_CLIENTID=...
 ```
+
+Then install dependencies and start the Vite dev server:
+
+```bash
+cd cloud-iep-client
 npm install
-npm start
+npm run dev
 ```
+
+---
+
 ## Library References:
 
-Material-UI for React Components that implement Google's Material Design: https://material-ui.com/
-
-Material-UI Pickers for date picker components: https://material-ui-pickers.dev/
-
-Recharts for graphing: http://recharts.org/en-US
+- [MUI (Material UI)](https://mui.com/) - React components implementing Google's Material Design
+- [MUI X Date Pickers](https://mui.com/x/react-date-pickers/) - Date picker components
+- [Recharts](https://recharts.org/) - Composable charting library
 
 ## Source Code References:
-Example for Repository Pattern with CosmosDB: https://github.com/Azure-Samples/PartitionedRepository
 
-
-Logged-in page routing inspired by John Reilly on GitHub: https://github.com/johnnyreilly/auth0-react-typescript-asp-net-core
-
-
-API types concept borrowed from https://github.com/camilosw/react-hooks-services and related blog post by Camilo Mejia: https://dev.to/camilomejia/fetch-data-with-react-hooks-and-typescript-390c
+- [EF Core Azure Cosmos DB Provider](https://learn.microsoft.com/en-us/ef/core/providers/cosmos/) - EF Core Cosmos documentation
+- [Auth0 React SDK](https://github.com/auth0/auth0-react) - Authentication provider integration
+- Logged-in page routing inspired by [John Reilly](https://github.com/johnnyreilly/auth0-react-typescript-asp-net-core)
+- API types concept borrowed from [Camilo Mejia](https://dev.to/camilomejia/fetch-data-with-react-hooks-and-typescript-390c)
