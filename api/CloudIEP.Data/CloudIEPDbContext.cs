@@ -18,18 +18,22 @@ public class CloudIEPDbContext : DbContext
             builder.ToContainer("Users");
             builder.HasPartitionKey(u => u.Id);
             builder.HasKey(u => u.Id);
+            builder.OwnsMany(u => u.Students);
         });
         modelBuilder.Entity<Goal>(builder =>
         {
             builder.ToContainer("Goals");
             builder.HasPartitionKey(g => g.Id);
             builder.HasKey(g => g.Id);
+            builder.OwnsMany(g => g.Objectives);
+            builder.OwnsMany(g => g.Observations);
         });
         modelBuilder.Entity<Student>(builder =>
         {
             builder.ToContainer("Students");
             builder.HasPartitionKey(s => s.Id);
             builder.HasKey(s => s.Id);
+            builder.OwnsMany(s => s.Goals);
         });
     }
 

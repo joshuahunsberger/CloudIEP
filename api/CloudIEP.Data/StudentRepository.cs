@@ -1,6 +1,6 @@
-﻿using CloudIEP.Data.CosmosDB;
+using System.Threading.Tasks;
+using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
-using Microsoft.Azure.Documents;
 
 namespace CloudIEP.Data;
 
@@ -8,10 +8,20 @@ public interface IStudentRepository : IRepository<Student>
 {
 }
 
-public class StudentRepository : CosmosDbRepository<Student>, IStudentRepository
+public class StudentRepository : EfRepository<Student>, IStudentRepository
 {
-    public StudentRepository(ICosmosDbClientFactory factory) : base(factory) { }
+    public StudentRepository(CloudIEPDbContext context) : base(context) { }
 
-    public override string CollectionName => "Students";
-    public override PartitionKey ResolvePartitionKey(string entityId) => new PartitionKey(entityId);
+    public override async Task UpdateAsync(Student entity)
+    {
+        var existing = await DbSet.FindAsync(entity.Id);
+        if (existing == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        Context.Entry(existing).CurrentValues.SetValues(entity);
+        existing.Goals = entity.Goals;
+        await Context.SaveChangesAsync();
+    }
 }

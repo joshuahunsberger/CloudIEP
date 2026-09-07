@@ -2,7 +2,6 @@ using System.Security.Claims;
 using CloudIEP.Data;
 using CloudIEP.Web;
 using CloudIEP.Web.Authorization;
-using CloudIEP.Web.IoC;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -20,8 +19,6 @@ var Configuration = builder.Configuration;
 builder.AddCloudIEPData();
 
 var services = builder.Services;
-
-services.AddData(Configuration);
 
 services.AddCors(options => options.AddPolicy(CorsPolicy, policyBuilder =>
 {
