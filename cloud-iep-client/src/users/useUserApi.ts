@@ -19,7 +19,7 @@ const useUsersApi = () => {
         const token = await getAccessTokenSilently();
 
         const response = await postRequest<null, User>(
-          'http://localhost:5000/api/User',
+          '/api/User',
           null,
           token,
         );

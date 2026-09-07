@@ -30,7 +30,6 @@ import React, { type FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type { Goal } from '../../goals/Goal';
 import deleteRequest from '../../network/deleteRequest';
-import getBaseUrl from '../../network/getBaseUrl';
 import postRequest from '../../network/postRequest';
 import putRequest from '../../network/putRequest';
 import type { GoalPreview } from '../../students/GoalPreview';
@@ -61,8 +60,7 @@ const Root = styled('div')(({ theme }) => ({
 
 const StudentDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const baseUrl = getBaseUrl();
-  const url = baseUrl + 'Student/' + id;
+  const url = '/api/Student/' + id;
   const service = useStudentByUrl(url);
   const snackBar = useSnackbar();
   const navigate = useNavigate();
@@ -185,7 +183,7 @@ const StudentDetail = () => {
   const addGoal = async (newGoal: Goal) => {
     const token = await getAccessTokenSilently();
     const result = await postRequest<Goal, Goal>(
-      'http://localhost:5000/api/Goal',
+      '/api/Goal',
       newGoal,
       token,
     );
@@ -201,7 +199,7 @@ const StudentDetail = () => {
 
   const deleteGoal = async (goalId: string) => {
     const token = await getAccessTokenSilently();
-    await deleteRequest('http://localhost:5000/api/Goal/' + goalId, token);
+    await deleteRequest('/api/Goal/' + goalId, token);
 
     const updatedGoals = goals.filter((goal) => goal.goalId !== goalId);
     setGoals(updatedGoals);

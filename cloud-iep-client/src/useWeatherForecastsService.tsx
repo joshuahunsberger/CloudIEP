@@ -10,7 +10,7 @@ const useWeatherForecastsService = () => {
   });
 
   useEffect(() => {
-    getRequest<WeatherForecast[]>('http://localhost:5000/weatherforecast')
+    getRequest<WeatherForecast[]>('/weatherforecast')
       .then((response) =>
         setResult({ status: ApiStatus.Loaded, result: response }),
       )
