@@ -18,7 +18,10 @@ var users = db.AddContainer("Users", "/id");
 
 var seeder = builder.AddProject<CloudIEP_DatabaseSeeder>("seeder")
     .WithReference(db)
-    .WaitFor(db);
+    .WaitFor(db)
+    .WaitFor(goals)
+    .WaitFor(students)
+    .WaitFor(users);
 
 var api = builder.AddProject<CloudIEP_Web>("api")
     .WithReference(db)
