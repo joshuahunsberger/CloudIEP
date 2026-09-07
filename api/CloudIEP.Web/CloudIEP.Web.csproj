@@ -6,9 +6,6 @@
 		<UserSecretsId>7ffa8ead-e964-45d4-97b0-30c91a116fed</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
-		<Folder Include="Authorization\" />
-	</ItemGroup>
-	<ItemGroup>
 		<ProjectReference Include="../ServiceDefaults/ServiceDefaults.csproj" />
 		<ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj">
 			<GlobalPropertiesToRemove>
