@@ -19,7 +19,7 @@
 		<PackageReference Include="Moq" Version="4.20.72" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj" />
-		<ProjectReference Include="..\CloudIEP.Domain\CloudIEP.Domain.csproj" />
+		<ProjectReference Include="../CloudIEP.Data/CloudIEP.Data.csproj" />
+		<ProjectReference Include="../CloudIEP.Domain/CloudIEP.Domain.csproj" />
 	</ItemGroup>
 </Project>
