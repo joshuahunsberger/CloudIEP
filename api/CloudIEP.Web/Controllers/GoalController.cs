@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using CloudIEP.Data;
+﻿using System.Threading.Tasks;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
+using CloudIEP.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,13 +12,11 @@ namespace CloudIEP.Web.Controllers;
 [Authorize]
 public class GoalController : Controller
 {
-    private readonly IGoalRepository _goalRepository;
-    private readonly IStudentRepository _studentRepository;
+    private readonly IGoalService _goalService;
 
-    public GoalController(IGoalRepository goalRepository, IStudentRepository studentRepository)
+    public GoalController(IGoalService goalService)
     {
-        _goalRepository = goalRepository;
-        _studentRepository = studentRepository;
+        _goalService = goalService;
     }
 
     [HttpPost]
@@ -35,13 +32,15 @@ public class GoalController : Controller
             return BadRequest("Student must be set to create goal.");
         }
 
-        var student = await GetStudent(goal.StudentId);
-        if (student == null) return BadRequest("Student does not exist.");
-
-        var goalResponse = await _goalRepository.AddAsync(goal);
-        await AddGoalToStudent(student, goal);
-
-        return Ok(goalResponse);
+        try
+        {
+            var goalResponse = await _goalService.CreateGoalAsync(goal);
+            return Ok(goalResponse);
+        }
+        catch (EntityNotFoundException)
+        {
+            return BadRequest("Student does not exist.");
+        }
     }
 
     [HttpGet("{goalId}")]
@@ -49,7 +48,7 @@ public class GoalController : Controller
     {
         try
         {
-            var goal = await _goalRepository.GetByIdAsync(goalId);
+            var goal = await _goalService.GetGoalByIdAsync(goalId);
             return Ok(goal);
         }
         catch (EntityNotFoundException)
@@ -66,18 +65,17 @@ public class GoalController : Controller
             return BadRequest(goal.Id);
         }
 
-        var student = await GetStudent(goal.StudentId);
-        if (student == null) return BadRequest("Student doesn't exist.");
-
         try
         {
-            await _goalRepository.UpdateAsync(goal);
-            await UpdateGoalForStudent(student, goal);
-
+            await _goalService.UpdateGoalAsync(goal);
             return NoContent();
         }
-        catch (EntityNotFoundException)
+        catch (EntityNotFoundException e)
         {
+            if (e.Message == "Student does not exist.")
+            {
+                return BadRequest("Student doesn't exist.");
+            }
             return NotFound(goalId);
         }
     }
@@ -87,11 +85,7 @@ public class GoalController : Controller
     {
         try
         {
-            var goal = await _goalRepository.GetByIdAsync(goalId);
-            var student = await GetStudent(goal.StudentId);
-            await _goalRepository.DeleteAsync(goal);
-            await RemoveGoalFromStudent(student, goalId);
-
+            await _goalService.DeleteGoalAsync(goalId);
             return NoContent();
         }
         catch (EntityNotFoundException)
@@ -105,49 +99,12 @@ public class GoalController : Controller
     {
         try
         {
-            var goal = await _goalRepository.GetByIdAsync(goalId);
-            goal.Observations.Add(observation);
-            await _goalRepository.UpdateAsync(goal);
+            await _goalService.AddObservationAsync(goalId, observation);
             return NoContent();
         }
         catch (EntityNotFoundException)
         {
             return NotFound(goalId);
         }
-    }
-
-    private async Task<Student> GetStudent(string studentId)
-    {
-        try
-        {
-            return await _studentRepository.GetByIdAsync(studentId);
-        }
-        catch (EntityNotFoundException)
-        {
-            return null;
-        }
-    }
-
-    private async Task AddGoalToStudent(Student student, Goal goal)
-    {
-        var goalPreview = new GoalPreview
-        {
-            GoalId = goal.Id,
-            GoalName = goal.GoalName
-        };
-        student.Goals.Add(goalPreview);
-        await _studentRepository.UpdateAsync(student);
-    }
-
-    private async Task UpdateGoalForStudent(Student student, Goal goal)
-    {
-        student.Goals = student.Goals.Where(g => g.GoalId != goal.Id).ToList();
-        await AddGoalToStudent(student, goal);
-    }
-
-    private async Task RemoveGoalFromStudent(Student student, string goalId)
-    {
-        student.Goals = student.Goals.Where(g => g.GoalId != goalId).ToList();
-        await _studentRepository.UpdateAsync(student);
     }
 }
