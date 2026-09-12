@@ -30,6 +30,7 @@ var api = builder.AddProject<CloudIEP_Web>("api")
     .WithReference(users)
     .WaitForCompletion(seeder);
 
+#pragma warning disable ASPIREBROWSERLOGS001
 builder.AddViteApp("client", "../../cloud-iep-client")
     .WithEndpoint("http", endpoint =>
     {
@@ -38,6 +39,8 @@ builder.AddViteApp("client", "../../cloud-iep-client")
     })
     .WithReference(api)
     .WaitFor(api)
-    .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"));
+    .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
+    .WithBrowserLogs();
+#pragma warning restore ASPIREBROWSERLOGS001
 
 builder.Build().Run();
