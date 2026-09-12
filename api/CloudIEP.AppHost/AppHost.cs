@@ -7,6 +7,7 @@ var cosmos = builder.AddAzureCosmosDB("cosmos-db")
     .RunAsPreviewEmulator(emulator =>
     {
         emulator.WithDataExplorer();
+        emulator.WithLifetime(ContainerLifetime.Persistent);
     });
 #pragma warning restore ASPIRECOSMOSDB001
 
