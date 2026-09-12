@@ -13,5 +13,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj" />
+      <ProjectReference Include="../ServiceDefaults/ServiceDefaults.csproj" />
     </ItemGroup>
 </Project>
