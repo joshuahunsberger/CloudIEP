@@ -25,9 +25,6 @@ var seeder = builder.AddProject<CloudIEP_DatabaseSeeder>("seeder")
 
 var api = builder.AddProject<CloudIEP_Web>("api")
     .WithReference(db)
-    .WithReference(goals)
-    .WithReference(students)
-    .WithReference(users)
     .WaitForCompletion(seeder);
 
 #pragma warning disable ASPIREBROWSERLOGS001
