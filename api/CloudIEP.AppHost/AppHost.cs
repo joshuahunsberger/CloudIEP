@@ -29,11 +29,8 @@ var api = builder.AddProject<CloudIEP_Web>("api")
 
 #pragma warning disable ASPIREBROWSERLOGS001
 builder.AddViteApp("client", "../../cloud-iep-client")
-    .WithEndpoint("http", endpoint =>
-    {
-        endpoint.Port = 5173;
-        endpoint.IsProxied = false;
-    })
+    .WithHttpEndpoint(5173, isProxied: false)
+    .WithExternalHttpEndpoints()
     .WithReference(api)
     .WaitFor(api)
     .WithEnvironment("VITE_API_URL", api.GetEndpoint("https"))
