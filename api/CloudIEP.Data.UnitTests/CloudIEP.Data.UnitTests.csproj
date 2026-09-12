@@ -20,5 +20,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj" />
+		<ProjectReference Include="..\CloudIEP.Domain\CloudIEP.Domain.csproj" />
 	</ItemGroup>
 </Project>

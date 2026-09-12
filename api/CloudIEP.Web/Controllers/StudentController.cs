@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using CloudIEP.Data;
+﻿using System.Threading.Tasks;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
+using CloudIEP.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,13 +12,11 @@ namespace CloudIEP.Web.Controllers;
 [Authorize]
 public class StudentController : Controller
 {
-    private readonly IStudentRepository _studentRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IStudentService _studentService;
 
-    public StudentController(IStudentRepository studentRepository, IUserRepository userRepository)
+    public StudentController(IStudentService studentService)
     {
-        _studentRepository = studentRepository;
-        _userRepository = userRepository;
+        _studentService = studentService;
     }
 
     [HttpPost]
@@ -30,15 +27,16 @@ public class StudentController : Controller
             return BadRequest();
         }
 
-        var user = await GetUser();
-        if (user == null) return BadRequest("You need to create a user account first.");
-
-        student.TeacherId = user.Id;
-
-        var studentResponse = await _studentRepository.AddAsync(student);
-        await AddStudentToUser(user, studentResponse);
-
-        return Ok(studentResponse);
+        var userId = HttpContext.User.Identity?.Name;
+        try
+        {
+            var studentResponse = await _studentService.CreateStudentAsync(student, userId);
+            return Ok(studentResponse);
+        }
+        catch (EntityNotFoundException)
+        {
+            return BadRequest("You need to create a user account first.");
+        }
     }
 
     [HttpGet("{studentId}")]
@@ -46,7 +44,7 @@ public class StudentController : Controller
     {
         try
         {
-            var student = await _studentRepository.GetByIdAsync(studentId);
+            var student = await _studentService.GetStudentByIdAsync(studentId);
             return Ok(student);
         }
         catch (EntityNotFoundException)
@@ -58,7 +56,7 @@ public class StudentController : Controller
     [HttpGet]
     public async Task<ActionResult<Student[]>> GetStudents()
     {
-        var students = await _studentRepository.GetAllAsync();
+        var students = await _studentService.GetAllStudentsAsync();
         return Ok(students);
     }
 
@@ -70,19 +68,10 @@ public class StudentController : Controller
             return BadRequest(student.Id);
         }
 
-        var user = await GetUser();
-        if (user == null) return BadRequest("You need to create a user account first.");
-
+        var userId = HttpContext.User.Identity?.Name;
         try
         {
-            if (studentId == null)
-            {
-                return NotFound(studentId);
-            }
-
-            await _studentRepository.UpdateAsync(student);
-            await UpdateStudentForUser(user, student);
-
+            await _studentService.UpdateStudentAsync(student, userId);
             return NoContent();
         }
         catch (EntityNotFoundException)
@@ -94,57 +83,15 @@ public class StudentController : Controller
     [HttpDelete("{studentId}")]
     public async Task<ActionResult> DeleteStudent(string studentId)
     {
+        var userId = HttpContext.User.Identity?.Name;
         try
         {
-            var user = await GetUser();
-            if (user == null) return BadRequest("You need to create a user account first.");
-
-            var student = await _studentRepository.GetByIdAsync(studentId);
-
-            await _studentRepository.DeleteAsync(student);
-            await RemoveStudentFromUser(user, studentId);
-
+            await _studentService.DeleteStudentAsync(studentId, userId);
             return NoContent();
         }
         catch (EntityNotFoundException)
         {
             return NotFound(studentId);
         }
-    }
-
-    private async Task<User> GetUser()
-    {
-        var userId = HttpContext.User.Identity.Name;
-        try
-        {
-            return await _userRepository.GetByIdAsync(userId);
-        }
-        catch (EntityNotFoundException)
-        {
-            return null;
-        }
-    }
-
-    private async Task AddStudentToUser(User user, Student student)
-    {
-        var studentPreview = new StudentPreview
-        {
-            Id = student.Id,
-            FullName = $"{student.FirstName} {student.LastName}",
-        };
-        user.Students.Add(studentPreview);
-        await _userRepository.UpdateAsync(user);
-    }
-
-    private async Task UpdateStudentForUser(User user, Student student)
-    {
-        user.Students = user.Students.Where(s => s.Id != student.Id).ToList();
-        await AddStudentToUser(user, student);
-    }
-
-    private async Task RemoveStudentFromUser(User user, string studentId)
-    {
-        user.Students = user.Students.Where(s => s.Id != studentId).ToList();
-        await _userRepository.UpdateAsync(user);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using CloudIEP.Data;
 using CloudIEP.Data.Exceptions;
 using CloudIEP.Data.Models;
+using CloudIEP.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,41 +12,29 @@ namespace CloudIEP.Web.Controllers;
 [Authorize]
 public class UserController : Controller
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserService _userService;
 
-    public UserController(IUserRepository userRepository)
+    public UserController(IUserService userService)
     {
-        _userRepository = userRepository;
+        _userService = userService;
     }
 
     [HttpPost]
     public async Task<ActionResult<User>> CreateUserFromToken()
     {
-        var userId = HttpContext.User.Identity.Name;
-        try
-        {
-            var existingUser = await _userRepository.GetByIdAsync(userId);
-            return Ok(existingUser);
-        }
-        catch (EntityNotFoundException)
-        {
-            var user = new User { Auth0Id = userId };
-            var userResponse = await _userRepository.AddAsync(user);
-            return Ok(userResponse);
-        }
-
+        var userId = HttpContext.User.Identity?.Name;
+        var user = await _userService.GetOrCreateUserFromTokenAsync(userId);
+        return Ok(user);
     }
 
     [HttpPost("FirstName")]
     public async Task<ActionResult> UpdateFirstName([FromBody] string firstName)
     {
-        var userId = HttpContext.User.Identity.Name;
+        var userId = HttpContext.User.Identity?.Name;
 
         try
         {
-            var user = await _userRepository.GetByIdAsync(userId);
-            user.FirstName = firstName;
-            await _userRepository.UpdateAsync(user);
+            await _userService.UpdateFirstNameAsync(userId, firstName);
             return NoContent();
         }
         catch (EntityNotFoundException)
@@ -58,13 +46,11 @@ public class UserController : Controller
     [HttpPost("LastName")]
     public async Task<ActionResult> UpdateLastName([FromBody] string lastName)
     {
-        var userId = HttpContext.User.Identity.Name;
+        var userId = HttpContext.User.Identity?.Name;
 
         try
         {
-            var user = await _userRepository.GetByIdAsync(userId);
-            user.LastName = lastName;
-            await _userRepository.UpdateAsync(user);
+            await _userService.UpdateLastNameAsync(userId, lastName);
             return NoContent();
         }
         catch (EntityNotFoundException)
