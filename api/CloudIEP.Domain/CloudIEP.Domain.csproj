@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj" />
+    <ProjectReference Include="../CloudIEP.Data/CloudIEP.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,11 +7,11 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="../ServiceDefaults/ServiceDefaults.csproj" />
-		<ProjectReference Include="..\CloudIEP.Data\CloudIEP.Data.csproj">
+		<ProjectReference Include="../CloudIEP.Data/CloudIEP.Data.csproj">
 			<GlobalPropertiesToRemove>
 			</GlobalPropertiesToRemove>
 		</ProjectReference>
-		<ProjectReference Include="..\CloudIEP.Domain\CloudIEP.Domain.csproj" />
+		<ProjectReference Include="../CloudIEP.Domain/CloudIEP.Domain.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
