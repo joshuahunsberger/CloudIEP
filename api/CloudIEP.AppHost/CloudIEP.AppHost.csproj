@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>ae1b90ef-8bae-4f24-bd62-ba98543f62f5</UserSecretsId>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
+    <AspireCliInvocationMode>DnxPinned</AspireCliInvocationMode>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.Azure.CosmosDB" Version="13.5.3" />
