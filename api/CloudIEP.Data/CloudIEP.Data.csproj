@@ -4,6 +4,6 @@
 		<TargetFramework>net10.0</TargetFramework>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="13.5.4" />
+		<PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.Cosmos" Version="13.6.0" />
 	</ItemGroup>
 </Project>
