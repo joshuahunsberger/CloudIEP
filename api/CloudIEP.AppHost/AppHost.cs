@@ -2,14 +2,12 @@ using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-#pragma warning disable ASPIRECOSMOSDB001
 var cosmos = builder.AddAzureCosmosDB("cosmos-db")
-    .RunAsPreviewEmulator(emulator =>
+    .RunAsEmulator(emulator =>
     {
         emulator.WithDataExplorer();
         emulator.WithLifetime(ContainerLifetime.Persistent);
     });
-#pragma warning restore ASPIRECOSMOSDB001
 
 var db = cosmos.AddCosmosDatabase("CloudIEPDev");
 
