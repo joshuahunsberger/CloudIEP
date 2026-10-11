@@ -7,7 +7,8 @@ namespace CloudIEP.DatabaseSeeder;
 public class Worker(
     ILogger<Worker> logger,
     IServiceScopeFactory serviceScopeFactory,
-    IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
+    IHostApplicationLifetime hostApplicationLifetime,
+    IConfiguration configuration) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -17,6 +18,17 @@ public class Worker(
         {
             var context = serviceScope.ServiceProvider.GetRequiredService<CloudIEPDbContext>();
             await context.Database.EnsureCreatedAsync(stoppingToken);
+
+            var reset = configuration.GetValue<bool>("reset") || configuration.GetSection("reset").Exists();
+            if (reset)
+            {
+                logger.LogInformation("Reset requested. Clearing existing students and goals...");
+                var existingGoals = await context.Goals.ToListAsync(stoppingToken);
+                context.Goals.RemoveRange(existingGoals);
+                var existingStudents = await context.Students.ToListAsync(stoppingToken);
+                context.Students.RemoveRange(existingStudents);
+                await context.SaveChangesAsync(stoppingToken);
+            }
 
             // Set up students and goals
             var studentCount = await context.Students.CountAsync(stoppingToken);
