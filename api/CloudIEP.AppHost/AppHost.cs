@@ -1,3 +1,4 @@
+using CloudIEP.AppHost;
 using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -9,7 +10,8 @@ var cosmos = builder.AddAzureCosmosDB("cosmos-db")
         emulator.WithLifetime(ContainerLifetime.Persistent);
     });
 
-var db = cosmos.AddCosmosDatabase("CloudIEPDev");
+var db = cosmos.AddCosmosDatabase("CloudIEPDev")
+    .AddCosmosDbSeederProcessCommands();
 
 var goals = db.AddContainer("Goals", "/id");
 var students = db.AddContainer("Students", "/id");
