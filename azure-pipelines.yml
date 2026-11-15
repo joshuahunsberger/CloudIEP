@@ -28,9 +28,10 @@ stages:
       - job: BuildReact
         steps:
           - task: UseNode@1
-            displayName: Use Node LTS (24.x)
+            displayName: Use Node version from .nvmrc
             inputs:
-              version: '24.x'
+              versionSource: 'fromFile'
+              versionFilePath: 'cloud-iep-client/.nvmrc'
 
           - script: |
               cd cloud-iep-client
