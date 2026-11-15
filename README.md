@@ -8,7 +8,7 @@ To run this locally, you need the following applications:
 
 - Visual Studio, JetBrains Rider, or Visual Studio Code
 - .NET 10 SDK
-- Node.js & NPM
+- Node.js 24 LTS & NPM (managed via [nvm](https://github.com/nvm-sh/nvm) or [nvm-windows](https://github.com/coreybutler/nvm-windows) using `.nvmrc`)
 - Docker or compatible container runtime (Required to run the Cosmos DB emulator container via Aspire)
 
 ### Running Locally with Aspire
@@ -16,6 +16,7 @@ To run this locally, you need the following applications:
 The easiest way to run the entire application stack is with **Aspire**:
 
 ```bash
+nvm use
 dotnet run --project api/CloudIEP.AppHost
 ```
 
@@ -91,6 +92,7 @@ Then install dependencies and start the Vite dev server:
 
 ```bash
 cd cloud-iep-client
+nvm use
 npm install
 npm run dev
 ```
