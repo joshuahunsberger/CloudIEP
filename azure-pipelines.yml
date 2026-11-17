@@ -16,7 +16,7 @@ stages:
               checkForExistingVersion: true
 
           - script: |
-              dnx Aspire.Cli do build --non-interactive
+              dotnet tool exec Aspire.Cli do build --non-interactive
             displayName: Build Application with Aspire
 
           - task: DotNetCoreCLI@2
