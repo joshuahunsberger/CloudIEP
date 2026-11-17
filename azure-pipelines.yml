@@ -6,39 +6,20 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     jobs:
-      - job: BuildAPI
+      - job: Build
+        displayName: Build & Test with Aspire
         steps:
           - task: UseDotNet@2
             displayName: Use .NET 10 SDK
             inputs:
               version: 10.0.x
 
-          - task: DotNetCoreCLI@2
-            displayName: Build Web API
-            inputs:
-              command: build
-              projects: 'api/CloudIEP.Web'
+          - script: |
+              dnx Aspire.Cli do build --non-interactive
+            displayName: Build Application with Aspire
 
           - task: DotNetCoreCLI@2
             displayName: Run Unit Tests
             inputs:
               command: test
               projects: '**/*UnitTests.csproj'
-
-      - job: BuildReact
-        steps:
-          - task: UseNode@1
-            displayName: Use Node version from .nvmrc
-            inputs:
-              versionSource: 'fromFile'
-              versionFilePath: 'cloud-iep-client/.nvmrc'
-
-          - script: |
-              cd cloud-iep-client
-              npm install
-            displayName: npm install
-
-          - script: |
-              cd cloud-iep-client
-              npm run build
-            displayName: npm build
